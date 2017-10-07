@@ -1,8 +1,11 @@
 import time
 import os
+import uuid
 import logging as logger
+from types import MethodType
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, \
+    WebDriverException
 from pyseleniumjs import E2EJS
 
 
@@ -31,7 +34,7 @@ class Controller(object):
         if isinstance(components, dict):
             self.components = lambda: None
             for name, component in components.iteritems():
-            setattr(self.components, name, component(webdriver, env))
+                setattr(self.components, name, component(webdriver, env))
         else:
             self.components = [component(webdriver, env) for component in components]
 
@@ -50,61 +53,63 @@ class Controller(object):
                 except NoSuchElementException:
                     return []
             # make copy of function
-            find_elements_by_css_selector = self.webdriver.find_elements_by_css_selector
-            self.webdriver.find_elements_by_css_selector = MethodType(
+            find_elements_by_css_selector = webdriver.find_elements_by_css_selector
+            webdriver.find_elements_by_css_selector = MethodType(
                 lambda self, css_selector: _safari_patch(
                     executor=find_elements_by_css_selector,
                     selector=css_selector
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_tag_name = self.webdriver.find_elements_by_tag_name
-            self.webdriver.find_elements_by_tag_name = MethodType(
+            find_elements_by_tag_name = webdriver.find_elements_by_tag_name
+            webdriver.find_elements_by_tag_name = MethodType(
                 lambda self, name: _safari_patch(
                     executor=find_elements_by_tag_name,
                     selector=name
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_id = self.webdriver.find_elements_by_id
-            self.webdriver.find_elements_by_id = MethodType(
+            find_elements_by_id = webdriver.find_elements_by_id
+            webdriver.find_elements_by_id = MethodType(
                 lambda self, id: _safari_patch(
                     executor=find_elements_by_id,
                     selector=id
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_class_name = self.webdriver.find_elements_by_class_name
-            self.webdriver.find_elements_by_class_name = MethodType(
+            find_elements_by_class_name = webdriver.find_elements_by_class_name
+            webdriver.find_elements_by_class_name = MethodType(
                 lambda self, name: _safari_patch(
                     executor=find_elements_by_class_name,
                     selector=name
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_xpath = self.webdriver.find_elements_by_xpath
-            self.webdriver.find_elements_by_xpath = MethodType(
+            find_elements_by_xpath = webdriver.find_elements_by_xpath
+            webdriver.find_elements_by_xpath = MethodType(
                 lambda self, xpath: _safari_patch(
                     executor=find_elements_by_xpath,
                     selector=xpath
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_name = self.webdriver.find_elements_by_name
-            self.webdriver.find_elements_by_name = MethodType(
+            find_elements_by_name = webdriver.find_elements_by_name
+            webdriver.find_elements_by_name = MethodType(
                 lambda self, name: _safari_patch(
                     executor=find_elements_by_name,
                     selector=name
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_link_text = self.webdriver.find_elements_by_link_text
-            self.webdriver.find_elements_by_link_text = MethodType(
+            find_elements_by_link_text = webdriver.find_elements_by_link_text
+            webdriver.find_elements_by_link_text = MethodType(
                 lambda self, text: _safari_patch(
                     executor=find_elements_by_link_text,
                     selector=text
-                ), self.webdriver)
+                ), webdriver)
             # make copy of function
-            find_elements_by_partial_link_text = self.webdriver.find_elements_by_partial_link_text
-            self.webdriver.find_elements_by_partial_link_text = MethodType(
+            find_elements_by_partial_link_text = webdriver.find_elements_by_partial_link_text
+            webdriver.find_elements_by_partial_link_text = MethodType(
                 lambda self, text: _safari_patch(
                     executor=find_elements_by_partial_link_text,
                     selector=text
-                ), self.webdriver)
+                ), webdriver)
+
+        return webdriver
 
     @property
     def location(self):
@@ -121,6 +126,13 @@ class Controller(object):
         :return: basestring
         """
         return self.webdriver.title
+
+    def refresh(self):
+        """
+        :Description: Refreshes primary window.
+        """
+        self.webdriver.switch_to_default_content()  # necessary for safari
+        self.webdriver.refresh()
 
     def navigate(self, route):
         """
@@ -151,14 +163,6 @@ class Controller(object):
         except WebDriverException:
             self.logger.critical('Browser console was not overridden, could not return any logs.')
 
-    def window_by_handle(self, window=None):
-        """
-        :Description: Changes to specified window or most recently opened.
-        :param window: (window handle) If specified, browser instance will focus on window handle, else focus on parent window.
-        """
-        self.browser.switch_to_window(self.windows.parent) \
-            if window is None else self.browser.switch_to_window(window)
-
     def window_by_title(self, title, graceful=False):
         """
         :Description: Changes to window context by window title.
@@ -166,9 +170,10 @@ class Controller(object):
         :type title: basestring
         :param graceful: Adds leniency to window title search.
         :type graceful: bool
+        :return: bool
         """
-        for handle in self.browser.window_handles:
-            self.browser.switch_to_window(handle)
+        for handle in self.webdriver.window_handles:
+            self.webdriver.switch_to_window(handle)
             if graceful and title in self.title:
                 return True
             if not graceful and self.title == title:
@@ -182,9 +187,10 @@ class Controller(object):
         :type location: basestring
         :param graceful: Adds leniency to window path search.
         :type graceful: bool
+        :return: bool
         """
-        for handle in self.browser.window_handles:
-            self.browser.switch_to_window(handle)
+        for handle in self.webdriver.window_handles:
+            self.webdriver.switch_to_window(handle)
             if graceful and location in self.location:
                 return True
             if not graceful and self.location == location:
@@ -194,11 +200,11 @@ class Controller(object):
     def wait(self, timeout=0, condition=None, reverse=False, throw_error=False):
         """
         :Description: Assisted delays between browser and main thread.
-        :param timeout: Time to wait.
+        :param timeout: Time in seconds to wait.
         :type timeout: int
         :param condition: (lambda|function) If callable, will wait 1 to timeout seconds until condition met.
         :param reverse: Will wait for the condition to evaluate to False instead of True.
-        :param throw_error: This parameter will not be used unless a condition is specified. Used for debugging specific errors in conditional waits.
+        :param throw_error: Will throw error raised by condition at end of timeout.
         :type throw_error: bool
         :return: None or condition()
         """
@@ -206,7 +212,7 @@ class Controller(object):
             if not isinstance(timeout, (int, float)) or timeout <= 0:
                 raise ValueError('`timeout` must be an integer or float greater than or equal to 1')
             error = None
-            for i in range(0, timeout):
+            for i in range(timeout):
                 try:
                     if reverse:
                         if not condition():
@@ -226,3 +232,66 @@ class Controller(object):
             return reverse
         else:
             time.sleep(timeout)
+
+    def element_exists(self, expression):
+        """
+        :Description: Verifies the expression
+        :param expression: (lambda|function) Expression to check against.
+        :return: bool
+        """
+        if callable(expression):
+            try:
+                return True if expression() else False
+            except NoSuchElementException:
+                return False
+        return False
+
+    def element_available(self, component, prop, visible=True, error=True, timeout=1, msg=None, reverse=False, log_name=None):
+        """
+        :Description: Verify component element both exists and is visible.
+        :param component: Component reference to target.
+        :type component: Component
+        :param prop: Property of component to check.
+        :type prop: basestring
+        :param visible: Will check for visibility.
+        :type visible: bool
+        :param error: Will error on failure, else return bool.
+        :type error: bool
+        :param timeout: Time in seconds to wait for property.
+        :type timeout: int
+        :param msg: Message to throw if property validity not met and @error is True.
+        :type msg: basestring
+        :param reverse: If reversed, will check for the inavailability of target element.
+        :param log_name: If specified, will dump logs with the filename specified on error.
+        :type log_name: basestring
+        :return: bool
+        """
+        status = self.wait(
+            timeout=timeout, reverse=reverse, condition=lambda: self.element_exists(
+            expression=lambda: self.js.is_visible(
+                element=getattr(component, prop)
+            ) if visible else getattr(component, prop)
+        ))  # exit on completion
+        failed = (reverse and status) or (not reverse and not status)
+        if error and failed:
+            if log_name:
+                self.dump_browser_logs(name=log_name)
+            raise RuntimeError(msg if msg else 'Component property "%s" %s %s' % (
+                prop, 'exists' if reverse else 'does not exist', 'or is not visible' \
+                    if not reverse and visible else ''
+            ))
+        else:
+            return not failed
+
+    def screen_shot(self, directory='./', prefix=''):
+        """
+        :Description: Takes a screen shot and saves it specified path.
+        :param directory: Directory to store screenshot in
+        :type directory: basestring
+        :param prefix: Prefix for screenshot.
+        :type prefix: basestring
+        :return: basestring
+        """
+        file_location = os.path.join(directory, prefix + str(uuid.uuid4()) + '.png')
+        self.webdriver.get_screenshot_as_file(filename=file_location)
+        return file_location
