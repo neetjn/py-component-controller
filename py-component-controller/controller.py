@@ -295,3 +295,128 @@ class Controller(object):
         file_location = os.path.join(directory, prefix + str(uuid.uuid4()) + '.png')
         self.webdriver.get_screenshot_as_file(filename=file_location)
         return file_location
+
+    def verify_text_fields(self, fields, value):
+        """
+        :Description: Verifies text fields for matched provided value.
+        :param fields: List of fields to verify.
+        :type fields: list
+        :param value: Value to check against element value.
+        :type value: basestring, list
+        :return: bool
+        """
+        for element in fields:
+            if isinstance(value, list):
+                if self.js.get_value(element=element) not in value:
+                    return False
+            else:
+                if self.js.get_value(element=element) != value:
+                    return False
+        return True
+
+    def verify_text_fields_detailed(self, pairs):
+        """
+        :Description: Verifies text fields for paired values.
+        :param pairs: (<dict>[<dict>...]) List of list pairs to verify.
+        :return: bool
+        """
+        for pair in pairs:
+            if len(pair) != 2:
+                raise ValueError('Pair must be a valid list with an element and value')
+            element, value = pair
+            if isinstance(value, list):
+                if self.js.get_value(element=element) not in value:
+                    return False
+            else:
+                if self.js.get_value(element=element) != value:
+                    return False
+        return True
+
+    def complete_text_fields(self, fields, value, verify=False, delay=0):
+        """
+        :Description: Fill out text fields with provided value.
+        :param fields: List of fields to modify.
+        :type fields: list
+        :param value: Value commit to text field.
+        :type value: basestring
+        :param verify: Specify whether or not to automatically verify changes were committed.
+        :type verify: bool
+        :return: bool
+        """
+        for element in fields:
+            if delay:
+                self.wait(timeout=delay)
+            element.clear()
+            element.send_keys(value)
+        return self.verify_text_fields(fields=fields, value=value) if verify else True
+
+    def complete_text_fields_detailed(self, pairs, verify=False, delay=0):
+        """
+        :Description: Fills out text fields by pairs.
+        :param pairs: (<dict>[<dict>...]) List of list pairs to modify.
+        :param verify: Specify whether or not to automatically verify changes were committed.
+        :type verify: bool
+        :param delay: Time in milliseconds to wait before modifying each field.
+        :type delay: float
+        :return: bool
+        """
+        for pair in pairs:
+            if len(pair) != 2:
+                raise ValueError('Pair must be a valid list with an element and value')
+            if delay > 0:
+                self.wait(timeout=delay)
+            element, value = pair
+            element.clear()
+            element.send_keys(value)
+        return self.verify_text_fields_detailed(pairs) if verify else True
+
+    def clear_text_fields(self, fields, verify=False):
+        """
+        :Description: Clears text fields.
+        :param fields: List of fields to modify.
+        :type fields: list
+        :param verify: Specify whether or not to automatically verify changes were committed.
+        :type verify: bool
+        :return: bool
+        """
+        for element in fields:
+            element.clear()
+        return self.verify_text_fields(fields=fields, value='') if verify else True
+
+    def verify_dom_attributes(self, elements, attribute, value):
+        """
+        :Description: Verifies element attributes by matched provided value.
+        :param elements: List of elements to verify.
+        :type elements: list
+        :param attribute: Attribute of provided elements to verify.
+        :type attribute: basestring
+        :param value: Value of attribute to check against.
+        :type value: basestring
+        :return: bool
+        """
+        for element in elements:
+            if self.js.get_attribute(element=element, attribute=attribute) != value:
+                return False
+        return True
+
+    def update_dom_attributes(self, elements, attribute, value, verify=False):
+        """
+        :Description: Changes element attributes with provided value.
+        :param elements: List of elements to update.
+        :type elements: list
+        :param attribute: Attribute of provided elements to update.
+        :type attribute: basestring
+        :param value: Value of attribute to update.
+        :type value: basestring
+        :param verify: Specify whether or not to automatically verify changes were committed.
+        :type verify: bool
+        :return: bool
+        """
+        for element in elements:
+            self.js.set_attribute(
+                element=element,
+                attribute=attribute,
+                value=value
+            )
+            
+        return self.verify_dom_attributes(elements=elements, attribute=attribute, value=value) if verify else True
