@@ -21,7 +21,7 @@ class Controller(object):
         :param components: Component objects to instantiate.
         :type components: tuple, list, dict
         :param env: Key value pairs to pass to instantiated components.
-        :type env: dict
+        :type env: **kwargs => dict
         """
         self.webdriver = self.__patch_webdriver(webdriver)
         self.js = E2EJS(webdriver)
@@ -145,24 +145,6 @@ class Controller(object):
             route=route
         ))
 
-    def dump_browser_logs(self, name=None):
-        """
-        :Description: Dumps browser logs to local directory.
-        :Warning: `self.js.console_logger` must be executed to store logs.
-        :param name: Name log file dropped to disk, will default to timestamp if not specified.
-        :type name: basestring
-        """
-        try:
-            logs = self.js.console_dump()
-            timestamp = str(int(time.time()))
-            log_name = 'console.%s.log' % (('%s.%s' % (name, timestamp)) if name else timestamp)
-            if not os.path.exists('artifacts'):
-                os.makedirs('artifacts')
-            with open('artifacts/%s' % log_name, 'a') as logfile:
-                logfile.write(logs)
-        except WebDriverException:
-            self.logger.critical('Browser console was not overridden, could not return any logs.')
-
     def window_by_title(self, title, graceful=False):
         """
         :Description: Changes to window context by window title.
@@ -214,17 +196,22 @@ class Controller(object):
             error = None
             for i in range(timeout):
                 try:
+
                     if reverse:
                         if not condition():
                             return False
                     else:
                         if condition():
                             if i >= timeout/2:
-                                self.logger.warn('Wait took `%s` seconds, more than half of the expected wait time' % str(i+1))
+                                self.logger.warning(
+                                    'Wait took `%s` seconds, more than half of the expected wait time' % str(i+1))
                             return True
+
                 except Exception as e:
+
                     if throw_error:
                         error = e
+
                 time.sleep(1)
 
             if error and throw_error:
@@ -232,6 +219,33 @@ class Controller(object):
             return reverse
         else:
             time.sleep(timeout)
+
+    def dump_browser_logs(self, name=None):
+        """
+        :Description: Dumps browser logs to local directory.
+        :Warning: `self.js.console_logger` must be executed to store logs.
+        :param name: Name log file dropped to disk, will default to timestamp if not specified.
+        :type name: basestring
+        """
+        try:
+            logs = self.js.console_dump()
+            timestamp = str(int(time.time()))
+            log_name = 'console.%s.json' % (('%s.%s' % (name, timestamp)) if name else timestamp)
+            with open('%s' % log_name, 'a') as logfile:
+                logfile.write(logs)
+        except WebDriverException:
+            self.logger.critical('Browser console was not overridden, could not return any logs.')
+
+    def screen_shot(self, prefix=''):
+        """
+        :Description: Takes a screen shot and saves it specified path.
+        :param prefix: Prefix for screenshot.
+        :type prefix: basestring
+        :return: basestring
+        """
+        file_location = os.path.join('./', prefix + str(uuid.uuid4()) + '.png')
+        self.webdriver.get_screenshot_as_file(filename=file_location)
+        return file_location
 
     def element_exists(self, expression):
         """
@@ -246,24 +260,22 @@ class Controller(object):
                 return False
         return False
 
-    def element_available(self, component, prop, visible=True, error=True, timeout=1, msg=None, reverse=False, log_name=None):
+    def element_available(self, component, prop, visible=True, error=True, timeout=1, msg=None, reverse=False):
         """
         :Description: Verify component element both exists and is visible.
         :param component: Component reference to target.
         :type component: Component
         :param prop: Property of component to check.
         :type prop: basestring
-        :param visible: Will check for visibility.
+        :param visible: Check for visibility.
         :type visible: bool
-        :param error: Will error on failure, else return bool.
+        :param error: Error on failure, else return bool status.
         :type error: bool
         :param timeout: Time in seconds to wait for property.
         :type timeout: int
         :param msg: Message to throw if property validity not met and @error is True.
         :type msg: basestring
-        :param reverse: If reversed, will check for the inavailability of target element.
-        :param log_name: If specified, will dump logs with the filename specified on error.
-        :type log_name: basestring
+        :param reverse: Check for the inavailability of target element.
         :return: bool
         """
         status = self.wait(
@@ -274,149 +286,9 @@ class Controller(object):
         ))  # exit on completion
         failed = (reverse and status) or (not reverse and not status)
         if error and failed:
-            if log_name:
-                self.dump_browser_logs(name=log_name)
             raise RuntimeError(msg if msg else 'Component property "%s" %s %s' % (
                 prop, 'exists' if reverse else 'does not exist', 'or is not visible' \
                     if not reverse and visible else ''
             ))
         else:
             return not failed
-
-    def screen_shot(self, directory='./', prefix=''):
-        """
-        :Description: Takes a screen shot and saves it specified path.
-        :param directory: Directory to store screenshot in
-        :type directory: basestring
-        :param prefix: Prefix for screenshot.
-        :type prefix: basestring
-        :return: basestring
-        """
-        file_location = os.path.join(directory, prefix + str(uuid.uuid4()) + '.png')
-        self.webdriver.get_screenshot_as_file(filename=file_location)
-        return file_location
-
-    def verify_text_fields(self, fields, value):
-        """
-        :Description: Verifies text fields for matched provided value.
-        :param fields: List of fields to verify.
-        :type fields: list
-        :param value: Value to check against element value.
-        :type value: basestring, list
-        :return: bool
-        """
-        for element in fields:
-            if isinstance(value, list):
-                if self.js.get_value(element=element) not in value:
-                    return False
-            else:
-                if self.js.get_value(element=element) != value:
-                    return False
-        return True
-
-    def verify_text_fields_detailed(self, pairs):
-        """
-        :Description: Verifies text fields for paired values.
-        :param pairs: (<dict>[<dict>...]) List of list pairs to verify.
-        :return: bool
-        """
-        for pair in pairs:
-            if len(pair) != 2:
-                raise ValueError('Pair must be a valid list with an element and value')
-            element, value = pair
-            if isinstance(value, list):
-                if self.js.get_value(element=element) not in value:
-                    return False
-            else:
-                if self.js.get_value(element=element) != value:
-                    return False
-        return True
-
-    def complete_text_fields(self, fields, value, verify=False, delay=0):
-        """
-        :Description: Fill out text fields with provided value.
-        :param fields: List of fields to modify.
-        :type fields: list
-        :param value: Value commit to text field.
-        :type value: basestring
-        :param verify: Specify whether or not to automatically verify changes were committed.
-        :type verify: bool
-        :return: bool
-        """
-        for element in fields:
-            if delay:
-                self.wait(timeout=delay)
-            element.clear()
-            element.send_keys(value)
-        return self.verify_text_fields(fields=fields, value=value) if verify else True
-
-    def complete_text_fields_detailed(self, pairs, verify=False, delay=0):
-        """
-        :Description: Fills out text fields by pairs.
-        :param pairs: (<dict>[<dict>...]) List of list pairs to modify.
-        :param verify: Specify whether or not to automatically verify changes were committed.
-        :type verify: bool
-        :param delay: Time in milliseconds to wait before modifying each field.
-        :type delay: float
-        :return: bool
-        """
-        for pair in pairs:
-            if len(pair) != 2:
-                raise ValueError('Pair must be a valid list with an element and value')
-            if delay > 0:
-                self.wait(timeout=delay)
-            element, value = pair
-            element.clear()
-            element.send_keys(value)
-        return self.verify_text_fields_detailed(pairs) if verify else True
-
-    def clear_text_fields(self, fields, verify=False):
-        """
-        :Description: Clears text fields.
-        :param fields: List of fields to modify.
-        :type fields: list
-        :param verify: Specify whether or not to automatically verify changes were committed.
-        :type verify: bool
-        :return: bool
-        """
-        for element in fields:
-            element.clear()
-        return self.verify_text_fields(fields=fields, value='') if verify else True
-
-    def verify_dom_attributes(self, elements, attribute, value):
-        """
-        :Description: Verifies element attributes by matched provided value.
-        :param elements: List of elements to verify.
-        :type elements: list
-        :param attribute: Attribute of provided elements to verify.
-        :type attribute: basestring
-        :param value: Value of attribute to check against.
-        :type value: basestring
-        :return: bool
-        """
-        for element in elements:
-            if self.js.get_attribute(element=element, attribute=attribute) != value:
-                return False
-        return True
-
-    def update_dom_attributes(self, elements, attribute, value, verify=False):
-        """
-        :Description: Changes element attributes with provided value.
-        :param elements: List of elements to update.
-        :type elements: list
-        :param attribute: Attribute of provided elements to update.
-        :type attribute: basestring
-        :param value: Value of attribute to update.
-        :type value: basestring
-        :param verify: Specify whether or not to automatically verify changes were committed.
-        :type verify: bool
-        :return: bool
-        """
-        for element in elements:
-            self.js.set_attribute(
-                element=element,
-                attribute=attribute,
-                value=value
-            )
-            
-        return self.verify_dom_attributes(elements=elements, attribute=attribute, value=value) if verify else True
