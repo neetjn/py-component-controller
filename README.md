@@ -2,9 +2,11 @@
 
 PCC is an opinionated framework for structuring selenium test suites. This project depends on the [pyselenium-js](https://github.com/neetjn/pyselenium-js) project.
 
-PCC takes the pain out of redundant tasks, and helps provide an interface to tackeling larger web applications. This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach. PCC also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
-
 ## About
+
+What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications. This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach. PCC also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
+
+## Breakdown
 
 A component object represents an area in the web application user interface that your test is interacting with. Component objects were created to represent every possible element a controller and/or test would need to reference. Component objects allow us to define an element once, and reference it however many times we need by it's defined property. If any major changes are made to our target interface, we can change the definition of a component's property once and it will work across all of our given controllers and tests. Reference: [Page Object](http://selenium-python.readthedocs.io/page-objects.html)
 
@@ -29,6 +31,11 @@ from pcc import Component
 class Home(Component):
 
   @property
+  def username(self):
+    return self.find_element_by_css_selector('#username') if \
+      self.env.legacy else self.find_element_by_css_selector('#newUsername')
+
+  @property
   def articles(self):
     return self.webdriver.find_elements_by_css_selector('div.article')
 ```
@@ -51,12 +58,20 @@ class Product(Controller):
       },
       env=**env
     )
+    self.logged_in = False
+
+  def count_articles(self):
+    return len(self.components.home.articles)
 
   def login(self, username, password):
     # do login
-    self.loggedIn = True
+    self.logged_in = True
     ...
+
+product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
 ```
+
+As can be seen in the controller example, a component included in the constructor can be accessed at any time by it's key pair name. 
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the Apache License, Version 2.0.
