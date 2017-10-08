@@ -25,7 +25,7 @@ pip install py-component-controller
 To define a new component, simply import `Component` from `pcc`.
 
 ```python
-from pcc import Component
+from py_component_controller import Component
 
 
 class Home(Component):
@@ -43,7 +43,7 @@ class Home(Component):
 Controllers can be defined using the `Controller` class which can also be imported from ppc.
 
 ```python
-from pcc import Controller
+from py_component_controller import Controller
 from project.components import Home
 
 

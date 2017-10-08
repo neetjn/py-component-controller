@@ -19,5 +19,5 @@ setup(
         'selenium',
         'pyseleniumjs',
     ],
-    packages=['pcc']
+    packages=['py_component_controller']
 )
