@@ -73,5 +73,22 @@ product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
 
 As can be seen in the controller example, a component included in the constructor can be accessed at any time by it's key pair name. The `env` variable we instantiate in our `Product` instance `legacy`, is also trickeled down into each of `Product`'s components which can then be processed as done in the `Component` example.
 
+## Testing
+
+All module related e2e tests are in the `py-component-controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock application, run `make app`. This will serve the application on localhost:3000. To run the test suite, use `make tests`.
+
+Requirements:
+
+* Chromium 60
+* ChromeDriver 2.32.3
+* Node.js 6
+* Python 2.7
+* Pip
+
+## Contributing
+
+Make sure your code passes our lint and e2e tests.
+Any new features added must also be tested in the `py-component-controller/tests` subdirectory.
+
 ---
 Copyright (c) 2017 John Nolette Licensed under the Apache License, Version 2.0.
