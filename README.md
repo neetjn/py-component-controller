@@ -71,7 +71,7 @@ class Product(Controller):
 product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
 ```
 
-As can be seen in the controller example, a component included in the constructor can be accessed at any time by it's key pair name. 
+As can be seen in the controller example, a component included in the constructor can be accessed at any time by it's key pair name. The `env` variable we instantiate in our `Product` instance `legacy`, is also trickeled down into each of `Product`'s components which can then be processed as done in the `Component` example.
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the Apache License, Version 2.0.
