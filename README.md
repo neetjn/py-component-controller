@@ -22,7 +22,7 @@ PCC can be installed using pip like so,
 pip install py-component-controller
 ```
 
-To define a new component, simply import `Component` from `pcc`.
+To define a new component, simply import `Component` from `py_component_controller`.
 
 ```python
 from py_component_controller import Component
@@ -40,7 +40,7 @@ class Home(Component):
     return self.webdriver.find_elements_by_css_selector('div.article')
 ```
 
-Controllers can be defined using the `Controller` class which can also be imported from ppc.
+Controllers can be defined using the `Controller` class which can also be imported from `py_component_controller`.
 
 ```python
 from py_component_controller import Controller
