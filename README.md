@@ -19,7 +19,7 @@ This project was created using Python 2.7, selenium `3.0.0b3`, and pyseleniumjs 
 PCC can be installed using pip like so,
 
 ```sh
-pip install pcc
+pip install py-component-controller
 ```
 
 To define a new component, simply import `Component` from `pcc`.
