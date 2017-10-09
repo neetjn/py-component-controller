@@ -75,7 +75,9 @@ As can be seen in the controller example, a component included in the constructo
 
 ## Testing
 
-All module related e2e tests are in the `py-component-controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock application, run `make app`. This will serve the application on localhost:3000. To run the test suite, use `make tests`.
+All module related e2e tests are in the `py_component_controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock site, run `make app`. This will serve the mock site on localhost:3000. To run the test suite, use `make tests`.
+
+The mock site was created using Riot.js 3, TWBS, webpack 2.2, and webpack dev server. It was designed to represent a common website layout with responsive capabilities.
 
 Requirements:
 
@@ -88,7 +90,7 @@ Requirements:
 ## Contributing
 
 Make sure your code passes our lint and e2e tests.
-Any new features added must also be tested in the `py-component-controller/tests` subdirectory.
+Any new features added must also be tested in the `py_component_controller/tests` subdirectory.
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the Apache License, Version 2.0.
