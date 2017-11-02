@@ -15,10 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import time
 import os
 import uuid
 import logging as logger
+import time
 from types import MethodType
 
 from selenium.common.exceptions import NoSuchElementException, \
@@ -43,17 +43,20 @@ class Controller(object):
         self.webdriver = self.__patch_webdriver(webdriver)
         self.js = E2EJS(webdriver)
         self.base_url = base_url
-        if base_url:
-            self.webdriver.get(base_url)
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
             raise TypeError('Components must be either a tuple, list, or dictionary')
+            
+        env = Resource(**env) if env else Resource()
+        
         if isinstance(components, dict):
             self.components = lambda: None
             for name, component in components.iteritems():
-                setattr(self.components, name, component(webdriver, env))
+                setattr(self.components, name, component(webdriver=self.webdriver, logger=self.logger, env=env))
         else:
-            self.components = [component(webdriver, env) for component in components]
+            self.components = [component(webdriver=self.webdriver, logger=self.logger, env=env) for component in components]
+            
+        self.webdriver.get(self.base_url)
 
     @staticmethod
     def __patch_webdriver(webdriver):
@@ -63,68 +66,21 @@ class Controller(object):
         :type webdriver: WebDriver
         :return: WebDriver
         """
-        if webdriver.capabilities['browserName'] == 'safari':
+        if browser.capabilities['browserName'] == 'safari':
+
             def _safari_patch(executor, selector):
                 try:
                     return executor(selector)
                 except NoSuchElementException:
                     return []
-            # make copy of function
-            find_elements_by_css_selector = webdriver.find_elements_by_css_selector
-            webdriver.find_elements_by_css_selector = MethodType(
-                lambda self, css_selector: _safari_patch(
-                    executor=find_elements_by_css_selector,
-                    selector=css_selector
-                ), webdriver)
-            # make copy of function
-            find_elements_by_tag_name = webdriver.find_elements_by_tag_name
-            webdriver.find_elements_by_tag_name = MethodType(
-                lambda self, name: _safari_patch(
-                    executor=find_elements_by_tag_name,
-                    selector=name
-                ), webdriver)
-            # make copy of function
-            find_elements_by_id = webdriver.find_elements_by_id
-            webdriver.find_elements_by_id = MethodType(
-                lambda self, id: _safari_patch(
-                    executor=find_elements_by_id,
-                    selector=id
-                ), webdriver)
-            # make copy of function
-            find_elements_by_class_name = webdriver.find_elements_by_class_name
-            webdriver.find_elements_by_class_name = MethodType(
-                lambda self, name: _safari_patch(
-                    executor=find_elements_by_class_name,
-                    selector=name
-                ), webdriver)
-            # make copy of function
-            find_elements_by_xpath = webdriver.find_elements_by_xpath
-            webdriver.find_elements_by_xpath = MethodType(
-                lambda self, xpath: _safari_patch(
-                    executor=find_elements_by_xpath,
-                    selector=xpath
-                ), webdriver)
-            # make copy of function
-            find_elements_by_name = webdriver.find_elements_by_name
-            webdriver.find_elements_by_name = MethodType(
-                lambda self, name: _safari_patch(
-                    executor=find_elements_by_name,
-                    selector=name
-                ), webdriver)
-            # make copy of function
-            find_elements_by_link_text = webdriver.find_elements_by_link_text
-            webdriver.find_elements_by_link_text = MethodType(
-                lambda self, text: _safari_patch(
-                    executor=find_elements_by_link_text,
-                    selector=text
-                ), webdriver)
-            # make copy of function
-            find_elements_by_partial_link_text = webdriver.find_elements_by_partial_link_text
-            webdriver.find_elements_by_partial_link_text = MethodType(
-                lambda self, text: _safari_patch(
-                    executor=find_elements_by_partial_link_text,
-                    selector=text
-                ), webdriver)
+
+            methods = ('css_selector', 'tag_name', 'id', 'xpath', 'name', 'link_text', 'partial_link_text')
+            for method in methods:
+                complete_method_name = 'find_elements_by_{method}'.format(method=method)
+                method = getattr(webdriver, complete_method_name)
+                setattr(webdriver, complete_method_name, MethodType(lambda self, selector: _safari_patch(
+                    executor=method, selector=selector
+                ), webdriver))
 
         return webdriver
 
@@ -208,8 +164,8 @@ class Controller(object):
         :return: None or condition()
         """
         if callable(condition):
-            if not isinstance(timeout, (int, float)) or timeout <= 0:
-                raise ValueError('`timeout` must be an integer or float greater than or equal to 1')
+            if not isinstance(timeout, int) or timeout < 1:
+                raise ValueError('Timeout must be an integer or float greater than or equal to 1')
             error = None
             for i in range(timeout):
                 try:
@@ -219,9 +175,6 @@ class Controller(object):
                             return False
                     else:
                         if condition():
-                            if i >= timeout/2:
-                                self.logger.warning(
-                                    'Wait took `%s` seconds, more than half of the expected wait time' % str(i+1))
                             return True
 
                 except Exception as e:
