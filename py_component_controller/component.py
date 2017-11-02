@@ -28,8 +28,15 @@ class Component(Resource):
   """
   def __init__(self, **kwargs):
     super(Resource, self).__init__(self, **kwargs)
+    self.__selectors = {}
+    
+  def register_elements(self, elements):
+    self.__selectors.update(elements)
   
   def fetch(self, key):
-    return self.browser.find_element_by_css_selector()
+    try:
+      return self.browser.find_element_by_css_selector(self.__selectors.get(key))
+    except Exception:
+      return None
   
   meta = {'required_fields': ['webdriver', 'logger', 'env']}
