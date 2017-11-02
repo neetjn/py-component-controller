@@ -47,14 +47,15 @@ class Controller(object):
         if not isinstance(components, (tuple, list, dict)):
             raise TypeError('Components must be either a tuple, list, or dictionary')
             
-        env = Resource(**env) if env else Resource()
+        self.env = Resource(**env) if env else Resource()
         
         if isinstance(components, dict):
-            self.components = lambda: None
-            for name, component in components.iteritems():
-                setattr(self.components, name, component(webdriver=self.webdriver, logger=self.logger, env=env))
+            self.components = Resource(**{
+                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env)}
+                    for name, component in components.iteritems())
         else:
-            self.components = [component(webdriver=self.webdriver, logger=self.logger, env=env) for component in components]
+            self.components = [
+                component(webdriver=self.webdriver, logger=self.logger, env=self.env) for component in components]
             
         self.webdriver.get(self.base_url)
 
