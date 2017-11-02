@@ -32,4 +32,4 @@ class Component(Resource):
   def fetch(self, key):
     return self.browser.find_element_by_css_selector()
   
-  meta = {'required_fields': ['webdriver', 'logger']}
+  meta = {'required_fields': ['webdriver', 'logger', 'env']}
