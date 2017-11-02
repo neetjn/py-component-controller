@@ -21,9 +21,10 @@ import logging as logger
 import time
 from types import MethodType
 
+from pyseleniumjs import E2EJS
+from resource import Resource
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
-from pyseleniumjs import E2EJS
 
 
 class Controller(object):
