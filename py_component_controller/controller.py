@@ -152,7 +152,7 @@ class Controller(object):
                 return True
         return False
 
-    def wait(self, timeout=0, condition=None, reverse=False, throw_error=False):
+    def wait(self, timeout=1, condition=None, reverse=False, throw_error=False):
         """
         :Description: Assisted delays between browser and main thread.
         :param timeout: Time in seconds to wait.
