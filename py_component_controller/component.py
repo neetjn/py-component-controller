@@ -15,15 +15,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-class Component(object):
-
-  def __init__(self, webdriver, env):
-    """
-    :Description: Base for web components.
-    :param webdriver: Webdriver instance to reference.
-    :type webdriver: WebDriver
-    :param env: Additional variables to be used in properties.
-    :type env: dict
-    """
-    self.webdriver = webdriver
-    self.env = env
+class Component(Resource): 
+  """
+  :Description: Base for web components.
+  :param webdriver: Webdriver instance to reference.
+  :type webdriver: WebDriver
+  :param env: Additional variables to be used in properties.
+  :type env: dict
+  """
+  def __init__(self, **kwargs):
+    
+    super(Resource, self).__init__(self, **kwargs)
+  
+  def fetch(self, key):
+    return self.browser.find_element_by_css_selector()
+  
+  meta = {'required_fields'}
