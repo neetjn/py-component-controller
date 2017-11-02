@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from resource import Resource
+
+
 class Component(Resource): 
   """
   :Description: Base for web components.
@@ -30,4 +33,4 @@ class Component(Resource):
   def fetch(self, key):
     return self.browser.find_element_by_css_selector()
   
-  meta = {'required_fields'}
+  meta = {'required_fields': ['webdriver', 'logger']}
