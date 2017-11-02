@@ -27,7 +27,6 @@ class Component(Resource):
   :type env: dict
   """
   def __init__(self, **kwargs):
-    
     super(Resource, self).__init__(self, **kwargs)
   
   def fetch(self, key):
