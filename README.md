@@ -87,12 +87,10 @@ All module related e2e tests are in the `py_component_controller/tests` subdirec
 The mock site was created using Riot.js 3, TWBS, webpack 2.2, and webpack dev server. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [pcc-mock-site](https://github.com/neetjn/pcc-mock-site) and be sure to update the submodule commit accordingly.
 
 Requirements:
-
-* Chromium 60
-* ChromeDriver 2.32.3
-* Node.js 6
-* Python 2.7
-* Pip
+* Chrome or Chromium (*last confirmed test used version 62*)
+* ChromeDriver (*last confirmed test used version 2.33*)
+* Node.js 6+ (with npm)
+* Python 2.7 (with pip)
 
 ### Contributors
 
