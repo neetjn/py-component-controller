@@ -84,7 +84,7 @@ As can be seen in the controller example, a component included in the constructo
 
 All module related e2e tests are in the `py_component_controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock site, run `make app`. This will serve the site on localhost:3000. To run the test suite, use `make tests`.
 
-The mock site was created using Riot.js 3, TWBS, webpack 2.2, and webpack dev server. It was designed to represent a common website layout with responsive capabilities.
+The mock site was created using Riot.js 3, TWBS, webpack 2.2, and webpack dev server. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [pcc-mock-site](https://github.com/neetjn/pcc-mock-site) and be sure to update the submodule commit accordingly.
 
 Requirements:
 
@@ -94,10 +94,15 @@ Requirements:
 * Python 2.7
 * Pip
 
-## Contributing
+### Contributors
 
-Make sure your code passes our lint and e2e tests.
-Any new features added must also be tested in the `py_component_controller/tests` subdirectory.
+* **John Nolette** (john@neetgroup.net)
+
+Contributing guidelines are as follows,
+
+* Any new features added must also be unit tested in the `pcc/tests` subdirectory.
+* Branches for bugs and features should be structued like so, `issue-x-username`.
+* Include your name and email in the contributors list.
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the Apache License, Version 2.0.
