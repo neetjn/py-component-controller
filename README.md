@@ -84,7 +84,7 @@ As can be seen in the controller example, a component included in the constructo
 
 All module related e2e tests are in the `py_component_controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock site, run `make app`. This will serve the site on localhost:3000. To run the test suite, use `make tests`.
 
-The mock site was created using Riot.js 3, SkeletonCSS, and webpack 3. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [pcc-mock-site](https://github.com/neetjn/pcc-mock-site) and be sure to update the submodule commit accordingly.
+The mock site was created using Riot.js 3, SkeletonCSS, and webpack 3. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [riot-todo](https://github.com/neetjn/riot-todo) and be sure to update the submodule commit accordingly.
 
 Requirements:
 * Chrome or Chromium (*last confirmed test used version 62*)
