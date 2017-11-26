@@ -18,25 +18,29 @@
 from resource import Resource
 
 
-class Component(Resource): 
-  """
-  :Description: Base for web components.
-  :param webdriver: Webdriver instance to reference.
-  :type webdriver: WebDriver
-  :param env: Additional variables to be used in properties.
-  :type env: dict
-  """
-  def __init__(self, **kwargs):
-    super(Resource, self).__init__(self, **kwargs)
-    self.__selectors = {}
-    
-  def register_elements(self, elements):
-    self.__selectors.update(elements)
-  
-  def fetch(self, key):
-    try:
-      return self.browser.find_element_by_css_selector(self.__selectors.get(key))
-    except Exception:
-      return None
-  
-  meta = {'required_fields': ['webdriver', 'logger', 'env']}
+class Component(Resource):
+    def __init__(self, **kwargs):
+        """
+        :Description: Base for web components.
+        :param webdriver: Webdriver instance to reference.
+        :type webdriver: WebDriver
+        :param env: Additional variables to be used in properties.
+        :type env: dict
+        """
+        super(Resource, self).__init__(self, **kwargs)
+        self.__selectors = {}
+
+    def register_elements(self, elements):
+        """
+        """
+        self.__selectors.update(elements)
+
+    def fetch(self, key):
+        """
+        """
+        try:
+            return self.browser.find_element_by_css_selector(self.__selectors.get(key))
+        except Exception:
+            return None
+
+    meta = {'required_fields': ['webdriver', 'logger', 'env']}
