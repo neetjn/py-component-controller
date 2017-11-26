@@ -1,0 +1,28 @@
+todo-list {
+  @include centered-block();
+
+  todo-task {
+    @include card-centered();
+    @include transition(opacity .5s ease);
+    padding: 1rem;
+    background-color: $color-pale-yellow;
+
+    &.disabled {
+      opacity: 0.5;
+      background-color: $color-celestial-gray;
+    }
+
+    & * {
+      cursor: default;
+    }
+
+    & #assignee {
+      cursor: pointer;
+    }
+  }
+
+  alert {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}

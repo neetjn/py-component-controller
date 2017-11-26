@@ -1,0 +1,61 @@
+@import '~foundation-icons/foundation-icons.css';
+@import '~skeleton-css/css/normalize.css';
+@import '~skeleton-css/css/skeleton.css';
+@import '~animate.css/animate.min.css';
+
+@import './variables.scss';
+
+@import './mixins/shadow.scss';
+@import './mixins/animations.scss';
+@import './mixins/transition.scss';
+@import './mixins/centered.scss';
+@import './mixins/card.scss';
+
+@import './helpers/icons.scss';
+@import './helpers/lists.scss';
+@import './helpers/text.scss';
+@import './helpers/fonts.scss';
+
+@import './elements/alert.scss';
+@import './elements/button.scss';
+@import './elements/input.scss';
+@import './elements/anchor.scss';
+
+@import './components/header.scss';
+@import './components/footer.scss';
+@import './components/code-sponsor.scss';
+@import './components/todo-list.scss';
+@import './components/create-todo.scss';
+@import './components/app.scss';
+
+@import './views/home.scss';
+@import './views/profile.scss';
+
+section#view {
+  display: block;
+  flex: 1;
+}
+
+r-view {
+  @include card(2);
+  background-color: $color-ghost-white;
+
+  @media #{$mobile}, #{$tablet} {
+    @include centered-block();
+    margin-top: 2rem;
+    padding: $mobile-view-padding;
+    padding-bottom: 6rem;
+  }
+
+  @media #{$tablet} {
+    @include centered-block($tablet-view-width);
+    padding: $tablet-view-padding;
+    padding-bottom: 6rem;
+  }
+
+  @media #{$desktop} {
+    @include centered-block($desktop-view-width);
+    padding: $desktop-view-padding;
+    padding-bottom: 6rem;
+  }
+}
