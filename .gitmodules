@@ -1,3 +1,0 @@
-[submodule "tests/mock-site"]
-	path = tests/mock-site
-	url = https://github.com/neetjn/riot-todo.git
