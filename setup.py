@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='py-component-controller',
-    description='PCC is an opinionated framework for structuring selenium test suites. This project depends on the pyselenium-js project.',
+    name='pyscc',
+    description='py-component-controller is an opinionated framework for structuring selenium test suites. This project depends on the pyselenium-js project.',
     version='0.0.1',
     url='https://github.com/neetjn/py-component-controller',
     author='John Nolette',
@@ -19,5 +19,5 @@ setup(
         'selenium',
         'pyseleniumjs',
     ],
-    packages=['py_component_controller']
+    packages=['pyscc']
 )
