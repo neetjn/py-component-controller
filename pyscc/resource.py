@@ -29,6 +29,7 @@ class Resource(object):
         :Description: Validate resource with defined meta data.
         """
         meta = getattr(self, 'meta', None)
+        # TODO: Add type checking
         if meta and meta.get('required_fields'):
             required_fields = meta.get('required_fields')
             if not any(getattr(self, field) is None for field in required_fields):
