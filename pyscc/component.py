@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from .resource import Resource
 from selenium.common.exceptions import WebDriverException, ElementNotVisibleException
+from .resource import Resource
 
 
 class Component(Resource):
@@ -51,5 +51,3 @@ class Component(Resource):
             return self.webdriver.find_element_by_css_selector(self.__selectors.get(key))
         except (WebDriverException, ElementNotVisibleException):
             return None
-
-    meta = {'required_fields': ['webdriver', 'logger', 'env']}

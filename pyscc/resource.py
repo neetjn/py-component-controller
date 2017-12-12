@@ -20,9 +20,17 @@ class Resource(object):
     :Description: Base object for shenanigans.
     """
     def __init__(self, **kwargs):
-        required_fields = self.meta.get('required_fields', None)
-        if required_fields and not any(field not in fields for field in check.iterkeys()):
-            raise AttributeError('Required fields "{}" were not available'.format(required_fields))
-
         for prop, val in kwargs.iteritems():
             setattr(self, prop, val)
+        self.validate()
+
+    def validate(self):
+        """
+        :Description: Validate resource with defined meta data.
+        """
+        meta = getattr(self, 'meta', None)
+        if meta and meta.get('required_fields'):
+            required_fields = meta.get('required_fields')
+            if not any(getattr(self, field) is None for field in required_fields):
+                raise AttributeError(
+                    'Required fields "{}" were not available'.format(required_fields))

@@ -77,13 +77,21 @@ class Controller(object):
                 except NoSuchElementException:
                     return []
 
-            methods = ('css_selector', 'tag_name', 'id', 'xpath', 'name', 'link_text', 'partial_link_text')
+            methods = (
+                'css_selector',
+                'tag_name',
+                'id',
+                'xpath',
+                'name',
+                'link_text',
+                'partial_link_text')
+
             for method in methods:
                 complete_method_name = 'find_elements_by_{method}'.format(method=method)
                 method = getattr(webdriver, complete_method_name)
-                setattr(webdriver, complete_method_name, MethodType(lambda self, selector: _safari_patch(
-                    executor=method, selector=selector
-                ), webdriver))
+                setattr(webdriver, complete_method_name, MethodType(
+                    lambda self, selector: _safari_patch(executor=method, selector=selector),
+                    webdriver))
 
         return webdriver
 
@@ -117,7 +125,7 @@ class Controller(object):
         :type route: basestring
         """
         self.webdriver.get('{location}/{route}'.format(
-            location = self.base_url,
+            location=self.base_url,
             route=route
         ))
 
@@ -160,7 +168,7 @@ class Controller(object):
         :Description: Assisted delays between browser and main thread.
         :param timeout: Time in seconds to wait.
         :type timeout: int
-        :param condition: (lambda|function) If callable, will wait 1 to timeout seconds until condition met.
+        :param condition: (lambda|function) Wait 1 to timeout seconds until condition met.
         :param reverse: Will wait for the condition to evaluate to False instead of True.
         :param throw_error: Will throw error raised by condition at end of timeout.
         :type throw_error: bool
@@ -170,23 +178,18 @@ class Controller(object):
             if not isinstance(timeout, int) or timeout < 1:
                 raise ValueError('Timeout must be an integer or float greater than or equal to 1')
             error = None
-            for i in range(timeout):
+            for _ in range(timeout):
                 try:
-
                     if reverse:
                         if not condition():
                             return False
                     else:
                         if condition():
                             return True
-
-                except Exception as e:
-
+                except Exception as exc:
                     if throw_error:
-                        error = e
-
+                        error = exc
                 time.sleep(1)
-
             if error and throw_error:
                 raise error
             return reverse
@@ -233,7 +236,7 @@ class Controller(object):
                 return False
         return False
 
-    def element_available(self, component, prop, visible=True, error=True, timeout=1, msg=None, reverse=False):
+    def element_available(self, component, prop, **kwargs):
         """
         :Description: Verify component element both exists and is visible.
         :param component: Component reference to target.
@@ -251,12 +254,21 @@ class Controller(object):
         :param reverse: Check for the inavailability of target element.
         :return: bool
         """
+        visible = kwargs.get('visible', True)
+        error = kwargs.get('error', True)
+        timeout = kwargs.get('timeout', 1)
+        msg = kwargs.get('msg', None)
+        reverse = kwargs.get('reverse', False)
+
         status = self.wait(
-            timeout=timeout, reverse=reverse, condition=lambda: self.element_exists(
-            expression=lambda: self.javascript.is_visible(
-                element=getattr(component, prop)
-            ) if visible else getattr(component, prop)
-        ))  # exit on completion
+            timeout=timeout, reverse=reverse,
+            condition=lambda: self.element_exists(
+                expression=lambda: self.javascript.is_visible(
+                    element=getattr(component, prop)
+                ) if visible else getattr(component, prop)
+            )
+        )  # exit on completion
+
         failed = (reverse and status) or (not reverse and not status)
         if error and failed:
             raise RuntimeError(msg if msg else 'Component property "%s" %s %s' % (
