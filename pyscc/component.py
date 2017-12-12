@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from resource import Resource
+from .resource import Resource
 from selenium.common.exceptions import WebDriverException, ElementNotVisibleException
 
 
@@ -27,13 +27,17 @@ class Component(Resource):
     :param env: Additional variables to be used in properties.
     :type env: dict
     """
-    def __init__(self, **kwargs):
-        super(Resource, self).__init__(self, **kwargs)
+    def __init__(self, webdriver, env, **kwargs):
+        super(Component, self).__init__(self, **kwargs)
+        self.webdriver = webdriver
+        self.env = env
         self.__selectors = {}
 
     def register_elements(self, elements):
         """
-        :Description:
+        :Description: Register a web element with a css selector for dynamic searches.
+        :param elements: ...
+        :type elements: ...
         """
         self.__selectors.update(elements)
 
@@ -44,7 +48,7 @@ class Component(Resource):
         :type key: basestring
         """
         try:
-            return self.browser.find_element_by_css_selector(self.__selectors.get(key))
+            return self.webdriver.find_element_by_css_selector(self.__selectors.get(key))
         except (WebDriverException, ElementNotVisibleException):
             return None
 

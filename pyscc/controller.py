@@ -22,42 +22,43 @@ import time
 from types import MethodType
 
 from pyseleniumjs import E2EJS
-from resource import Resource
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
 
+from .resource import Resource
+
 
 class Controller(object):
-
+    """
+    :Description: Controller for managing components.
+    :param webdriver: Webdriver for controller and components to reference.
+    :type webdriver: WebDriver
+    :param base_url: Base url for navigations, will navigate to this url in init.
+    :type base_url: basestring
+    :param components: Component objects to instantiate.
+    :type components: tuple, list, dict
+    :param env: Key value pairs to pass to instantiated components.
+    :type env: **kwargs => dict
+    """
     def __init__(self, webdriver, base_url, components, **env):
-        """
-        :Description: Controller for managing components.
-        :param webdriver: Webdriver for controller and components to reference.
-        :type webdriver: WebDriver
-        :param base_url: Base url for navigations, will navigate to this url in init.
-        :type base_url: basestring
-        :param components: Component objects to instantiate.
-        :type components: tuple, list, dict
-        :param env: Key value pairs to pass to instantiated components.
-        :type env: **kwargs => dict
-        """
         self.webdriver = self.__patch_webdriver(webdriver)
-        self.js = E2EJS(webdriver)
+        self.javascript = E2EJS(webdriver)
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
             raise TypeError('Components must be either a tuple, list, or dictionary')
-            
+
         self.env = Resource(**env) if env else Resource()
-        
+
         if isinstance(components, dict):
             self.components = Resource(**{
-                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env)}
-                    for name, component in components.iteritems())
+                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
+                    for name, component in components.iteritems()})
         else:
             self.components = [
-                component(webdriver=self.webdriver, logger=self.logger, env=self.env) for component in components]
-            
+                component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
+                    for component in components]
+
         self.webdriver.get(self.base_url)
 
     @staticmethod
@@ -68,7 +69,7 @@ class Controller(object):
         :type webdriver: WebDriver
         :return: WebDriver
         """
-        if browser.capabilities['browserName'] == 'safari':
+        if webdriver.capabilities['browserName'] == 'safari':
 
             def _safari_patch(executor, selector):
                 try:
@@ -195,12 +196,12 @@ class Controller(object):
     def dump_browser_logs(self, name=None):
         """
         :Description: Dumps browser logs to local directory.
-        :Warning: `self.js.console_logger` must be executed to store logs.
+        :Warning: `self.javascript.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: basestring
         """
         try:
-            logs = self.js.console_dump()
+            logs = self.javascript.console_dump()
             timestamp = str(int(time.time()))
             log_name = 'console.%s.json' % (('%s.%s' % (name, timestamp)) if name else timestamp)
             with open('%s' % log_name, 'a') as logfile:
@@ -252,7 +253,7 @@ class Controller(object):
         """
         status = self.wait(
             timeout=timeout, reverse=reverse, condition=lambda: self.element_exists(
-            expression=lambda: self.js.is_visible(
+            expression=lambda: self.javascript.is_visible(
                 element=getattr(component, prop)
             ) if visible else getattr(component, prop)
         ))  # exit on completion

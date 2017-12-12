@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from component import Component
-from controller import Controller
+from .component import Component
+from .controller import Controller
