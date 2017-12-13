@@ -91,7 +91,7 @@ class Controller(object):
                 complete_method_name = 'find_elements_by_{method}'.format(method=method)
                 method = getattr(webdriver, complete_method_name)
                 setattr(webdriver, complete_method_name, MethodType(
-                    lambda self, selector: _safari_patch(executor=method, selector=selector),
+                    lambda self, selector: _safari_patch(executor=method, selector=selector), #pylint: disable=cell-var-from-loop
                     webdriver))
 
         return webdriver
@@ -164,7 +164,8 @@ class Controller(object):
                 return True
         return False
 
-    def wait(self, timeout=1, condition=None, reverse=False, throw_error=False):
+    @classmethod
+    def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
         """
         :Description: Assisted delays between browser and main thread.
         :param timeout: Time in seconds to wait.
@@ -187,12 +188,12 @@ class Controller(object):
                     else:
                         if condition():
                             return True
-                except Exception as exc:
+                except Exception as exc: #pylint: disable=broad-except
                     if throw_error:
                         error = exc
                 time.sleep(1)
             if error and throw_error:
-                raise error
+                raise error #pylint: disable=raising-bad-type
             return reverse
         else:
             time.sleep(timeout)
@@ -224,7 +225,8 @@ class Controller(object):
         self.webdriver.get_screenshot_as_file(filename=file_location)
         return file_location
 
-    def element_exists(self, expression):
+    @classmethod
+    def element_exists(cls, expression):
         """
         :Description: Verifies the expression
         :param expression: (lambda|function) Expression to check against.
