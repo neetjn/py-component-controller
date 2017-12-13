@@ -20,7 +20,7 @@ class Resource(object):
     :Description: Base object for shenanigans.
     """
     def __init__(self, **kwargs):
-        for prop, val in kwargs.iteritems():
+        for prop, val in kwargs.items():
             setattr(self, prop, val)
         self.validate()
 

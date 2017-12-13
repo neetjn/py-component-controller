@@ -18,7 +18,7 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using Python 2.7, selenium `3.6.0`, and pyseleniumjs `1.3.3`. An update for Python 3 will be available with pyseleniumjs version 2.
+This project was created using Python 3.6, selenium `3.6.0`, and pyseleniumjs `1.3.3`.
 
 PCC can be installed using pip like so,
 
