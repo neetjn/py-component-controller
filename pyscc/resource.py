@@ -15,12 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from six import iteritems
+
+
 class Resource(object):
     """
     :Description: Base object for shenanigans.
     """
     def __init__(self, **kwargs):
-        for prop, val in kwargs.items():
+        for prop, val in iteritems(kwargs):
             setattr(self, prop, val)
         self.validate()
 

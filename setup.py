@@ -16,8 +16,9 @@ setup(
         'Programming Language :: Python :: 2.7'
     ],
     install_requires=[
-        'selenium',
-        'pyseleniumjs',
+        'selenium==3.6.0',
+        'pyseleniumjs==1.3.3',
+        'six'
     ],
     packages=['pyscc']
 )

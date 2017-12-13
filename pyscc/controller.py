@@ -20,6 +20,7 @@ import uuid
 import logging as logger
 import time
 from types import MethodType
+from six import iteritems
 
 from pyseleniumjs import E2EJS
 from selenium.common.exceptions import NoSuchElementException, \
@@ -53,7 +54,7 @@ class Controller(object):
         if isinstance(components, dict):
             self.components = Resource(**{
                 name: component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
-                    for name, component in components.iteritems()})
+                    for name, component in iteritems(components)})
         else:
             self.components = [
                 component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
