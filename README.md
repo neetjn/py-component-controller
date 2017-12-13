@@ -18,7 +18,7 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using Python 3.6, selenium `3.6.0`, and pyseleniumjs `1.3.3`.
+This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.3`. Support is available for both Python 2.7 and 3.6.
 
 PCC can be installed using pip like so,
 
@@ -84,10 +84,10 @@ All module related e2e tests are in the `tests` subdirectory. To setup your envi
 The mock site was created using Riot.js 3, SkeletonCSS, and webpack 3. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [riot-todo](https://github.com/neetjn/riot-todo) and be sure to update the submodule commit accordingly.
 
 Requirements:
+* Python 2.7, 3.6 (with pip)
 * Chrome or Chromium (*last confirmed test used version 62*)
 * ChromeDriver (*last confirmed test used version 2.33*)
 * Node.js 6+ (with npm)
-* Python 2.7 (with pip)
 
 ### Contributors
 
