@@ -22,32 +22,14 @@ from .resource import Resource
 
 class Component(Resource):
     """
-    :Description: Base for web components.
-    :param webdriver: Webdriver instance to reference.
-    :type webdriver: WebDriver
-    :param env: Additional variables to be used in properties.
-    :type env: dict
+    :Description: Base resource for web components.
+    :param controller: Parent controller reference.
+    :type controller: Controller
+    :return: Component
     """
     def __init__(self, controller, **kwargs):
         self.controller = controller
         super(Component, self).__init__(self, **kwargs)
-        self.__selectors = {}
 
-    def register_elements(self, elements):
-        """
-        :Description: Register a web element with a css selector for dynamic searches.
-        :param elements: ...
-        :type elements: ...
-        """
-        self.__selectors.update(elements)
+    def register(name, selector):
 
-    def fetch(self, key):
-        """
-        :Description: Fetch registered web elements by their css selector.
-        :param key: Name of registered web element to search for.
-        :type key: basestring
-        """
-        try:
-            return self.webdriver.find_element_by_css_selector(self.__selectors.get(key))
-        except (WebDriverException, ElementNotVisibleException):
-            return None

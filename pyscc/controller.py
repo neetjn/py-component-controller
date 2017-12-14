@@ -37,7 +37,7 @@ class Controller(object):
     :param base_url: Base url for navigations, will navigate to this url in init.
     :type base_url: basestring
     :param components: Component objects to instantiate.
-    :type components: tuple, list, dict
+    :type components: dict
     :param env: Key value pairs to pass to instantiated components.
     :type env: **kwargs => dict
     """
@@ -51,14 +51,8 @@ class Controller(object):
 
         self.env = Resource(**env) if env else Resource()
 
-        if isinstance(components, dict):
-            self.components = Resource(**{
-                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
-                    for name, component in iteritems(components)})
-        else:
-            self.components = [
-                component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
-                    for component in components]
+        self.components = Resource(**{
+            name: component(controller=self) for name, component in iteritems(components)})
 
         self.webdriver.get(self.base_url)
 

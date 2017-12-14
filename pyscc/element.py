@@ -19,11 +19,19 @@ from pyscc.resource import Resource
 
 
 class Element(Resource):
-
+    """
+    :Description: Base resource for component elements.
+    :param controller: Parent controller reference.
+    :type controller: Controller
+    :return: Element
+    """
     def __init__(self, controller):
         pass
 
     def get(self):
+        """
+        :Description: Used to fetch a selenium WebElement.
+        """
         pass
 
     def is(self):
