@@ -15,32 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from resource import Resource
+from six import iteritems
 
 
-class Component(Resource):
+class Resource(object): #pylint: disable=too-few-public-methods
+    """
+    :Description: Base object for shenanigans.
+    """
     def __init__(self, **kwargs):
-        """
-        :Description: Base for web components.
-        :param webdriver: Webdriver instance to reference.
-        :type webdriver: WebDriver
-        :param env: Additional variables to be used in properties.
-        :type env: dict
-        """
-        super(Resource, self).__init__(self, **kwargs)
-        self.__selectors = {}
+        for prop, val in iteritems(kwargs):
+            setattr(self, prop, val)
+        self.validate()
 
-    def register_elements(self, elements):
+    def validate(self):
         """
+        :Description: Validate resource with defined meta data.
         """
-        self.__selectors.update(elements)
-
-    def fetch(self, key):
-        """
-        """
-        try:
-            return self.browser.find_element_by_css_selector(self.__selectors.get(key))
-        except Exception:
-            return None
-
-    meta = {'required_fields': ['webdriver', 'logger', 'env']}
+        meta = getattr(self, 'meta', None)
+        # TODO: Add type checking
+        if meta and meta.get('required_fields'):
+            required_fields = meta.get('required_fields')
+            if not any(getattr(self, field) is None for field in required_fields):
+                raise AttributeError(
+                    'Required fields "{}" were not available'.format(required_fields))

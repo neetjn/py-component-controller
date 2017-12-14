@@ -20,44 +20,46 @@ import uuid
 import logging as logger
 import time
 from types import MethodType
+from six import iteritems
 
 from pyseleniumjs import E2EJS
-from resource import Resource
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
 
+from .resource import Resource
+
 
 class Controller(object):
-
+    """
+    :Description: Controller for managing components.
+    :param webdriver: Webdriver for controller and components to reference.
+    :type webdriver: WebDriver
+    :param base_url: Base url for navigations, will navigate to this url in init.
+    :type base_url: basestring
+    :param components: Component objects to instantiate.
+    :type components: tuple, list, dict
+    :param env: Key value pairs to pass to instantiated components.
+    :type env: **kwargs => dict
+    """
     def __init__(self, webdriver, base_url, components, **env):
-        """
-        :Description: Controller for managing components.
-        :param webdriver: Webdriver for controller and components to reference.
-        :type webdriver: WebDriver
-        :param base_url: Base url for navigations, will navigate to this url in init.
-        :type base_url: basestring
-        :param components: Component objects to instantiate.
-        :type components: tuple, list, dict
-        :param env: Key value pairs to pass to instantiated components.
-        :type env: **kwargs => dict
-        """
         self.webdriver = self.__patch_webdriver(webdriver)
-        self.js = E2EJS(webdriver)
+        self.javascript = E2EJS(webdriver)
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
             raise TypeError('Components must be either a tuple, list, or dictionary')
-            
+
         self.env = Resource(**env) if env else Resource()
-        
+
         if isinstance(components, dict):
             self.components = Resource(**{
-                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env)}
-                    for name, component in components.iteritems())
+                name: component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
+                    for name, component in iteritems(components)})
         else:
             self.components = [
-                component(webdriver=self.webdriver, logger=self.logger, env=self.env) for component in components]
-            
+                component(webdriver=self.webdriver, logger=self.logger, env=self.env) \
+                    for component in components]
+
         self.webdriver.get(self.base_url)
 
     @staticmethod
@@ -68,7 +70,7 @@ class Controller(object):
         :type webdriver: WebDriver
         :return: WebDriver
         """
-        if browser.capabilities['browserName'] == 'safari':
+        if webdriver.capabilities['browserName'] == 'safari':
 
             def _safari_patch(executor, selector):
                 try:
@@ -76,13 +78,21 @@ class Controller(object):
                 except NoSuchElementException:
                     return []
 
-            methods = ('css_selector', 'tag_name', 'id', 'xpath', 'name', 'link_text', 'partial_link_text')
+            methods = (
+                'css_selector',
+                'tag_name',
+                'id',
+                'xpath',
+                'name',
+                'link_text',
+                'partial_link_text')
+
             for method in methods:
                 complete_method_name = 'find_elements_by_{method}'.format(method=method)
                 method = getattr(webdriver, complete_method_name)
-                setattr(webdriver, complete_method_name, MethodType(lambda self, selector: _safari_patch(
-                    executor=method, selector=selector
-                ), webdriver))
+                setattr(webdriver, complete_method_name, MethodType(
+                    lambda self, selector: _safari_patch(executor=method, selector=selector), #pylint: disable=cell-var-from-loop
+                    webdriver))
 
         return webdriver
 
@@ -116,7 +126,7 @@ class Controller(object):
         :type route: basestring
         """
         self.webdriver.get('{location}/{route}'.format(
-            location = self.base_url,
+            location=self.base_url,
             route=route
         ))
 
@@ -154,12 +164,13 @@ class Controller(object):
                 return True
         return False
 
-    def wait(self, timeout=1, condition=None, reverse=False, throw_error=False):
+    @classmethod
+    def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
         """
         :Description: Assisted delays between browser and main thread.
         :param timeout: Time in seconds to wait.
         :type timeout: int
-        :param condition: (lambda|function) If callable, will wait 1 to timeout seconds until condition met.
+        :param condition: (lambda|function) Wait 1 to timeout seconds until condition met.
         :param reverse: Will wait for the condition to evaluate to False instead of True.
         :param throw_error: Will throw error raised by condition at end of timeout.
         :type throw_error: bool
@@ -169,25 +180,20 @@ class Controller(object):
             if not isinstance(timeout, int) or timeout < 1:
                 raise ValueError('Timeout must be an integer or float greater than or equal to 1')
             error = None
-            for i in range(timeout):
+            for _ in range(timeout):
                 try:
-
                     if reverse:
                         if not condition():
                             return False
                     else:
                         if condition():
                             return True
-
-                except Exception as e:
-
+                except Exception as exc: #pylint: disable=broad-except
                     if throw_error:
-                        error = e
-
+                        error = exc
                 time.sleep(1)
-
             if error and throw_error:
-                raise error
+                raise error #pylint: disable=raising-bad-type
             return reverse
         else:
             time.sleep(timeout)
@@ -195,12 +201,12 @@ class Controller(object):
     def dump_browser_logs(self, name=None):
         """
         :Description: Dumps browser logs to local directory.
-        :Warning: `self.js.console_logger` must be executed to store logs.
+        :Warning: `self.javascript.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: basestring
         """
         try:
-            logs = self.js.console_dump()
+            logs = self.javascript.console_dump()
             timestamp = str(int(time.time()))
             log_name = 'console.%s.json' % (('%s.%s' % (name, timestamp)) if name else timestamp)
             with open('%s' % log_name, 'a') as logfile:
@@ -219,7 +225,8 @@ class Controller(object):
         self.webdriver.get_screenshot_as_file(filename=file_location)
         return file_location
 
-    def element_exists(self, expression):
+    @classmethod
+    def element_exists(cls, expression):
         """
         :Description: Verifies the expression
         :param expression: (lambda|function) Expression to check against.
@@ -232,7 +239,7 @@ class Controller(object):
                 return False
         return False
 
-    def element_available(self, component, prop, visible=True, error=True, timeout=1, msg=None, reverse=False):
+    def element_available(self, component, prop, **kwargs):
         """
         :Description: Verify component element both exists and is visible.
         :param component: Component reference to target.
@@ -250,12 +257,21 @@ class Controller(object):
         :param reverse: Check for the inavailability of target element.
         :return: bool
         """
+        visible = kwargs.get('visible', True)
+        error = kwargs.get('error', True)
+        timeout = kwargs.get('timeout', 1)
+        msg = kwargs.get('msg', None)
+        reverse = kwargs.get('reverse', False)
+
         status = self.wait(
-            timeout=timeout, reverse=reverse, condition=lambda: self.element_exists(
-            expression=lambda: self.js.is_visible(
-                element=getattr(component, prop)
-            ) if visible else getattr(component, prop)
-        ))  # exit on completion
+            timeout=timeout, reverse=reverse,
+            condition=lambda: self.element_exists(
+                expression=lambda: self.javascript.is_visible(
+                    element=getattr(component, prop)
+                ) if visible else getattr(component, prop)
+            )
+        )  # exit on completion
+
         failed = (reverse and status) or (not reverse and not status)
         if error and failed:
             raise RuntimeError(msg if msg else 'Component property "%s" %s %s' % (

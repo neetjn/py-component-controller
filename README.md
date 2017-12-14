@@ -1,17 +1,14 @@
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/ymhxqZ47jLBFuVrU2iywqLGC/neetjn/py-component-controller'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/ymhxqZ47jLBFuVrU2iywqLGC/neetjn/py-component-controller.svg' />
-</a>
-
 # py-component-controller
 
 [![build](https://travis-ci.org/neetjn/py-component-controller.svg?branch=master)](https://travis-ci.org/neetjn/py-component-controller)
+[![Code Health](https://landscape.io/github/neetjn/py-component-controller/master/landscape.svg?style=flat)](https://landscape.io/github/neetjn/py-component-controller/master)
 [![Join the chat at https://gitter.im/py-component-controller/Lobby](https://badges.gitter.im/py-component-controller/Lobby.svg)](https://gitter.im/py-component-controller/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-PCC is an opinionated framework for structuring selenium test suites. This project depends on the [pyselenium-js](https://github.com/neetjn/pyselenium-js) project.
+**py-component-controller** is an opinionated framework for structuring selenium test suites. This project depends on the [pyselenium-js](https://github.com/neetjn/pyselenium-js) project.
 
 ## About
 
-What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications. This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach. PCC also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
+What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications. This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach. **py-component-controller** also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
 
 ## Breakdown
 
@@ -21,18 +18,18 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using Python 2.7, selenium `3.0.0b3`, and pyseleniumjs `1.3.1`. An update for Python 3 will be available with pyseleniumjs version 2, as well as the latest version of selenium.
+This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.3`. Support is available for both Python 2.7 and 3.6.
 
 PCC can be installed using pip like so,
 
 ```sh
-pip install py-component-controller
+pip install pyscc
 ```
 
-To define a new component, simply import `Component` from `py_component_controller`.
+To define a new component, simply import `Component` from `pyscc`.
 
 ```python
-from py_component_controller import Component
+from pyscc import Component
 
 
 class Home(Component):
@@ -47,10 +44,10 @@ class Home(Component):
     return self.webdriver.find_elements_by_css_selector('div.article')
 ```
 
-Controllers can be defined using the `Controller` class which can also be imported from `py_component_controller`.
+Controllers can be defined using the `Controller` class which can also be imported from `pyscc`.
 
 ```python
-from py_component_controller import Controller
+from pyscc import Controller
 from project.components import Home
 
 
@@ -82,15 +79,15 @@ As can be seen in the controller example, a component included in the constructo
 
 ## Testing
 
-All module related e2e tests are in the `py_component_controller/tests` subdirectory. To setup your environment run `make setup`. To stand up the mock site, run `make app`. This will serve the site on localhost:3000. To run the test suite, use `make tests`.
+All module related e2e tests are in the `tests` subdirectory. To setup your environment run `make setup`. To stand up the mock site, run `make app`. This will serve the site on localhost:3000. To run the test suite, use `make tests`.
 
 The mock site was created using Riot.js 3, SkeletonCSS, and webpack 3. It was designed to represent a common website layout with responsive capabilities. To add new features for unit tests, refer to [riot-todo](https://github.com/neetjn/riot-todo) and be sure to update the submodule commit accordingly.
 
 Requirements:
+* Python 2.7, 3.6 (with pip)
 * Chrome or Chromium (*last confirmed test used version 62*)
 * ChromeDriver (*last confirmed test used version 2.33*)
 * Node.js 6+ (with npm)
-* Python 2.7 (with pip)
 
 ### Contributors
 
