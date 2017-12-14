@@ -28,8 +28,8 @@ class Component(Resource):
     :param env: Additional variables to be used in properties.
     :type env: dict
     """
-    def __init__(self, webdriver, **kwargs):
-        self.webdriver = webdriver
+    def __init__(self, controller, **kwargs):
+        self.controller = controller
         super(Component, self).__init__(self, **kwargs)
         self.__selectors = {}
 
@@ -51,10 +51,3 @@ class Component(Resource):
             return self.webdriver.find_element_by_css_selector(self.__selectors.get(key))
         except (WebDriverException, ElementNotVisibleException):
             return None
-
-    meta = {
-        'required_fields': [
-            ('webdriver', (Remote, Firefox, Chrome, Safari, Opera)),
-            ('env', Resource)
-        ]
-    }
