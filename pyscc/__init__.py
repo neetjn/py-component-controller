@@ -15,5 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from .component import Component
-from .controller import Controller
+from pyscc.element import element
+from pyscc.component import Component
+from pyscc.controller import Controller

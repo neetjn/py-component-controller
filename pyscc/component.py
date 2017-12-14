@@ -17,7 +17,8 @@
 
 from selenium.webdriver import Remote, Firefox, Chrome, Safari, Opera
 from selenium.common.exceptions import WebDriverException, ElementNotVisibleException
-from .resource import Resource
+from pyscc.resource import Resource
+
 
 
 class Component(Resource):
@@ -32,4 +33,4 @@ class Component(Resource):
         super(Component, self).__init__(self, **kwargs)
 
     def register(name, selector):
-
+        setattr(self, name, )
