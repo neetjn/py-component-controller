@@ -75,7 +75,7 @@ class Product(Controller):
       .send_input(password, force=True)
     home.country_selection.trigger_event(event='change')\
       .click()
-    self.wait(timeout=5, condition=home.country_selection.invisible)
+    self.wait(timeout=5, condition=home.country_selection.check.invisible)
     self.logged_in = True
 
 product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
