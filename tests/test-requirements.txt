@@ -3,3 +3,4 @@ pyseleniumjs==1.3.4
 six
 pylint
 pytest-cov
+codecov

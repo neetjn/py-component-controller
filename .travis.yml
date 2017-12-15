@@ -6,8 +6,9 @@ env:
   - NODE_VERSION="8"
 before_install:
   - nvm install $NODE_VERSION
-  - pip install virtualenv
   - npm install -g chromedriver
+  - pip install virtualenv
+  - pip install codecov
 addons:
   chrome: stable
 install:
@@ -15,6 +16,7 @@ install:
 script:
   - make app
   - make tests
+  - codecov
 # deploy:
 #   provider: pypi
 #   user: neetjn
