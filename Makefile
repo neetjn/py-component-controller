@@ -10,7 +10,7 @@ setup:
 	npm --prefix tests/mock-site install
 
 app:
-	npm run --prefix mock-site app:detached
+	npm run --prefix tests/mock-site app:detached
 
 tests:
 # run e2e tests
