@@ -23,7 +23,7 @@ from six import string_types
 
 class Element(Resource):
     """
-    :Description: Base resource for component elements.
+    :Description: Base resource for component element.
     :param controller: Parent controller reference.
     :type controller: Controller
     :param selector: Selector of given element.
@@ -33,6 +33,7 @@ class Element(Resource):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
+        self.formatted = False
         self.check = Check(element)
 
     def __find_element(self, **kwargs):
@@ -47,8 +48,11 @@ class Element(Resource):
         :Description: Used to fetch a selenium WebElement.
         :return: WebElement, None
         """
-        self.selector = self._selector
-        return self.__find_element()
+        found = self.__find_element()
+        if self.formatted:
+            self.selector = self._selector
+            self.formatted = False
+        return found
 
     def fmt(self, **kwargs):
         """
@@ -56,6 +60,7 @@ class Element(Resource):
         :return: Element
         """
         self.selector = self.selector.format(**kwargs)
+        self.formatted = True
         return self
 
     @property
@@ -114,8 +119,56 @@ class Check(Resource):
     meta = {'required_fields': (('element', Element))}
 
 
+class Elements(Resource):
+    """
+    :Description: Base resource for component elements.
+    """
+    def __init__(self, controller, selector):
+        self.controller = controller
+        self.type = 'xpath' if '/' in selector else 'css_selector'
+        self.selector = self._selector = selector
+        self.formatted = False
+
+    def __find_elements(self, **kwargs):
+        getattr(self.controller.webdriver, 'find_elements_by_{type}'.format(
+            type=self.type))(kwargs.get('selector', self.selector))
+
+    def get(self):
+        """
+        :Description: Used to fetch a selenium WebElement.
+        :return: WebElement, None
+        """
+        found = self.__find_elements()
+        if self.formatted:
+            self.selector = self._selector # reset formatted selector
+            self.formatted = False
+        return found
+
+    def fmt(self, **kwargs):
+        """
+        :Description: Used to format selectors.
+        :return: Elements
+        """
+        self.selector = self.selector.format(**kwargs)
+        return self
+
+    meta = {
+        'required_fields': (
+            ('controller', Controller),
+            ('selector', string_types)
+        )
+    }
+
+
 def element(ref):
     @property
     def wrapper(self):
         return Element(self.controller, ref(self))
+    return wrapper
+
+
+def elements(ref):
+    @property
+    def wrapper(self):
+        return Elements(self.controller, ref(self))
     return wrapper
