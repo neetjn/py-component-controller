@@ -64,7 +64,6 @@ class Element(Resource):
         self.formatted = True
         return self
 
-    @property
     def click(self):
         """
         :Description: Execute a click on the given element.
@@ -76,7 +75,6 @@ class Element(Resource):
             return True
         return False
 
-    @property
     def scroll_to(self):
         """
         :Description: Scroll to the given element.
