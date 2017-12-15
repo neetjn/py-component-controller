@@ -22,7 +22,7 @@ wrappers for web elements
 
 from pyscc.controller import Controller
 from pyscc.resource import Resource
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 from six import string_types
 
 
@@ -93,6 +93,38 @@ class Element(Resource):
             return True
         return False
 
+    def wait_for(self, timeout, error=None):
+        """
+        :Description: Wait for a given element to become available.
+        :param timeout: Time in seconds to wait for element.
+        :type timeout: int
+        :param error: Error message, if passed will raise NoSuchElementException.
+        :type error: string
+        """
+        if not self.controller.wait(timeout=timeout, condition=self.check.available):
+            if error:
+                raise NoSuchElementException(error)
+            else:
+                return None
+
+        return self.get()
+
+    def wait_visible(self, timeout, error=None):
+        """
+        :Description: Wait for given element to become visible.
+        :param timeout: Time in seconds to wait for element.
+        :type timeout: int
+        :param error: Error message, if passed will raise a ElementNotVisibleException.
+        :type error: string
+        """
+        if not self.controller.wait(timeout=timeout, condition=self.check.visible):
+            if error:
+                raise ElementNotVisibleException(error)
+            else:
+                return None
+
+        return self.get()
+
     meta = {
         'required_fields': (
             ('controller', Controller),
@@ -104,8 +136,8 @@ class Element(Resource):
 class Check(Resource):
     """
     :Description: Base resource for individual element checks.
-    :param el: Element instance to reference.
-    :type el: Element
+    :param element: Element instance to reference.
+    :type element: Element
     """
     def __init__(self, element):
         self.element = element
@@ -175,6 +207,42 @@ class Elements(Resource):
         :return: int
         """
         return len(self.get())
+
+    def wait_for(self, timeout, length, strict=False, error=None):
+        """
+        :Description: Wait for...
+        :param timeout:
+        :type timeout: int
+        :param length:
+        :type length: int
+        :param strict:
+        :type strict: bool
+        :param error:
+        :type error: string
+        """
+        if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
+            strict else self.count() >= length):
+            if error:
+                raise NoSuchElementException(error)
+
+        return self.get()
+
+
+    def wait_visible(self, timeout, length, strict=False, error=None):
+        """
+        :Description: Wait for...
+        :param timeout:
+        :type timeout: int
+        :param length:
+        :type length: int
+        :param strict:
+        :type strict: bool
+        :param error:
+        :type error: string
+        """
+        self.wait_for(timeout, length, strict, error)
+        found = self.checks.visible()
+
 
     meta = {
         'required_fields': (
