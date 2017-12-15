@@ -210,14 +210,14 @@ class Elements(Resource):
 
     def wait_for(self, timeout, length, strict=False, error=None):
         """
-        :Description: Wait for...
-        :param timeout:
+        :Description: Wait for given length of elements to be available.
+        :param timeout: Time in seconds to wait for elements.
         :type timeout: int
-        :param length:
+        :param length: Number of elements to wait for.
         :type length: int
-        :param strict:
+        :param strict: Expect exactly the length of elements, no more.
         :type strict: bool
-        :param error:
+        :param error: Error message, if passed will raise NoSuchElementException.
         :type error: string
         """
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
@@ -230,18 +230,26 @@ class Elements(Resource):
 
     def wait_visible(self, timeout, length, strict=False, error=None):
         """
-        :Description: Wait for...
-        :param timeout:
+        :Description: Wait for given length of elements to be available and visible.
+        :param timeout: Time in seconds to wait for elements.
         :type timeout: int
-        :param length:
+        :param length: Number of elements to wait for.
         :type length: int
-        :param strict:
+        :param strict: Expect exactly the length of elements, no more.
         :type strict: bool
-        :param error:
+        :param error: Error message, if passed will raise ElementNotVisibleException.
         :type error: string
         """
-        self.wait_for(timeout, length, strict, error)
-        found = self.checks.visible()
+        if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
+            strict else self.count() >= length):
+            if error:
+                raise NoSuchElementException(error)
+
+        if not self.checks.visible():
+            if error:
+                raise ElementNotVisibleException(error)
+
+        return self.get()
 
 
     meta = {
