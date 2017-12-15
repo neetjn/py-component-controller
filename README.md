@@ -64,7 +64,7 @@ class Product(Controller):
     self.logged_in = False
 
   def count_articles(self):
-    return len(self.components.home.articles.get())
+    return self.components.home.articles.count()
 
   def login(self, username, password):
     home = self.components.home
