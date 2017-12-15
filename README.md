@@ -73,7 +73,8 @@ class Product(Controller):
       .send_input(username)
     home.password.wait_for(5, error=True)\
       .send_input(username)
-    ...
+    home.country_selection.trigger_event(event='change')\
+      .click()
     self.logged_in = True
 
 product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
