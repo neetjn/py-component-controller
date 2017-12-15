@@ -67,24 +67,41 @@ class Element(Resource):
     def click(self):
         """
         :Description: Execute a click on the given element.
-        :return: bool
+        :return: Element, None
         """
         found = self.get()
         if found:
             self.controller.js.click(found)
-            return True
-        return False
+            return self
+        return None
 
     def scroll_to(self):
         """
         :Description: Scroll to the given element.
-        :return: bool
+        :return: Element, None
         """
         found = self.get()
         if found:
             self.controller.js.scroll_into_view(found)
-            return True
-        return False
+            return self
+        return None
+
+    def trigger_event(self, event, event_type=None, options=None):
+        """
+        :Description: Dispatch event to given element.
+        :param event: Name of event to dispatch.
+        :type event: string
+        :param event_type: Type of the event to dispatch.
+        :type event_type: string
+        :param options: Options for event to dispatch.
+        :type options: dict
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.trigger_event(found, event, event_type, options)
+            return self
+        return None
 
     def wait_for(self, timeout, error=None):
         """
@@ -93,6 +110,7 @@ class Element(Resource):
         :type timeout: int
         :param error: Error message, if passed will raise NoSuchElementException.
         :type error: string
+        :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.available):
             if error:
@@ -100,7 +118,7 @@ class Element(Resource):
             else:
                 return None
 
-        return self.get()
+        return self
 
     def wait_visible(self, timeout, error=None):
         """
@@ -109,6 +127,7 @@ class Element(Resource):
         :type timeout: int
         :param error: Error message, if passed will raise a ElementNotVisibleException.
         :type error: string
+        :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.visible):
             if error:
@@ -116,7 +135,7 @@ class Element(Resource):
             else:
                 return None
 
-        return self.get()
+        return self
 
     meta = {
         'required_fields': (
