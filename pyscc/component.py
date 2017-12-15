@@ -15,8 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from selenium.webdriver import Remote, Firefox, Chrome, Safari, Opera
-from selenium.common.exceptions import WebDriverException, ElementNotVisibleException
 from pyscc.resource import Resource
 
 
@@ -30,7 +28,3 @@ class Component(Resource):
     def __init__(self, controller, **kwargs):
         self.controller = controller
         super(Component, self).__init__(self, **kwargs)
-
-    def register(name, selector):
-        # TODO: Figure out how to instantiate new function wrapped with element
-        setattr(self, name, )

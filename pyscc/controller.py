@@ -26,7 +26,7 @@ from pyseleniumjs import E2EJS
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
 
-from .resource import Resource
+from pyscc.resource import Resource
 
 
 class Controller(object):

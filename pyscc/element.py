@@ -34,7 +34,7 @@ class Element(Resource):
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
         self.formatted = False
-        self.check = Check(element)
+        self.check = Check(self)
 
     def __find_element(self, **kwargs):
         try:
@@ -67,6 +67,7 @@ class Element(Resource):
     def click(self):
         """
         :Description: Execute a click on the given element.
+        :return: bool
         """
         found = self.get()
         if found:
@@ -78,6 +79,7 @@ class Element(Resource):
     def scroll_to(self):
         """
         :Description: Scroll to the given element.
+        :return: bool
         """
         found = self.get()
         if found:
@@ -96,8 +98,8 @@ class Element(Resource):
 class Check(Resource):
     """
     :Description: Base resource for individual element checks.
-    :param element: Element instance to reference.
-    :type element: Element
+    :param el: Element instance to reference.
+    :type el: Element
     """
     def __init__(self, element):
         self.element = element
@@ -105,12 +107,14 @@ class Check(Resource):
     def available(self):
         """
         :Description: Get element availability.
+        :return: bool
         """
         return bool(self.element.get())
 
     def visible(self):
         """
         :Description: Get element visibility.
+        :return: bool
         """
         found = self.element.get()
         return found and \
@@ -122,12 +126,17 @@ class Check(Resource):
 class Elements(Resource):
     """
     :Description: Base resource for component elements.
+    :param controller: Parent controller reference.
+    :type controller: Controller
+    :param selector: Selector of given elements.
+    :type selector: string
     """
     def __init__(self, controller, selector):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
         self.formatted = False
+        self.checks = Checks(self)
 
     def __find_elements(self, **kwargs):
         getattr(self.controller.webdriver, 'find_elements_by_{type}'.format(
@@ -160,14 +169,46 @@ class Elements(Resource):
     }
 
 
-def element(ref):
+class Checks(Resource):
+    """
+    :Description: Base resource for multiple element checks.
+    :param elements: Elements instance to reference.
+    :type element: Elements
+    """
+    def __init__(self, elements):
+        self.elements = elements
+
+    def visible(self):
+        """
+        :Description: Used to check at least one element is available and all visible.
+        :return: bool
+        """
+        found = self.elements.get()
+        if not len(found):
+            return False
+        else:
+            for element in found:
+                if not self.elements.controller.js.is_visible(element):
+                    return False
+        return True
+
+    meta = {'required_fields': (('elements', Elements))}
+
+
+def component_element(ref):
+    """
+    :Description:
+    """
     @property
     def wrapper(self):
         return Element(self.controller, ref(self))
     return wrapper
 
 
-def elements(ref):
+def component_elements(ref):
+    """
+    :Description:
+    """
     @property
     def wrapper(self):
         return Elements(self.controller, ref(self))
