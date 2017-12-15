@@ -1,0 +1,62 @@
+from pyscc import Component, Controller, component_element, component_elements
+
+
+class HomePage(Component):
+
+    @component_element
+    def logo(self):
+        return 'header-partial h1.logo'
+
+    @component_element
+    def task(self):
+        return 'todo-task#task-{id}'
+
+    @component_elements
+    def tasks(self):
+        return 'todo-task'
+
+    @component_elements
+    def task_assignees(self):
+        return 'todo-task #assignee'
+
+    @component_element
+    def delete_tasks_button(self):
+        return '#deleteTasks'
+
+    @component_element
+    def create_task_assignee(self):
+        return '#taskAssignee'
+
+    @component_element
+    def create_task_title(self):
+        return '#taskTitle'
+
+    @component_element
+    def create_task_content(self):
+        return '#taskContent'
+
+
+class AppController(Controller):
+
+    def __init__(self, webdriver):
+        super(AppController, self).__init__(self, webdriver, {
+            'home': HomePage})
+
+    def go_home(self):
+        self.components.home.logo.click()
+
+    def deleteTask(self, tasks):
+        assert isinstance(tasks, (tuple, list)), 'Expected a tuple or list of tasks'
+        home = self.components.home
+        home.tasks.wait_for(
+            timeout=5, length=1, error='No available tasks to delete')
+        for task in tasks:
+            assert home.task.fmt(id=task).click(), 'Could not find task {}'.format(task)
+        home.delete_tasks_button.click()
+
+    def createTask(self, assignee, title, content):
+        home = self.components.home
+        home.create_task_assignee.wait_visible(5)
+        home.create_task_assignee.get().send_keys(assignee)
+        home.create_task_title.get().send_keys(title)
+        home.create_task_content.get().send_keys(content)
