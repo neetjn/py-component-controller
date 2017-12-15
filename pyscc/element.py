@@ -177,19 +177,35 @@ class Check(Resource):
 
     def available(self):
         """
-        :Description: Get element availability.
+        :Description: Check element available.
         :return: bool
         """
         return bool(self.element.get())
 
+    def not_available(self):
+        """
+        :Description: Check element not available.
+        :return: bool
+        """
+        return not bool(self.element.get())
+
     def visible(self):
         """
-        :Description: Get element visibility.
+        :Description: Check element visibility.
         :return: bool
         """
         found = self.element.get()
         return found and \
             self.element.controller.js.is_visible(found)
+
+    def invisible(self):
+        """
+        :Description: Get element invisible.
+        :return: bool
+        """
+        found = self.element.get()
+        return found and \
+            not self.element.controller.js.is_visible(found)
 
     meta = {'required_fields': (('element', Element))}
 
