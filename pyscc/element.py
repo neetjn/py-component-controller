@@ -231,13 +231,14 @@ class Elements(Resource):
         :type strict: bool
         :param error: Error message, if passed will raise NoSuchElementException.
         :type error: string
+        :return: Elements
         """
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
             strict else self.count() >= length):
             if error:
                 raise NoSuchElementException(error)
 
-        return self.get()
+        return self
 
 
     def wait_visible(self, timeout, length, strict=False, error=None):
@@ -251,6 +252,7 @@ class Elements(Resource):
         :type strict: bool
         :param error: Error message, if passed will raise ElementNotVisibleException.
         :type error: string
+        :return: Elements
         """
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
             strict else self.count() >= length):
@@ -261,7 +263,7 @@ class Elements(Resource):
             if error:
                 raise ElementNotVisibleException(error)
 
-        return self.get()
+        return self
 
 
     meta = {
