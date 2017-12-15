@@ -15,12 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""
-The resource module was created to help validate instantiated objects.
-Because py-component-controller dynamically generates so many objects,
-this base resource should help debug any inheritance issues at the front door.
-"""
-
 from six import iteritems
 
 

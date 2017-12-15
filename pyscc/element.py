@@ -15,11 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""
-To help simplify and modernize the official selenium bindings,
-wrappers for web elements
-"""
-
 from pyscc.controller import Controller
 from pyscc.resource import Resource
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
