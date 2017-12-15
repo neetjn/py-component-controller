@@ -2,6 +2,7 @@
 
 [![build](https://travis-ci.org/neetjn/py-component-controller.svg?branch=master)](https://travis-ci.org/neetjn/py-component-controller)
 [![Code Health](https://landscape.io/github/neetjn/py-component-controller/master/landscape.svg?style=flat)](https://landscape.io/github/neetjn/py-component-controller/master)
+[![codecov](https://codecov.io/gh/neetjn/py-component-controller/branch/master/graph/badge.svg)](https://codecov.io/gh/neetjn/py-component-controller)
 [![Join the chat at https://gitter.im/py-component-controller/Lobby](https://badges.gitter.im/py-component-controller/Lobby.svg)](https://gitter.im/py-component-controller/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **py-component-controller** is an opinionated framework for structuring selenium test suites. This project depends on the [pyselenium-js](https://github.com/neetjn/pyselenium-js) project.
