@@ -103,18 +103,37 @@ class Element(Resource):
             return self
         return None
 
+    def send_input(self, input, force=False):
+        """
+        :Description: Send input to element.
+        :param input: Input to send to given element.
+        :type input: string
+        :param force: Use for elements without an focus event handler.
+        :type force: bool
+        :return: Element, none
+        """
+        found = self.get()
+        if found:
+            if force:
+                self.controller.js.set_property(found, 'innerText', input)
+            else:
+                found.send_keys(input)
+            return self
+        return None
+
     def wait_for(self, timeout, error=None):
         """
         :Description: Wait for a given element to become available.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Error message, if passed will raise NoSuchElementException.
-        :type error: string
+        :type error: string, bool
         :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.available):
             if error:
-                raise NoSuchElementException(error)
+                raise NoSuchElementException(error if isinstance(error, string_types) else \
+                    'Element by selector "{}" not found'.format(self.selector))
             else:
                 return None
 
@@ -126,12 +145,13 @@ class Element(Resource):
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Error message, if passed will raise a ElementNotVisibleException.
-        :type error: string
+        :type error: string, bool
         :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.visible):
             if error:
-                raise ElementNotVisibleException(error)
+                raise ElementNotVisibleException(error if isinstance(error, string_types) else \
+                    'Element by selector "{}" not found or is not visible'.format(self.selector))
             else:
                 return None
 
@@ -236,7 +256,8 @@ class Elements(Resource):
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
             strict else self.count() >= length):
             if error:
-                raise NoSuchElementException(error)
+                raise NoSuchElementException(error if isinstance(error, string_types) else \
+                    '{} elements by selector "{}" not found'.format(length, self.selector))
 
         return self
 
@@ -254,14 +275,11 @@ class Elements(Resource):
         :type error: string
         :return: Elements
         """
-        if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
-            strict else self.count() >= length):
-            if error:
-                raise NoSuchElementException(error)
-
+        self.wait_for(timeout, length, strict, error)
         if not self.checks.visible():
             if error:
-                raise ElementNotVisibleException(error)
+                raise ElementNotVisibleException(error if isinstance(error, string_types) else \
+                    '{} elements by selector "{}" not visible'.format(length, self.selector))
 
         return self
 

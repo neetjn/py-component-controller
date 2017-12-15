@@ -72,11 +72,11 @@ class Product(Controller):
     username_field = home.username.wait_for(5)
     if not username_field:
       raise Error('Username field did not load within 5 seconds')
-    username_field.send_keys(username)
+    username_field.get().send_keys(username)
     password_field = home.password.wait_visible(5)
     if not password_field:
       raise Error('Password field was not visible after 5 seconds')
-    password_field.send_keys(password)
+    password_field.get().send_keys(password)
     ...
     self.logged_in = True
 
