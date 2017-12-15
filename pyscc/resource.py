@@ -34,6 +34,14 @@ class Resource(object): #pylint: disable=too-few-public-methods
         meta = getattr(self, 'meta', None)
         if meta and meta.get('required_fields'):
             required_fields = meta.get('required_fields')
-            if not any(getattr(self, field) is None for field in required_fields):
-                raise AttributeError(
-                    'Required fields "{}" were not available'.format(required_fields))
+            for field in required_fields:
+                if isinstance(field, (list, tuple)):
+                    field, types = field
+                    if not hasattr(self, field):
+                        raise AttributeError('Resource missing required field "{}"'.format(field))
+                    if not isinstance(getattr(self, field), type):
+                        raise ValueError(
+                            'Field "{}" is not of type "{}" as expected'.format(field, types))
+                else:
+                    if not hasattr(self, field):
+                        raise AttributeError('Resource missing required field "{}"'.format(field))
