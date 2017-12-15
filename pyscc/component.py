@@ -20,7 +20,6 @@ from selenium.common.exceptions import WebDriverException, ElementNotVisibleExce
 from pyscc.resource import Resource
 
 
-
 class Component(Resource):
     """
     :Description: Base resource for web components.
@@ -33,4 +32,5 @@ class Component(Resource):
         super(Component, self).__init__(self, **kwargs)
 
     def register(name, selector):
+        # TODO: Figure out how to instantiate new function wrapped with element
         setattr(self, name, )

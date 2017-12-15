@@ -15,7 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from pyscc.controller import Controller
 from pyscc.resource import Resource
+from selenium.common.exceptions import NoSuchElementException
+from six import string_types
 
 
 class Element(Resource):
@@ -23,28 +26,96 @@ class Element(Resource):
     :Description: Base resource for component elements.
     :param controller: Parent controller reference.
     :type controller: Controller
-    :return: Element
+    :param selector: Selector of given element.
+    :type selector: string
     """
-    def __init__(self, controller):
-        pass
+    def __init__(self, controller, selector):
+        self.controller = controller
+        self.type = 'xpath' if '/' in selector else 'css_selector'
+        self.selector = self._selector = selector
+        self.check = Check(element)
+
+    def __find_element(self, **kwargs):
+        try:
+            return getattr(self.controller.webdriver, 'find_element_by_{type}'.format(
+                type=self.type))(kwargs.get('selector', self.selector))
+        except NoSuchElementException:
+            return None
 
     def get(self):
         """
         :Description: Used to fetch a selenium WebElement.
+        :return: WebElement, None
         """
-        pass
+        self.selector = self._selector
+        return self.__find_element()
 
-    def is(self):
-        pass
+    def fmt(self, **kwargs):
+        """
+        :Description: Used to format selectors.
+        :return: Element
+        """
+        self.selector = self.selector.format(**kwargs)
+        return self
 
+    @property
     def click(self):
-        pass
+        """
+        :Description: Execute a click on the given element.
+        """
+        found = self.get()
+        if found:
+            self.controller.js.click(found)
+            return True
+        return False
 
+    @property
     def scroll_to(self):
-        pass
+        """
+        :Description: Scroll to the given element.
+        """
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            return True
+        return False
+
+    meta = {
+        'required_fields': (
+            ('controller', Controller),
+            ('selector', string_types)
+        )
+    }
 
 
-def element(el):
-  def wrapper(self):
+class Check(Resource):
+    """
+    :Description: Base resource for individual element checks.
+    :param element: Element instance to reference.
+    :type element: Element
+    """
+    def __init__(self, element):
+        self.element = element
 
-  return wrapper
+    def available(self):
+        """
+        :Description: Get element availability.
+        """
+        return bool(self.element.get())
+
+    def visible(self):
+        """
+        :Description: Get element visibility.
+        """
+        found = self.element.get()
+        return found and \
+            self.element.controller.js.is_visible(found)
+
+    meta = {'required_fields': (('element', Element))}
+
+
+def element(ref):
+    @property
+    def wrapper(self):
+        return Element(self.controller, ref(self))
+    return wrapper

@@ -43,7 +43,7 @@ class Controller(object):
     """
     def __init__(self, webdriver, base_url, components, **env):
         self.webdriver = self.__patch_webdriver(webdriver)
-        self.javascript = E2EJS(webdriver)
+        self.js = E2EJS(webdriver)
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
@@ -195,12 +195,12 @@ class Controller(object):
     def dump_browser_logs(self, name=None):
         """
         :Description: Dumps browser logs to local directory.
-        :Warning: `self.javascript.console_logger` must be executed to store logs.
+        :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: basestring
         """
         try:
-            logs = self.javascript.console_dump()
+            logs = self.js.console_dump()
             timestamp = str(int(time.time()))
             log_name = 'console.%s.json' % (('%s.%s' % (name, timestamp)) if name else timestamp)
             with open('%s' % log_name, 'a') as logfile:
@@ -260,7 +260,7 @@ class Controller(object):
         status = self.wait(
             timeout=timeout, reverse=reverse,
             condition=lambda: self.element_exists(
-                expression=lambda: self.javascript.is_visible(
+                expression=lambda: self.js.is_visible(
                     element=getattr(component, prop)
                 ) if visible else getattr(component, prop)
             )
