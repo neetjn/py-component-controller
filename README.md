@@ -69,7 +69,7 @@ class Product(Controller):
 
   def login(self, username, password):
     home = self.components.home
-    home.username.wait_for(5, error=True)\
+    home.username.wait_visible(5, error=True)\
       .send_input(username)
     home.password.wait_for(5, error=True)\
       .send_input(username)
