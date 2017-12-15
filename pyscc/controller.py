@@ -273,3 +273,18 @@ class Controller(object):
             ))
         else:
             return not failed
+
+    def exit(self, safe_exit=False):
+        """
+        :Description: Safely exit instance of webdriver.
+        :param safe_exit: Disable any possible alert or confirmation popup windows.
+        :type safe_exit: bool
+        """
+        if safe_exit:
+            self.webdriver.execute_script('delete window.alert; delete window.confirm')
+        try:
+            self.webdriver.stop_client()
+        except (WebDriverException, AttributeError):
+            self.logger.warn('Could not close remote driver')
+        finally:
+            self.webdriver.quit()

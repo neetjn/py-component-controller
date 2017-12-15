@@ -1,6 +1,7 @@
 from pyscc import Component, Controller, component_element, component_elements
 from selenium import webdriver
 from unittest import TestCase
+from time import time
 
 
 class HomePage(Component):
@@ -40,9 +41,9 @@ class HomePage(Component):
 
 class AppController(Controller):
 
-    def __init__(self, webdriver, base_url):
+    def __init__(self, webdriver, base_url, **env):
         super(AppController, self).__init__(self, webdriver, base_url, {
-            'home': HomePage})
+            'home': HomePage}, **env)
 
     def go_home(self):
         self.components.home.logo.click()
@@ -67,11 +68,14 @@ class AppController(Controller):
         home.create_task_title.get().send_keys(title)
         home.create_task_content.get().send_keys(content)
 
-        
- class BaseTest(TestCase):
-    
-    def setUp():
-        self.app = AppController(webdriver.Chrome(), 'http://localhost:3000')
-        
-    def tearDown():
+
+class BaseTest(TestCase):
+
+    def setUp(self):
+        self.app_url = 'http://localhost:3000'
+        self.created = time()
+        self.app = AppController(
+            webdriver.Chrome(), self.app_url, created=self.created)
+
+    def tearDown(self):
         self.app.exit()
