@@ -72,7 +72,7 @@ class Product(Controller):
     home.username.wait_visible(5, error=True)\
       .send_input(username)
     home.password.wait_for(5, error=True)\
-      .send_input(username)
+      .send_input(password, force=True)
     home.country_selection.trigger_event(event='change')\
       .click()
     self.logged_in = True
