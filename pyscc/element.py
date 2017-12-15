@@ -16,7 +16,8 @@
 # under the License.
 
 """
-
+To help simplify and modernize the official selenium bindings,
+wrappers for web elements
 """
 
 from pyscc.controller import Controller
@@ -167,6 +168,13 @@ class Elements(Resource):
         """
         self.selector = self.selector.format(**kwargs)
         return self
+
+    def count(self):
+        """
+        :Description: Used to count number of found elements.
+        :return: int
+        """
+        return len(self.get())
 
     meta = {
         'required_fields': (

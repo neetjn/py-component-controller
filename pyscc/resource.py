@@ -19,8 +19,6 @@
 The resource module was created to help validate instantiated objects.
 Because py-component-controller dynamically generates so many objects,
 this base resource should help debug any inheritance issues at the front door.
-
-Resources
 """
 
 from six import iteritems

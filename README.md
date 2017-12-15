@@ -20,28 +20,27 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.3`. Support is available for both Python 2.7 and 3.6.
 
-PCC can be installed using pip like so,
+Pyscc can be installed using pip like so,
 
 ```sh
 pip install pyscc
 ```
 
-To define a new component, simply import `Component` from `pyscc`.
+To define a new component, simply import `Component`, `component_element`, and `component_elements` from `pyscc`.
 
 ```python
-from pyscc import Component
+from pyscc import Component, component_element, component_elements
 
 
 class Home(Component):
 
-  @property
+  @component_element
   def username(self):
-    return self.find_element_by_css_selector('#username') if \
-      self.env.legacy else self.find_element_by_css_selector('#newUsername')
+    return '#user' if self.controller.env.legacy else '#username'
 
-  @property
+  @component_elements
   def articles(self):
-    return self.webdriver.find_elements_by_css_selector('div.article')
+    return 'div.articles'
 ```
 
 Controllers can be defined using the `Controller` class which can also be imported from `pyscc`.
@@ -65,12 +64,20 @@ class Product(Controller):
     self.logged_in = False
 
   def count_articles(self):
-    return len(self.components.home.articles)
+    return len(self.components.home.articles.get())
 
   def login(self, username, password):
-    # do login
-    self.logged_in = True
+    home = self.components.home
+    username_field = home.username.wait_for(5)
+    if not username_field:
+      raise Error('Username field did not load within 5 seconds')
+    username_field.send_keys(username)
+    password_field = home.password.wait_visible(5)
+    if not password_field:
+      raise Error('Password field was not visible after 5 seconds')
+    password_field.send_keys(password)
     ...
+    self.logged_in = True
 
 product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
 ```

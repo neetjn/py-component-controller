@@ -222,20 +222,6 @@ class Controller(object):
         self.webdriver.get_screenshot_as_file(filename=file_location)
         return file_location
 
-    @classmethod
-    def element_exists(cls, expression):
-        """
-        :Description: Verifies the expression
-        :param expression: (lambda|function) Expression to check against.
-        :return: bool
-        """
-        if callable(expression):
-            try:
-                return True if expression() else False
-            except NoSuchElementException:
-                return False
-        return False
-
     def element_available(self, component, prop, **kwargs):
         """
         :Description: Verify component element both exists and is visible.
@@ -260,9 +246,22 @@ class Controller(object):
         msg = kwargs.get('msg', None)
         reverse = kwargs.get('reverse', False)
 
+        def element_exists(expression):
+            """
+            :Description: Verifies the expression
+            :param expression: (lambda|function) Expression to check against.
+            :return: bool
+            """
+            if callable(expression):
+                try:
+                    return True if expression() else False
+                except NoSuchElementException:
+                    return False
+            return False
+
         status = self.wait(
             timeout=timeout, reverse=reverse,
-            condition=lambda: self.element_exists(
+            condition=lambda: element_exists(
                 expression=lambda: self.js.is_visible(
                     element=getattr(component, prop)
                 ) if visible else getattr(component, prop)
