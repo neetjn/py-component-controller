@@ -14,7 +14,7 @@ app:
 
 tests:
 # run e2e tests
-	venv/bin/pytest tests
+	venv/bin/pytest-cov --cov=pyscc tests
 
 package:
 	python setup.py sdist
