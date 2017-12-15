@@ -15,6 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+"""
+
+"""
+
 from pyscc.controller import Controller
 from pyscc.resource import Resource
 from selenium.common.exceptions import NoSuchElementException
@@ -35,6 +39,7 @@ class Element(Resource):
         self.selector = self._selector = selector
         self.formatted = False
         self.check = Check(self)
+        self.validate()
 
     def __find_element(self, **kwargs):
         try:
@@ -103,6 +108,7 @@ class Check(Resource):
     """
     def __init__(self, element):
         self.element = element
+        self.validate()
 
     def available(self):
         """
@@ -137,6 +143,7 @@ class Elements(Resource):
         self.selector = self._selector = selector
         self.formatted = False
         self.checks = Checks(self)
+        self.validate()
 
     def __find_elements(self, **kwargs):
         getattr(self.controller.webdriver, 'find_elements_by_{type}'.format(
@@ -177,6 +184,7 @@ class Checks(Resource):
     """
     def __init__(self, elements):
         self.elements = elements
+        self.validate()
 
     def visible(self):
         """
@@ -184,7 +192,7 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if not len(found):
+        if len(found):  #pylint: disable=len-as-condition
             return False
         else:
             for element in found:
@@ -197,19 +205,21 @@ class Checks(Resource):
 
 def component_element(ref):
     """
-    :Description:
+    :Description: Wrapper for singular component element.
+    :return: Element
     """
     @property
-    def wrapper(self):
+    def wrapper(self):  #pylint: disable=missing-docstring
         return Element(self.controller, ref(self))
     return wrapper
 
 
 def component_elements(ref):
     """
-    :Description:
+    :Description: Wrapper for multiple component element.
+    :return: Elements
     """
     @property
-    def wrapper(self):
+    def wrapper(self):  #pylint: disable=missing-docstring
         return Elements(self.controller, ref(self))
     return wrapper

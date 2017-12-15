@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+"""
+"""
+
 import os
 import uuid
 import logging as logger
@@ -43,7 +46,7 @@ class Controller(object):
     """
     def __init__(self, webdriver, base_url, components, **env):
         self.webdriver = self.__patch_webdriver(webdriver)
-        self.js = E2EJS(webdriver)
+        self.js = E2EJS(webdriver) #pylint: disable=invalid-name
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):

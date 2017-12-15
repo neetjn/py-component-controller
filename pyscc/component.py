@@ -15,16 +15,21 @@
 # specific language governing permissions and limitations
 # under the License.
 
+"""
+"""
+
+from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-class Component(Resource):
+class Component(Resource): #pylint: disable=too-few-public-methods
     """
     :Description: Base resource for web components.
     :param controller: Parent controller reference.
     :type controller: Controller
-    :return: Component
     """
-    def __init__(self, controller, **kwargs):
+    def __init__(self, controller):
         self.controller = controller
-        super(Component, self).__init__(self, **kwargs)
+        self.validate()
+
+    meta = {'required_fields': (('controller', Controller))}

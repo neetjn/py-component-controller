@@ -15,6 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
+"""
+The resource module was created to help validate instantiated objects.
+Because py-component-controller dynamically generates so many objects,
+this base resource should help debug any inheritance issues at the front door.
+
+Resources
+"""
+
 from six import iteritems
 
 
@@ -32,7 +40,6 @@ class Resource(object): #pylint: disable=too-few-public-methods
         :Description: Validate resource with defined meta data.
         """
         meta = getattr(self, 'meta', None)
-        # TODO: Add type checking
         if meta and meta.get('required_fields'):
             required_fields = meta.get('required_fields')
             if not any(getattr(self, field) is None for field in required_fields):
