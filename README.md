@@ -36,7 +36,7 @@ class Home(Component):
 
   @component_element
   def username(self):
-    return '#user' if self.controller.env.legacy else '#username'
+    return '#user' if self.env.legacy else '#username'
 
   @component_elements
   def articles(self):
