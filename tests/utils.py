@@ -51,7 +51,11 @@ class AppController(Controller):
         home.tasks.wait_for(
             timeout=5, length=1, error='No available tasks to delete')
         for task in tasks:
-            assert home.task.fmt(id=task).click(), 'Could not find task {}'.format(task)
+            task_el = home.task.fmt(id=task)
+            # TODO: finish controller
+            if 'disabled' not in self.js.get_attribute(task_el, 'class'):
+                task_el.click()
+                assert home.task.fmt(id=task).click(), 'Could not find task {}'.format(task)
         home.delete_tasks_button.click()
 
     def createTask(self, assignee, title, content):
