@@ -27,7 +27,7 @@ class Component(Resource): #pylint: disable=too-few-public-methods
     """
     def __init__(self, controller):
         self.controller = controller
-        self.webdriver = controller.webdriver
+        self.browser = controller.browser
         self.env = controller.env
         self.validate()
 

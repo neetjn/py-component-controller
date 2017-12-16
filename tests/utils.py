@@ -41,8 +41,8 @@ class HomePage(Component):
 
 class AppController(Controller):
 
-    def __init__(self, webdriver, base_url, **env):
-        super(AppController, self).__init__(self, webdriver, base_url, {
+    def __init__(self, browser, base_url, **env):
+        super(AppController, self).__init__(browser, base_url, {
             'home': HomePage}, **env)
 
     def go_home(self):

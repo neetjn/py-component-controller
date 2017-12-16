@@ -15,10 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from pyscc.controller import Controller
-from pyscc.resource import Resource
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 from six import string_types
+
+from pyscc.controller import Controller
+from pyscc.resource import Resource
 
 
 class Element(Resource):
@@ -40,7 +41,7 @@ class Element(Resource):
 
     def __find_element(self, **kwargs):
         try:
-            return getattr(self.controller.webdriver, 'find_element_by_{type}'.format(
+            return getattr(self.controller.browser, 'find_element_by_{type}'.format(
                 type=self.type))(kwargs.get('selector', self.selector))
         except NoSuchElementException:
             return None
@@ -295,7 +296,7 @@ class Elements(Resource):
         self.validate()
 
     def __find_elements(self, **kwargs):
-        getattr(self.controller.webdriver, 'find_elements_by_{type}'.format(
+        getattr(self.controller.browser, 'find_elements_by_{type}'.format(
             type=self.type))(kwargs.get('selector', self.selector))
 
     def get(self):

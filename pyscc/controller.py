@@ -32,8 +32,8 @@ from pyscc.resource import Resource
 class Controller(object):
     """
     :Description: Controller for managing components.
-    :param webdriver: Webdriver for controller and components to reference.
-    :type webdriver: WebDriver
+    :param browser: Webdriver for controller and components to reference.
+    :type browser: webdriver
     :param base_url: Base url for navigations, will navigate to this url in init.
     :type base_url: basestring
     :param components: Component objects to instantiate.
@@ -41,9 +41,9 @@ class Controller(object):
     :param env: Key value pairs to pass to instantiated components.
     :type env: **kwargs => dict
     """
-    def __init__(self, webdriver, base_url, components, **env):
-        self.webdriver = self.__patch_webdriver(webdriver)
-        self.js = E2EJS(webdriver) #pylint: disable=invalid-name
+    def __init__(self, browser, base_url, components, **env):
+        self.browser = self.__patch_webdriver(browser)
+        self.js = E2EJS(browser) #pylint: disable=invalid-name
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
@@ -54,7 +54,7 @@ class Controller(object):
         self.components = Resource(**{
             name: component(controller=self) for name, component in iteritems(components)})
 
-        self.webdriver.get(self.base_url)
+        self.browser.get(self.base_url)
 
     @staticmethod
     def __patch_webdriver(webdriver):
@@ -96,7 +96,7 @@ class Controller(object):
         :Description: Fetch the current url of controller's webdriver instance.
         :return: basestring
         """
-        return self.webdriver.current_url
+        return self.browser.current_url
 
     @property
     def title(self):
@@ -104,14 +104,14 @@ class Controller(object):
         :Description: Fetch the title of the controller's webdriver instance.
         :return: basestring
         """
-        return self.webdriver.title
+        return self.browser.title
 
     def refresh(self):
         """
         :Description: Refreshes primary window.
         """
-        self.webdriver.switch_to_default_content()  # necessary for safari
-        self.webdriver.refresh()
+        self.browser.switch_to_default_content()  # necessary for safari
+        self.browser.refresh()
 
     def navigate(self, route):
         """
@@ -119,7 +119,7 @@ class Controller(object):
         :param route: Route to navigate to using defined base url.
         :type route: basestring
         """
-        self.webdriver.get('{location}/{route}'.format(
+        self.browser.get('{location}/{route}'.format(
             location=self.base_url,
             route=route
         ))
@@ -133,8 +133,8 @@ class Controller(object):
         :type graceful: bool
         :return: bool
         """
-        for handle in self.webdriver.window_handles:
-            self.webdriver.switch_to_window(handle)
+        for handle in self.browser.window_handles:
+            self.browser.switch_to_window(handle)
             if graceful and title in self.title:
                 return True
             if not graceful and self.title == title:
@@ -150,8 +150,8 @@ class Controller(object):
         :type graceful: bool
         :return: bool
         """
-        for handle in self.webdriver.window_handles:
-            self.webdriver.switch_to_window(handle)
+        for handle in self.browser.window_handles:
+            self.browser.switch_to_window(handle)
             if graceful and location in self.location:
                 return True
             if not graceful and self.location == location:
@@ -168,7 +168,7 @@ class Controller(object):
         :param reverse: Will wait for the condition to evaluate to False instead of True.
         :param throw_error: Will throw error raised by condition at end of timeout.
         :type throw_error: bool
-        :return: None or condition()
+        :return: bool
         """
         if callable(condition):
             if not isinstance(timeout, int) or timeout < 1:
@@ -191,6 +191,7 @@ class Controller(object):
             return reverse
         else:
             time.sleep(timeout)
+            return True
 
     def dump_browser_logs(self, name=None):
         """
@@ -216,7 +217,7 @@ class Controller(object):
         :return: basestring
         """
         file_location = os.path.join('./', prefix + str(uuid.uuid4()) + '.png')
-        self.webdriver.get_screenshot_as_file(filename=file_location)
+        self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 
     def element_available(self, component, prop, **kwargs):
@@ -281,10 +282,10 @@ class Controller(object):
         :type safe_exit: bool
         """
         if safe_exit:
-            self.webdriver.execute_script('delete window.alert; delete window.confirm')
+            self.browser.execute_script('delete window.alert; delete window.confirm')
         try:
-            self.webdriver.stop_client()
+            self.browser.stop_client()
         except (WebDriverException, AttributeError):
             self.logger.warn('Could not close remote driver')
         finally:
-            self.webdriver.quit()
+            self.browser.quit()
