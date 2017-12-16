@@ -55,8 +55,9 @@ class AppController(Controller):
             home.tasks.wait_for(
                 timeout=5, error='No available tasks to delete')
             for task in tasks:
-                if 'disabled' not in home.task.fmt(id=task).get_attribute('class'):
-                    home.task.fmt(id=task).click()
+                task_el = home.task.fmt(id=task)
+                if 'disabled' not in task_el.get_attribute('class'):
+                    task_el.click()
         elif isinstance(tasks, int):
             task_el = home.task.fmt(id=tasks)
             if 'disabled' not in task_el.wait_for(timeout=5, error=True).get_attribute('class'):
