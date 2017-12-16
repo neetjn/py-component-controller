@@ -164,7 +164,7 @@ class Controller(object):
         :Description: Assisted delays between browser and main thread.
         :param timeout: Time in seconds to wait.
         :type timeout: int
-        :param condition: (lambda|function) Wait 1 to timeout seconds until condition met.
+        :param condition: (callable) Wait 1 to timeout seconds until condition met.
         :param reverse: Will wait for the condition to evaluate to False instead of True.
         :param throw_error: Will throw error raised by condition at end of timeout.
         :type throw_error: bool
@@ -248,7 +248,7 @@ class Controller(object):
         def element_exists(expression):
             """
             :Description: Verifies the expression
-            :param expression: (lambda|function) Expression to check against.
+            :param expression: (callable) Expression to check against.
             :return: bool
             """
             if callable(expression):
