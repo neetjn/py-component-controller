@@ -59,6 +59,7 @@ class AppController(Controller):
                     task_el.click()
         elif isinstance(tasks, int):
             task_el = home.task.fmt(id=tasks)
+            # TODO: left here, account for None return because no attribute class
             if 'disabled' not in task_el.wait_for(timeout=5, error=True).get_attribute('class'):
                 task_el.click()
         else:
