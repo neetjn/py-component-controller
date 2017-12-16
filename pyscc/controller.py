@@ -209,14 +209,15 @@ class Controller(object):
         except WebDriverException:
             self.logger.critical('Browser console was not overridden, could not return any logs.')
 
-    def screen_shot(self, prefix=''):
+    def screen_shot(self, prefix=None):
         """
         :Description: Takes a screen shot and saves it specified path.
         :param prefix: Prefix for screenshot.
         :type prefix: basestring
         :return: basestring
         """
-        file_location = os.path.join('./', prefix + str(uuid.uuid4()) + '.png')
+        file_location = os.path.join(
+            './', (prefix + '_' if prefix else '') + str(uuid.uuid4()) + '.png')
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 
