@@ -60,7 +60,7 @@ class Element(Resource):
         :type attribute: string
         :return: None, bool, int, float, string
         """
-        self.controller.js.get_attribute(self.get(), attribute)
+        return self.controller.js.get_attribute(self.get(), attribute)
 
     def set_attribute(self, attribute, value):
         """
@@ -85,7 +85,7 @@ class Element(Resource):
         :type prop: string
         :return: None, bool, int, float, string
         """
-        self.controller.js.get_property(self.get(), prop)
+        return self.controller.js.get_property(self.get(), prop)
 
     def set_property(self, prop, value):
         """
@@ -270,7 +270,7 @@ class Check(Resource):
         """
         return self.element.controller.js.wait_status(self.element.wait_handle)
 
-    meta = {'required_fields': (('element', Element))}
+    meta = {'required_fields': [('element', Element)]}
 
 
 class Elements(Resource):
@@ -390,7 +390,7 @@ class Checks(Resource):
                     return False
         return True
 
-    meta = {'required_fields': (('elements', Elements))}
+    meta = {'required_fields': [('elements', Elements)]}
 
 
 def component_element(ref):

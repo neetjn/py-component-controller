@@ -4,10 +4,10 @@ from tests.utils import BaseTest
 
 class TestController(BaseTest):
 
-    def test_controller_screenshot(self):
-        """test controller screenshot"""
-        file_name = self.app.screen_shot(prefix='test')
-        self.assertTrue(os.stat(file_name))
+    # def test_controller_screenshot(self):
+    #     """test controller screenshot"""
+    #     file_name = self.app.screen_shot(prefix='test')
+    #     self.assertTrue(os.stat(file_name))
 
     def test_controller_wait(self):
         """"test controller conditional wait"""
@@ -18,5 +18,5 @@ class TestController(BaseTest):
         self.assertTrue(self.app.wait(timeout=5, condition=lambda:
             home.tasks.count() == 2))
 
-    def test_controller_navigate(self):
-        pass
+    # def test_controller_navigate(self):
+    #     pass
