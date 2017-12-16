@@ -33,8 +33,9 @@ class Element(Resource):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
-        self.formatted = False
+        self.formatted = False  # used to reset formatted selectors
         self.check = Check(self)
+        self.wait_handle = None  # used for js waits
         self.validate()
 
     def __find_element(self, **kwargs):
@@ -51,7 +52,7 @@ class Element(Resource):
         """
         found = self.__find_element()
         if self.formatted:
-            self.selector = self._selector
+            self.selector = self._selector  # reset formatted selector
             self.formatted = False
         return found
 
@@ -157,6 +158,17 @@ class Element(Resource):
 
         return self
 
+    def wait_js(self, condition, interval):
+        """
+        :Description: Wait for element by javascript condition.
+        :param condition: Javascript condition to execute.
+        :type condition: string
+        :param interval: Interval to check condition by in ms.
+        :type interval: int
+        :return: Element, None
+        """
+        self.wait_handle = self.controller.js.wait(condition, interval, self.selector)
+
     meta = {
         'required_fields': (
             ('controller', Controller),
@@ -200,12 +212,18 @@ class Check(Resource):
 
     def invisible(self):
         """
-        :Description: Get element invisible.
+        :Description: Check element invisible.
         :return: bool
         """
         found = self.element.get()
         return found and \
             not self.element.controller.js.is_visible(found)
+
+    def wait_status(self):
+        """
+        :Description: Check javascript wait status.
+        """
+        return self.element.controller.js.wait_status(self.element.wait_handle)
 
     meta = {'required_fields': (('element', Element))}
 
@@ -222,7 +240,7 @@ class Elements(Resource):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
-        self.formatted = False
+        self.formatted = False  # used to reset formatted selectors
         self.checks = Checks(self)
         self.validate()
 
