@@ -154,11 +154,11 @@ class Element(Resource):
             return self
         return None
 
-    def send_input(self, input, force=False):
+    def send_input(self, value, force=False):
         """
         :Description: Send input to element.
-        :param input: Input to send to given element.
-        :type input: string
+        :param value: Input to send to given element.
+        :type value: string
         :param force: Use for elements without an focus event handler.
         :type force: bool
         :return: Element, none
@@ -166,9 +166,9 @@ class Element(Resource):
         found = self.get()
         if found:
             if force:
-                self.controller.js.set_property(found, 'innerText', input)
+                self.controller.js.set_property(found, 'innerText', value)
             else:
-                found.send_keys(input)
+                found.send_keys(value)
             return self
         return None
 
