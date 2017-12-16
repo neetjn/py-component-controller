@@ -58,13 +58,13 @@ class AppController(Controller):
                 if 'disabled' not in task_el.get_attribute('class'):
                     task_el.click()
         elif isinstance(tasks, int):
-            task_el = home.task.fmt(id=tasks)
-            # TODO: left here, account for None return because no attribute class
-            if 'disabled' not in task_el.wait_for(timeout=5, error=True).get_attribute('class'):
+            task_el = home.task.fmt(id=tasks).wait_for(timeout=5, error=True)
+            task_class = task_el.get_attribute('class')
+            if not task_class or 'disabled' not in task_class:
                 task_el.click()
         else:
             raise RuntimeError('Expected a task or list of tasks')
-        home.delete_tasks_button.click()
+        home.delete_tasks_button.get().click()
 
     def create_tasks(self, assignee, title, content):
         home = self.components.home

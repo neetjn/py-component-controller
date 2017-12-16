@@ -1,1 +1,1 @@
-from utils import BaseTest
+from tests.utils import BaseTest

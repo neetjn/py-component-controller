@@ -289,7 +289,7 @@ class Elements(Resource):
         self.validate()
 
     def __find_elements(self, **kwargs):
-        getattr(self.controller.browser, 'find_elements_by_{type}'.format(
+        return getattr(self.controller.browser, 'find_elements_by_{type}'.format(
             type=self.type))(kwargs.get('selector', self.selector))
 
     def get(self):
