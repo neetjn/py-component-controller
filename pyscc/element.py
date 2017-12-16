@@ -324,7 +324,7 @@ class Elements(Resource):
         """
         return len(self.get())
 
-    def wait_for(self, timeout, length, strict=False, error=None):
+    def wait_for(self, timeout, length=1, strict=False, error=None):
         """
         :Description: Wait for given length of elements to be available.
         :param timeout: Time in seconds to wait for elements.

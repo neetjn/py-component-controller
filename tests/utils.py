@@ -52,13 +52,10 @@ class AppController(Controller):
         assert isinstance(tasks, (tuple, list)), 'Expected a tuple or list of tasks'
         home = self.components.home
         home.tasks.wait_for(
-            timeout=5, length=1, error='No available tasks to delete')
+            timeout=5, error='No available tasks to delete')
         for task in tasks:
-            # TODO: clean once get_attribute, set_attribute, get_property, and set_property implemented
-            task_el = home.task.fmt(id=task).get()
-            if 'disabled' not in self.js.get_attribute(task_el, 'class'):
-                task_el.click()
-                assert home.task.fmt(id=task).click(), 'Could not find task {}'.format(task)
+            if 'disabled' not in home.task.fmt(id=task).get_attribute('class'):
+                home.task.fmt(id=task).click()
         home.delete_tasks_button.click()
 
     def createTask(self, assignee, title, content):
