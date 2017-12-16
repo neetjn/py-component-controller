@@ -49,7 +49,6 @@ class AppController(Controller):
         self.components.home.logo.click()
 
     def delete_tasks(self, tasks):
-        assert isinstance(tasks, (tuple, list)), 'Expected a tuple or list of tasks'
         home = self.components.home
         if isinstance(tasks, (tuple, list)):
             home.tasks.wait_for(

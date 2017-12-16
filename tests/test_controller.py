@@ -11,7 +11,12 @@ class TestController(BaseTest):
 
     def test_controller_wait(self):
         """"test controller conditional wait"""
-        self.app.delete_tasks(tasks=[1])
+        self.app.delete_tasks(tasks=1)
+        home = self.app.components.home
+        self.assertFalse(self.app.wait(timeout=5, condition=lambda:
+            home.tasks.count() == 3, reverse=True))
+        self.assertTrue(self.app.wait(timeout=5, condition=lambda:
+            home.tasks.count() == 2))
 
     def test_controller_navigate(self):
         pass
