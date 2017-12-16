@@ -48,17 +48,24 @@ class AppController(Controller):
     def go_home(self):
         self.components.home.logo.click()
 
-    def deleteTask(self, tasks):
+    def delete_tasks(self, tasks):
         assert isinstance(tasks, (tuple, list)), 'Expected a tuple or list of tasks'
         home = self.components.home
-        home.tasks.wait_for(
-            timeout=5, error='No available tasks to delete')
-        for task in tasks:
-            if 'disabled' not in home.task.fmt(id=task).get_attribute('class'):
-                home.task.fmt(id=task).click()
+        if isinstance(tasks, (tuple, list)):
+            home.tasks.wait_for(
+                timeout=5, error='No available tasks to delete')
+            for task in tasks:
+                if 'disabled' not in home.task.fmt(id=task).get_attribute('class'):
+                    home.task.fmt(id=task).click()
+        elif isinstance(tasks, int):
+            task_el = home.task.fmt(id=tasks)
+            if 'disabled' not in task_el.wait_for(timeout=5, error=True).get_attribute('class'):
+                task_el.click()
+        else:
+            raise RuntimeError('Expected a task or list of tasks')
         home.delete_tasks_button.click()
 
-    def createTask(self, assignee, title, content):
+    def create_tasks(self, assignee, title, content):
         home = self.components.home
         home.create_task_assignee.wait_visible(5)
         home.create_task_assignee.get().send_keys(assignee)

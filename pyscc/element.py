@@ -34,7 +34,6 @@ class Element(Resource):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
-        self.formatted = False  # used to reset formatted selectors
         self.check = Check(self)
         self.wait_handle = None  # used for js waits
         self.validate()
@@ -51,11 +50,7 @@ class Element(Resource):
         :Description: Used to fetch a selenium WebElement.
         :return: WebElement, None
         """
-        found = self.__find_element()
-        if self.formatted:
-            self.selector = self._selector  # reset formatted selector
-            self.formatted = False
-        return found
+        return self.__find_element()
 
     def get_attribute(self, attribute):
         """
@@ -113,7 +108,6 @@ class Element(Resource):
         :return: Element
         """
         self.selector = self.selector.format(**kwargs)
-        self.formatted = True
         return self
 
     def click(self):
@@ -291,7 +285,6 @@ class Elements(Resource):
         self.controller = controller
         self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
-        self.formatted = False  # used to reset formatted selectors
         self.checks = Checks(self)
         self.validate()
 
@@ -302,13 +295,9 @@ class Elements(Resource):
     def get(self):
         """
         :Description: Used to fetch a selenium WebElement.
-        :return: WebElement, None
+        :return: [WebElement, ...], None
         """
-        found = self.__find_elements()
-        if self.formatted:
-            self.selector = self._selector # reset formatted selector
-            self.formatted = False
-        return found
+        return self.__find_elements()
 
     def fmt(self, **kwargs):
         """
