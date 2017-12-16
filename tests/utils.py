@@ -54,8 +54,8 @@ class AppController(Controller):
         home.tasks.wait_for(
             timeout=5, length=1, error='No available tasks to delete')
         for task in tasks:
-            task_el = home.task.fmt(id=task)
-            # TODO: finish controller
+            # TODO: clean once get_attribute, set_attribute, get_property, and set_property implemented
+            task_el = home.task.fmt(id=task).get()
             if 'disabled' not in self.js.get_attribute(task_el, 'class'):
                 task_el.click()
                 assert home.task.fmt(id=task).click(), 'Could not find task {}'.format(task)
