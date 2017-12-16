@@ -68,10 +68,11 @@ class AppController(Controller):
 
     def create_tasks(self, assignee, title, content):
         home = self.components.home
-        home.create_task_assignee.wait_visible(5)
-        home.create_task_assignee.get().send_keys(assignee)
-        home.create_task_title.get().send_keys(title)
-        home.create_task_content.get().send_keys(content)
+        home.create_task_assignee.wait_for(5, error=True)\
+            .send_input(assignee)
+        home.create_task_assignee.send_input(assignee)
+        home.create_task_title.send_input(title)
+        home.create_task_content.send_input(content)
 
 
 class BaseTest(TestCase):
