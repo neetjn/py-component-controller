@@ -56,6 +56,56 @@ class Element(Resource):
             self.formatted = False
         return found
 
+    def get_attribute(self, attribute):
+        """
+        :Description: Used to fetch specified element attribute.
+        :Warning: This method does not check if element is available.
+        :param attribute: Attribute of element to target.
+        :type attribute: string
+        :return: None, bool, int, float, string
+        """
+        self.controller.js.get_attribute(self.get(), attribute)
+
+    def set_attribute(self, attribute, value):
+        """
+        :Description: Used to set specified element attribute.
+        :param attribute: Attribute of element to target.
+        :type attribute: string
+        :param value: Value to set specified element attribute to.
+        :type value: None, bool, int, float, string
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.set_attribute(found, attribute, value)
+            return self
+        return None
+
+    def get_property(self, prop):
+        """
+        :Description: Used to fetch specified element property.
+        :Warning: This method does not check if element is available.
+        :param prop: Property of element to target.
+        :type prop: string
+        :return: None, bool, int, float, string
+        """
+        self.controller.js.get_property(self.get(), prop)
+
+    def set_property(self, prop, value):
+        """
+        :Description: Used to set specified element property.
+        :param prop: Property of element to target.
+        :type prop: string
+        :param value: Value to set specified element property to.
+        :type value: None, bool, int, float, string
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.set_property(found, prop, value)
+            return self
+        return None
+
     def fmt(self, **kwargs):
         """
         :Description: Used to format selectors.
