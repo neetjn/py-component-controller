@@ -287,6 +287,6 @@ class Controller(object):
         try:
             self.browser.stop_client()
         except (WebDriverException, AttributeError):
-            self.logger.warn('Could not close remote driver')
+            self.logger.warning('Could not close remote driver')
         finally:
             self.browser.quit()
