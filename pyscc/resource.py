@@ -39,7 +39,7 @@ class Resource(object): #pylint: disable=too-few-public-methods
                     field, types = field
                     if not hasattr(self, field):
                         raise AttributeError('Resource missing required field "{}"'.format(field))
-                    if not isinstance(getattr(self, field), type):
+                    if not isinstance(getattr(self, field), types):
                         raise ValueError(
                             'Field "{}" is not of type "{}" as expected'.format(field, types))
                 else:

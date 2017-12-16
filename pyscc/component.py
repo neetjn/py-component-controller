@@ -31,4 +31,4 @@ class Component(Resource): #pylint: disable=too-few-public-methods
         self.env = controller.env
         self.validate()
 
-    meta = {'required_fields': (('controller', Controller))}
+    meta = {'required_fields': [('controller', Controller)]}
