@@ -12,9 +12,9 @@ setup:
 app:
 	npm run --prefix tests/mock-site app:detached
 
-tests:
+test:
 # run e2e tests
-	venv/bin/pytest-cov --cov=pyscc tests
+	venv/bin/pytest --cov=pyscc tests/test_*.py
 
 package:
 	python setup.py sdist
