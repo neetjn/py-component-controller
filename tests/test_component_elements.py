@@ -128,17 +128,10 @@ class TestElement(BaseTest):
         with self.assertRaises(NoSuchElementException):
             self.tasks.wait_visible(timeout=1, length=4, error=True)
 
-    def test_elements_wrapper_count(self):
-        """test elements wrapper element count"""
-        self.assertEqual(self.tasks.count(), 3)
-
     def test_elements_wrapper_text(self):
-        self.tasks.wait_for(timeout=5, length=3)
+        self.app.wait(timeout=1)  # wait for transitions
         for task in self.tasks.text():
             self.assertIn('2017', task)
         for task in self.tasks.text(raw=True):
             self.assertIn('r-sref="/profile/', task)
 
-    def test_elements_wrapper_checks(self):
-        """verify elements wrapper checks module"""
-        self.assertTrue(self.tasks.checks.visible())
