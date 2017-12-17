@@ -221,61 +221,6 @@ class Controller(object):
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 
-    def element_available(self, component, prop, **kwargs):
-        """
-        :Description: Verify component element both exists and is visible.
-        :param component: Component reference to target.
-        :type component: Component
-        :param prop: Property of component to check.
-        :type prop: basestring
-        :param visible: Check for visibility.
-        :type visible: bool
-        :param error: Error on failure, else return bool status.
-        :type error: bool
-        :param timeout: Time in seconds to wait for property.
-        :type timeout: int
-        :param msg: Message to throw if property validity not met and @error is True.
-        :type msg: basestring
-        :param reverse: Check for the inavailability of target element.
-        :return: bool
-        """
-        visible = kwargs.get('visible', True)
-        error = kwargs.get('error', True)
-        timeout = kwargs.get('timeout', 1)
-        msg = kwargs.get('msg', None)
-        reverse = kwargs.get('reverse', False)
-
-        def element_exists(expression):
-            """
-            :Description: Verifies the expression
-            :param expression: (callable) Expression to check against.
-            :return: bool
-            """
-            if callable(expression):
-                try:
-                    return True if expression() else False
-                except NoSuchElementException:
-                    return False
-            return False
-
-        status = self.wait(
-            timeout=timeout, reverse=reverse,
-            condition=lambda: element_exists(
-                expression=lambda: self.js.is_visible(
-                    element=getattr(component, prop)
-                ) if visible else getattr(component, prop)
-            )
-        )  # exit on completion
-
-        failed = (reverse and status) or (not reverse and not status)
-        if error and failed:
-            raise RuntimeError(msg if msg else 'Component property "%s" %s %s' % (
-                prop, 'exists' if reverse else 'does not exist', 'or is not visible' \
-                    if not reverse and visible else ''
-            ))
-        else:
-            return not failed
-
     def exit(self, safe_exit=False):
         """
         :Description: Safely exit instance of webdriver.
