@@ -29,10 +29,10 @@ Pyscc can be installed using pip like so,
 pip install pyscc
 ```
 
-To define a new component, simply import `Component`, `component_element`, and `component_elements` from `pyscc`.
+To define a new component, simply import `Component`, `component_element`, `component_elements`, and `component_group` from `pyscc`.
 
 ```python
-from pyscc import Component, component_element, component_elements
+from pyscc import Component, component_element, component_elements, component_group
 
 
 class Home(Component):
@@ -44,6 +44,14 @@ class Home(Component):
   @component_elements
   def articles(self):
     return 'div.articles'
+
+  @component_group
+  def social_links(self):
+    return {
+      'facebook': 'a#facebook',
+      'twitter': 'a#twitter',
+      'linkedin': 'a#linkedin',
+    }
 ```
 
 Controllers can be defined using the `Controller` class which can also be imported from `pyscc`.

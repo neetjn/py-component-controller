@@ -10,16 +10,17 @@ class TestElement(BaseTest):
 
     def setUp(self):
         super(TestElement, self).setUp()
-        self.social_buttons = self.components.header.social_buttons
+        self.social_buttons = self.app.components.header.social_buttons
         self.logo = self.app.components.header.riot_logo
         self.task = self.app.components.home.task
         self.tasks = self.app.components.home.tasks
+        self.delete_tasks = self.app.components.home.delete_tasks_button
 
     def test_element_group(self):
         """test element groups are generated as intended"""
         self.assertIsInstance(self.social_buttons, Resource)
         for s in ('twitter', 'facebook', 'linkedin'):
-            self.assertTrue(hasattr(self.social_buttons), s)
+            self.assertTrue(hasattr(self.social_buttons, s))
             self.assertIsInstance(getattr(self.social_buttons, s), Element)
 
     def test_element_wrapper(self):
@@ -33,6 +34,7 @@ class TestElement(BaseTest):
     def test_element_wrapper_fmt(self):
         """test element wrapper selector formatting"""
         task = self.task.fmt(id=1)
+        self.app.wait(timeout=5, condition=task.get)
         self.assertIsInstance(task.get(), WebElement)
         self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
 
@@ -50,11 +52,21 @@ class TestElement(BaseTest):
         """test element wrapper javascript wait"""
         self.task.fmt(id=2)
         self.assertEqual(
-            self.task.wait_js(
-                '$el.getAttribute("class").indexOf("disabled") == -1', 250), self.task)
-        self.assertFalse(self.task.check.wait_status())
+            self.delete_tasks.wait_js(
+                '$el.getAttribute("class").indexOf("is-danger") == -1', 50), self.delete_tasks)
+        self.assertFalse(self.delete_tasks.check.wait_status())
         self.task.click()
-        self.assertTrue(self.task.check.wait_status())
+        self.assertTrue(self.app.wait(timeout=5, condition=self.delete_tasks.check.wait_status))
+
+    def test_element_wrapper_attribute(self):
+        """test element wrapper get set attribute"""
+        self.assertEqual(self.logo.set_attribute(attribute='some', value='value'), self.logo)
+        self.assertEqual(self.logo.get_attribute(attribute='some'), 'value')
+
+    def test_element_wrapper_property(self):
+        """test element wrapper get set property"""
+        self.assertEqual(self.logo.set_property(prop='some', value='value'), self.logo)
+        self.assertEqual(self.logo.get_property(prop='some'), 'value')
 
     def test_element_wrapper_check(self):
         """verify element wrapper check module"""
