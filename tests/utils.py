@@ -97,10 +97,10 @@ class BaseTest(TestCase):
     def setUp(self):
         self.app_url = 'http://localhost:3000'
         self.created = time()
-        #chrome_options = webdriver.ChromeOptions()
-        #chrome_options.add_argument('--headless')
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless')
         self.app = AppController(
-            webdriver.Chrome(), self.app_url, created=self.created)
+            webdriver.Chrome(chrome_options=chrome_options), self.app_url, created=self.created)
 
     def tearDown(self):
         self.app.exit()
