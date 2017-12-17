@@ -37,7 +37,7 @@ class TestController(BaseTest):
     def test_controller_window_detection(self):
         """test controller window detection"""
         header = self.app.components.header
-        header.twitter_button.get().click()
+        header.social_buttons.twitter.get().click()
         self.assertTrue(
             self.app.wait(timeout=5, condition=lambda: self.app.window_by_location(
                 'https://twitter.com/neet_jn')))

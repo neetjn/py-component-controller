@@ -16,7 +16,7 @@
 # under the License.
 
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
-from six import string_types
+from six import string_types, iteritems
 
 from pyscc.controller import Controller
 from pyscc.resource import Resource
@@ -440,5 +440,6 @@ def component_group(ref):
     @property
     def wrapper(self): #pylint: disable=missing-docstring
         return Resource(**{
-            element: Element(self.controller, selector) for element, selector in ref(self)})
+            element: Element(self.controller, selector) \
+                for element, selector in iteritems(ref(self))})
     return wrapper

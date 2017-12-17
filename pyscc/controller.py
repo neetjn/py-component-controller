@@ -20,11 +20,11 @@ import uuid
 import logging as logger
 import time
 from types import MethodType
-from six import iteritems
 
 from pyseleniumjs import E2EJS
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
+from six import iteritems
 
 from pyscc.resource import Resource
 

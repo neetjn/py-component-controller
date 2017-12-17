@@ -1,7 +1,9 @@
-from pyscc import Component, Controller, component_element, component_elements
-from selenium import webdriver
-from unittest import TestCase
 from time import time
+from unittest import TestCase
+
+from pyscc import Component, Controller, component_element, component_elements, \
+    component_group
+from selenium import webdriver
 
 
 class Header(Component):
@@ -10,17 +12,13 @@ class Header(Component):
     def riot_logo(self):
         return '#riot'
 
-    @component_element
-    def twitter_button(self):
-        return 'a[title="twitter"]'
-
-    @component_element
-    def linkedin_button(self):
-        return 'a[title="linked"]'
-
-    @component_element
-    def facebook_button(self):
-        return 'a[title="facebook"]'
+    @component_group
+    def social_buttons(self):
+        return {
+            'twitter': 'a[title="twitter"]',
+            'linkedin': 'a[title="linked"]',
+            'facebook': 'a[title="facebook"]'
+        }
 
 
 class HomePage(Component):
