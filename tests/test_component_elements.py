@@ -70,17 +70,23 @@ class TestElement(BaseTest):
         self.assertEqual(self.logo.set_property(prop='some', value='value'), self.logo)
         self.assertEqual(self.logo.get_property(prop='some'), 'value')
 
-    def test_element_send_input_get_value(self):
+    def test_element_wraooer_send_input_get_value(self):
         """test element wrapper send input and get value"""
         random_str = str(uuid4())
         self.assertEqual(self.create_task_assignee.send_input(random_str), self.create_task_assignee)
         self.assertEqual(self.create_task_assignee.value(), random_str)
 
-    def test_element_get_text(self):
+    def test_element_wrapper_get_text(self):
         """test element wrapper get text"""
         self.assertEqual(self.create_task_assignee_label.text(), 'Assignee')
         self.assertEqual(
             self.delete_tasks.text(raw=True), ' <i class=\"ico ico-left fi-trash\"></i> Delete Completed ')
+
+    def test_element_wrapper_trigger_event(self):
+        """test element wrapper trigger event"""
+        self.delete_tasks.trigger_event('click', 'MouseEvent', {'bubbles': True})
+        self.task.fmt(id=2)
+        self.assertTrue(self.app.wait(timeout=5, condition=self.task.check.not_available))
 
     def test_element_wrapper_check(self):
         """verify element wrapper check module"""
