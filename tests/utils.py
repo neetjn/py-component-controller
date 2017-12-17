@@ -4,6 +4,21 @@ from unittest import TestCase
 from time import time
 
 
+class Header(Component):
+
+    @component_element
+    def twitter_button(self):
+        return 'a[title="twitter"]'
+
+    @component_element
+    def linkedin_button(self):
+        return 'a[title="linked"]'
+
+    @component_element
+    def facebook_button(self):
+        return 'a[title="facebook"]'
+
+
 class HomePage(Component):
 
     @component_element
@@ -43,7 +58,9 @@ class AppController(Controller):
 
     def __init__(self, browser, base_url, **env):
         super(AppController, self).__init__(browser, base_url, {
-            'home': HomePage}, **env)
+            'header': Header,
+            'home': HomePage
+        }, **env)
 
     def go_home(self):
         self.components.home.logo.click()
@@ -80,10 +97,10 @@ class BaseTest(TestCase):
     def setUp(self):
         self.app_url = 'http://localhost:3000'
         self.created = time()
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--headless')
+        #chrome_options = webdriver.ChromeOptions()
+        #chrome_options.add_argument('--headless')
         self.app = AppController(
-            webdriver.Chrome(chrome_options=chrome_options), self.app_url, created=self.created)
+            webdriver.Chrome(), self.app_url, created=self.created)
 
     def tearDown(self):
         self.app.exit()
