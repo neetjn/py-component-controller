@@ -17,6 +17,7 @@ class TestElement(BaseTest):
         self.task = self.app.components.home.task
         self.tasks = self.app.components.home.tasks
         self.delete_tasks = self.app.components.home.delete_tasks_button
+        self.author = self.app.components.footer.author
 
     def test_element_group(self):
         """test element groups are generated as intended"""
@@ -87,6 +88,12 @@ class TestElement(BaseTest):
         self.delete_tasks.trigger_event('click', 'MouseEvent', {'bubbles': True})
         self.task.fmt(id=2)
         self.assertTrue(self.app.wait(timeout=5, condition=self.task.check.not_available))
+
+    def test_element_wrapper_scroll_to(self):
+        """test element wrapper scroll to"""
+        original_offsets = self.app.js.get_scrolling_offsets
+        self.assertEqual(self.author.scroll_to(), self.author)
+        self.assertTrue(self.app.js.get_scrolling_offsets['y'] > original_offsets['y'])
 
     def test_element_wrapper_check(self):
         """verify element wrapper check module"""

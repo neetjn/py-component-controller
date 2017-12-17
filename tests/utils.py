@@ -60,11 +60,19 @@ class HomePage(Component):
         return '#taskContent'
 
 
+class Footer(Component):
+
+    @component_element
+    def author(self):
+        return 'a#author'
+
+
 class AppController(Controller):
 
     def __init__(self, browser, base_url, **env):
         super(AppController, self).__init__(browser, base_url, {
             'header': Header,
+            'footer': Footer,
             'home': HomePage
         }, **env)
 
