@@ -15,7 +15,7 @@ install:
   - make setup
 script:
   - make app
-  - make tests
+  - make test
   - codecov
 # deploy:
 #   provider: pypi
