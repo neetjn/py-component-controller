@@ -181,7 +181,6 @@ class Element(Resource):
     def get_text(self, raw=False):
         """
         :Description: Get element text value.
-        :Warning: This method does not check if element is available.
         :param raw: Extract inner html from element.
         :type raw: bool
         :return: string
@@ -372,6 +371,25 @@ class Elements(Resource):
         """
         return len(self.get())
 
+    def get_text(self, raw=False):
+        """
+        :Description: Get list of element text values.
+        :param raw: Extract inner html from element.
+        :type raw: bool
+        :return: [string, ...], None
+        """
+        found = self.get()
+        if found:
+            collection = []
+            if raw:
+                for element in found:
+                    collection.append(self.controller.js.get_raw_text(element))
+            else:
+                for element in found:
+                    collection.append(element.text)
+            return collection
+        return None
+
     def wait_for(self, timeout, length=1, strict=False, error=None):
         """
         :Description: Wait for given length of elements to be available.
@@ -393,7 +411,6 @@ class Elements(Resource):
 
         return self
 
-
     def wait_visible(self, timeout, length, strict=False, error=None):
         """
         :Description: Wait for given length of elements to be available and visible.
@@ -414,7 +431,6 @@ class Elements(Resource):
                     '{} elements by selector "{}" not visible'.format(length, self.selector))
 
         return self
-
 
     meta = {
         'required_fields': (
