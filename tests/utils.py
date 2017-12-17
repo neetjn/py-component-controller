@@ -7,6 +7,10 @@ from time import time
 class Header(Component):
 
     @component_element
+    def riot_logo(self):
+        return '#riot'
+
+    @component_element
     def twitter_button(self):
         return 'a[title="twitter"]'
 

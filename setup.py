@@ -18,7 +18,7 @@ setup(
     ],
     install_requires=[
         'selenium==3.6.0',
-        'pyseleniumjs==1.3.4',
+        'pyseleniumjs==1.3.5',
         'six'
     ],
     packages=['pyscc']

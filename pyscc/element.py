@@ -107,7 +107,7 @@ class Element(Resource):
         :Description: Used to format selectors.
         :return: Element
         """
-        self.selector = self.selector.format(**kwargs)
+        self.selector = self._selector.format(**kwargs)
         return self
 
     def click(self):
@@ -304,7 +304,7 @@ class Elements(Resource):
         :Description: Used to format selectors.
         :return: Elements
         """
-        self.selector = self.selector.format(**kwargs)
+        self.selector = self._selector.format(**kwargs)
         return self
 
     def count(self):

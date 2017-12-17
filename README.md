@@ -19,7 +19,7 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.4`. Support is available for both Python 2.7 and 3.6.
+This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.5`. Support is available for both Python 2.7 and 3.6.
 
 Pyscc can be installed using pip like so,
 
