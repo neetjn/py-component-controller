@@ -473,11 +473,11 @@ class Checks(Resource):
         """
         found = self.elements.get()
         if len(found):  #pylint: disable=len-as-condition
-            return False
-        else:
             for element in found:
                 if not self.elements.controller.js.is_visible(element):
                     return False
+        else:
+            return False
         return True
 
     meta = {'required_fields': [('elements', Elements)]}

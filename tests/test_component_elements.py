@@ -4,6 +4,7 @@ from pyscc.element import Element, Elements
 from pyscc.resource import Resource
 from tests.utils import BaseTest
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 
 
 class TestElement(BaseTest):
@@ -45,11 +46,15 @@ class TestElement(BaseTest):
         """test element wrapper wait"""
         self.assertEqual(self.logo.wait_for(timeout=1), self.logo)
         self.assertEqual(self.task.wait_for(timeout=1), None)
+        with self.assertRaises(NoSuchElementException):
+            self.task.wait_for(timeout=1, error=True)
 
     def test_element_wrapper_wait_visibility(self):
         """test element wrapper visibility wait"""
         self.assertEqual(self.logo.wait_visible(timeout=1), self.logo)
         self.assertEqual(self.logo.wait_invisible(timeout=5), self.logo)
+        with self.assertRaises(ElementNotVisibleException):
+            self.logo.wait_visible(timeout=1, error=True)
 
     def test_element_wrapper_js_wait(self):
         """test element wrapper javascript wait"""
@@ -111,6 +116,29 @@ class TestElement(BaseTest):
         self.assertTrue(hasattr(self.tasks, 'checks'))
         self.assertEqual(self.app, self.tasks.controller)
 
+    def test_elements_wrapper_wait_for(self):
+        """test elements wrapper wait for"""
+        self.assertEqual(self.tasks.wait_for(timeout=5, length=3), self.tasks)
+        with self.assertRaises(NoSuchElementException):
+            self.tasks.wait_for(timeout=1, length=4, error=True)
+
+    def test_elements_wrapper_wait_visible(self):
+        """test elements wrapper wait visible"""
+        self.assertEqual(self.tasks.wait_visible(timeout=5, length=3), self.tasks)
+        with self.assertRaises(NoSuchElementException):
+            self.tasks.wait_visible(timeout=1, length=4, error=True)
+
+    def test_elements_wrapper_count(self):
+        """test elements wrapper element count"""
+        self.assertEqual(self.tasks.count(), 3)
+
+    def test_elements_wrapper_text(self):
+        self.tasks.wait_for(timeout=5, length=3)
+        for task in self.tasks.text():
+            self.assertIn('2017', task)
+        for task in self.tasks.text(raw=True):
+            self.assertIn('r-sref="/profile/', task)
+
     def test_elements_wrapper_checks(self):
         """verify elements wrapper checks module"""
-        pass
+        self.assertTrue(self.tasks.checks.visible())
