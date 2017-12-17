@@ -45,12 +45,42 @@ class Element(Resource):
         except NoSuchElementException:
             return None
 
+    def fmt(self, **kwargs):
+        """
+        :Description: Used to format selectors.
+        :return: Element
+        """
+        self.selector = self._selector.format(**kwargs)
+        return self
+
     def get(self):
         """
         :Description: Used to fetch a selenium WebElement.
         :return: WebElement, None
         """
         return self.__find_element()
+
+    def text(self, raw=False):
+        """
+        :Description: Get element text value.
+        :param raw: Extract inner html from element.
+        :type raw: bool
+        :return: string
+        """
+        found = self.get()
+        if found:
+            return self.controller.js.get_raw_text(found) if raw else found.text
+        return None
+
+    def value(self):
+        """
+        :Description: Get input element value.
+        :return: string
+        """
+        found = self.get()
+        if found:
+            return self.controller.js.get_value(found)
+        return None
 
     def get_attribute(self, attribute):
         """
@@ -101,14 +131,6 @@ class Element(Resource):
             self.controller.js.set_property(found, prop, value)
             return self
         return None
-
-    def fmt(self, **kwargs):
-        """
-        :Description: Used to format selectors.
-        :return: Element
-        """
-        self.selector = self._selector.format(**kwargs)
-        return self
 
     def click(self):
         """
@@ -175,22 +197,6 @@ class Element(Resource):
                 self.controller.js.set_property(found, 'innerText', value)
             else:
                 found.send_keys(value)
-            return self
-        return None
-
-    def get_text(self, raw=False):
-        """
-        :Description: Get element text value.
-        :param raw: Extract inner html from element.
-        :type raw: bool
-        :return: string
-        """
-        found = self.get()
-        if found:
-            if raw:
-                return self.controller.js.get_raw_text(found)
-            else:
-                return found.text
             return self
         return None
 
@@ -349,13 +355,6 @@ class Elements(Resource):
         return getattr(self.controller.browser, 'find_elements_by_{type}'.format(
             type=self.type))(kwargs.get('selector', self.selector))
 
-    def get(self):
-        """
-        :Description: Used to fetch a selenium WebElement.
-        :return: [WebElement, ...], None
-        """
-        return self.__find_elements()
-
     def fmt(self, **kwargs):
         """
         :Description: Used to format selectors.
@@ -364,6 +363,13 @@ class Elements(Resource):
         self.selector = self._selector.format(**kwargs)
         return self
 
+    def get(self):
+        """
+        :Description: Used to fetch a selenium WebElement.
+        :return: [WebElement, ...], None
+        """
+        return self.__find_elements()
+
     def count(self):
         """
         :Description: Used to count number of found elements.
@@ -371,7 +377,7 @@ class Elements(Resource):
         """
         return len(self.get())
 
-    def get_text(self, raw=False):
+    def text(self, raw=False):
         """
         :Description: Get list of element text values.
         :param raw: Extract inner html from element.
@@ -388,6 +394,16 @@ class Elements(Resource):
                 for element in found:
                     collection.append(element.text)
             return collection
+        return None
+
+    def value(self):
+        """
+        :Description: Get list of input element values.
+        :return: [string, ...], None
+        """
+        found = self.get()
+        if found:
+            return [self.controller.js.get_value(element) for element in found]
         return None
 
     def wait_for(self, timeout, length=1, strict=False, error=None):

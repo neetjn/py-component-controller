@@ -12,6 +12,8 @@ class TestElement(BaseTest):
         super(TestElement, self).setUp()
         self.social_buttons = self.app.components.header.social_buttons
         self.logo = self.app.components.header.riot_logo
+        self.create_task_assignee_label = self.app.components.home.create_task_assignee_label
+        self.create_task_assignee = self.app.components.home.create_task_assignee
         self.task = self.app.components.home.task
         self.tasks = self.app.components.home.tasks
         self.delete_tasks = self.app.components.home.delete_tasks_button
@@ -67,6 +69,18 @@ class TestElement(BaseTest):
         """test element wrapper get set property"""
         self.assertEqual(self.logo.set_property(prop='some', value='value'), self.logo)
         self.assertEqual(self.logo.get_property(prop='some'), 'value')
+
+    def test_element_send_input_get_value(self):
+        """test element wrapper send input and get value"""
+        random_str = str(uuid4())
+        self.assertEqual(self.create_task_assignee.send_input(random_str), self.create_task_assignee)
+        self.assertEqual(self.create_task_assignee.value(), random_str)
+
+    def test_element_get_text(self):
+        """test element wrapper get text"""
+        self.assertEqual(self.create_task_assignee_label.text(), 'Assignee')
+        self.assertEqual(
+            self.delete_tasks.text(raw=True), ' <i class=\"ico ico-left fi-trash\"></i> Delete Completed ')
 
     def test_element_wrapper_check(self):
         """verify element wrapper check module"""

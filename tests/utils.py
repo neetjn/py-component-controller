@@ -44,6 +44,10 @@ class HomePage(Component):
         return '#deleteTasks'
 
     @component_element
+    def create_task_assignee_label(self):
+        return 'label[for="taskAssignee"]'
+
+    @component_element
     def create_task_assignee(self):
         return '#taskAssignee'
 
