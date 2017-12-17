@@ -26,9 +26,8 @@ class TestElement(BaseTest):
     #     self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
 
     def test_element_wrapper_check(self):
-        self.assertTrue(self.logo.check.visible())
-        self.assertTrue(self.app.wait(timeout=5, condition=self.logo.check.invisible),
-            msg='found: {}'.format(self.logo.check.visible()))
+        self.assertTrue(self.task.check.visible())
+        self.assertTrue(self.app.wait(timeout=5, condition=self.task.check.invisible))
 
     # def test_elements_wrapper(self):
     #     self.assertIsInstance(self.tasks, Elements)
