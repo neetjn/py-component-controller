@@ -203,6 +203,24 @@ class Element(Resource):
 
         return self
 
+    def wait_invisible(self, timeout, error=None):
+        """
+        :Description: Wait for given element to become invisible.
+        :param timeout: Time in seconds to wait for element.
+        :type timeout: int
+        :param error: Error message, if passed will raise a NoSuchElementException.
+        :type error: string, bool
+        :return: Element, None
+        """
+        if not self.controller.wait(timeout=timeout, condition=self.check.invisible):
+            if error:
+                raise NoSuchElementException(error if isinstance(error, string_types) else \
+                    'Element by selector "{}" not found or is visible'.format(self.selector))
+            else:
+                return None
+
+        return self
+
     def wait_js(self, condition, interval):
         """
         :Description: Wait for element by javascript condition.

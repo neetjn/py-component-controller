@@ -1,8 +1,8 @@
-from pyscc.controller import Controller
+from uuid import uuid4
+
 from pyscc.element import Element, Elements
 from tests.utils import BaseTest
 from selenium.webdriver.remote.webelement import WebElement
-from uuid import uuid4
 
 
 class TestElement(BaseTest):
