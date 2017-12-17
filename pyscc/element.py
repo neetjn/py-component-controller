@@ -431,3 +431,14 @@ def component_elements(ref):
     def wrapper(self):  #pylint: disable=missing-docstring
         return Elements(self.controller, ref(self))
     return wrapper
+
+def component_group(ref):
+    """
+    :Description: Wrapper for component element groups.
+    :return: Resource
+    """
+    @property
+    def wrapper(self): #pylint: disable=missing-docstring
+        return Resource(**{
+            element: Element(self.controller, selector) for element, selector in ref(self)})
+    return wrapper

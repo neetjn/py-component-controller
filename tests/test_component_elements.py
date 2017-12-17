@@ -46,7 +46,7 @@ class TestElement(BaseTest):
         self.assertTrue(self.app.wait(timeout=5, condition=self.task.fmt(id=2).check.not_available))
 
     def test_elements_wrapper(self):
-        """test element wrapper instantiated as intended"""
+        """test elements wrapper instantiated as intended"""
         self.assertIsInstance(self.tasks, Elements)
         self.assertTrue(hasattr(self.tasks, 'controller'))
         self.assertTrue(hasattr(self.tasks, 'selector'))
@@ -54,5 +54,5 @@ class TestElement(BaseTest):
         self.assertEqual(self.app, self.tasks.controller)
 
     def test_elements_wrapper_checks(self):
-        """verify element wrapper checks module"""
+        """verify elements wrapper checks module"""
         pass
