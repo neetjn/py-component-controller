@@ -37,6 +37,16 @@ class TestElement(BaseTest):
         self.assertEqual(self.logo.wait_visible(timeout=1), self.logo)
         self.assertEqual(self.logo.wait_invisible(timeout=5), self.logo)
 
+    def test_element_wrapper_js_wait(self):
+        """test element wrapper javascript wait"""
+        self.task.fmt(id=2)
+        self.assertEqual(
+            self.task.wait_js(
+                '$el.getAttribute("class").indexOf("disabled") == -1', 250), self.task)
+        self.assertFalse(self.task.check.wait_status())
+        self.task.click()
+        self.assertTrue(self.task.check.wait_status())
+
     def test_element_wrapper_check(self):
         """verify element wrapper check module"""
         self.assertTrue(self.logo.check.available())

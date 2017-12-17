@@ -231,6 +231,7 @@ class Element(Resource):
         :return: Element, None
         """
         self.wait_handle = self.controller.js.wait(condition, interval, self.selector)
+        return self
 
     meta = {
         'required_fields': (
