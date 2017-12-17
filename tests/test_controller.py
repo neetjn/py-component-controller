@@ -26,7 +26,7 @@ class TestController(BaseTest):
     def test_controller_env(self):
         """test controller env resource is properly created"""
         self.assertTrue(hasattr(self.app, 'env'))
-        self.assertEqual(self.app.created, self.created)
+        self.assertEqual(self.app.env.created, self.created)
 
     def test_controller_component_mapping(self):
         """test controller components are instantiated as expected"""
