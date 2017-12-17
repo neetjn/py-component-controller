@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from pyscc.element import Element, Elements
+from pyscc.resource import Resource
 from tests.utils import BaseTest
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -9,9 +10,17 @@ class TestElement(BaseTest):
 
     def setUp(self):
         super(TestElement, self).setUp()
+        self.social_buttons = self.components.header.social_buttons
         self.logo = self.app.components.header.riot_logo
         self.task = self.app.components.home.task
         self.tasks = self.app.components.home.tasks
+
+    def test_element_group(self):
+        """test element groups are generated as intended"""
+        self.assertIsInstance(self.social_buttons, Resource)
+        for s in ('twitter', 'facebook', 'linkedin'):
+            self.assertTrue(hasattr(self.social_buttons), s)
+            self.assertIsInstance(getattr(self.social_buttons, s), Element)
 
     def test_element_wrapper(self):
         """test element wrapper instantiated as intended"""
