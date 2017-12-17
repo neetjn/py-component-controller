@@ -121,6 +121,17 @@ class Element(Resource):
             return self
         return None
 
+    def dbl_click(self):
+        """
+        :Description: Execute a double click on the given element.
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.dbl_click(found)
+            return self
+        return None
+
     def scroll_to(self):
         """
         :Description: Scroll to the given element.
@@ -164,6 +175,23 @@ class Element(Resource):
                 self.controller.js.set_property(found, 'innerText', value)
             else:
                 found.send_keys(value)
+            return self
+        return None
+
+    def get_text(self, raw=False):
+        """
+        :Description: Get element text value.
+        :Warning: This method does not check if element is available.
+        :param raw: Extract inner html from element.
+        :type raw: bool
+        :return: string
+        """
+        found = self.get()
+        if found:
+            if raw:
+                return self.controller.js.get_raw_text(found)
+            else:
+                return found.text
             return self
         return None
 
@@ -232,6 +260,17 @@ class Element(Resource):
         """
         self.wait_handle = self.controller.js.wait(condition, interval, self.selector)
         return self
+
+    def switch_to(self):
+        """
+        :Description: Switch into an iframe element context.
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.browser.switch_to.frame(found)
+            return self
+        return None
 
     meta = {
         'required_fields': (
