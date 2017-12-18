@@ -223,8 +223,8 @@ class Element(Resource):
         :Description: Wait for given element to become visible.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
-        :param error: Error message, if passed will raise a ElementNotVisibleException.
-        :type error: string, bool
+        :param error: Raise NoSuchElementException on failure.
+        :type error: bool, string
         :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.visible):
@@ -241,8 +241,8 @@ class Element(Resource):
         :Description: Wait for given element to become invisible.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
-        :param error: Error message, if passed will raise a NoSuchElementException.
-        :type error: string, bool
+        :param error: Raise NoSuchElementException on failure.
+        :type error: bool, string
         :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.invisible):
@@ -415,8 +415,8 @@ class Elements(Resource):
         :type length: int
         :param strict: Expect exactly the length of elements, no more.
         :type strict: bool
-        :param error: Error message, if passed will raise NoSuchElementException.
-        :type error: string
+        :param error: Raise NoSuchElementException on failure.
+        :type error: bool, string
         :return: Elements
         """
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
@@ -436,8 +436,8 @@ class Elements(Resource):
         :type length: int
         :param strict: Expect exactly the length of elements, no more.
         :type strict: bool
-        :param error: Error message, if passed will raise ElementNotVisibleException.
-        :type error: string
+        :param error: Raise ElementNotVisibleException on failure.
+        :type error: bool, string
         :return: Elements
         """
         self.wait_for(timeout, length, strict, error)

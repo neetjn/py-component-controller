@@ -5,8 +5,6 @@ clean:
 setup:
 # create virtualenv and install test dependencies
 	virtualenv venv && venv/bin/pip install -r tests/test-requirements.txt
-	git submodule init
-	git submodule update
 	npm --prefix tests/mock-site install
 
 app:
