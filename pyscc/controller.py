@@ -24,7 +24,7 @@ from types import MethodType
 from pyseleniumjs import E2EJS
 from selenium.common.exceptions import NoSuchElementException, \
     WebDriverException
-from six import iteritems
+from six import iteritems, string_types
 
 from pyscc.resource import Resource
 
@@ -35,7 +35,7 @@ class Controller(object):
     :param browser: Webdriver for controller and components to reference.
     :type browser: webdriver
     :param base_url: Base url for navigations, will navigate to this url in init.
-    :type base_url: basestring
+    :type base_url: string
     :param components: Component objects to instantiate.
     :type components: dict
     :param env: Key value pairs to pass to instantiated components.
@@ -94,7 +94,7 @@ class Controller(object):
     def location(self):
         """
         :Description: Fetch the current url of controller's webdriver instance.
-        :return: basestring
+        :return: string
         """
         return self.browser.current_url
 
@@ -102,7 +102,7 @@ class Controller(object):
     def title(self):
         """
         :Description: Fetch the title of the controller's webdriver instance.
-        :return: basestring
+        :return: string
         """
         return self.browser.title
 
@@ -117,18 +117,34 @@ class Controller(object):
         """
         :Description: Navigate to a route using your defined base url.
         :param route: Route to navigate to using defined base url.
-        :type route: basestring
+        :type route: string
         """
         self.browser.get('{location}/{route}'.format(
             location=self.base_url,
             route=route
         ))
 
+    def is_location(self, route, timeout=0, graceful=False, error=False):
+        """
+        :Description: Check current webdriver location.
+        :param route: Route to check against.
+        :param timeout: Time in seconds to wait for route.
+        :param graceful: Adds leniency to route comparison.
+        :param error: Error upon failure.
+        :type error: bool, string
+        """
+        check = lambda: route in self.location if graceful else route == self.location
+        if timeout:
+            if error and not check():
+                raise RuntimeError(error if isinstance(error, string_types) else)
+        else:
+            check
+
     def window_by_title(self, title, graceful=False):
         """
         :Description: Changes to window context by window title.
         :param title: Title of window to switch into.
-        :type title: basestring
+        :type title: string
         :param graceful: Adds leniency to window title search.
         :type graceful: bool
         :return: bool
@@ -145,7 +161,7 @@ class Controller(object):
         """
         :Description: Changes to window context by window path.
         :param location: Path of window to switch into.
-        :type location: basestring
+        :type location: string
         :param graceful: Adds leniency to window path search.
         :type graceful: bool
         :return: bool
@@ -198,7 +214,7 @@ class Controller(object):
         :Description: Dumps browser logs to local directory.
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
-        :type name: basestring
+        :type name: string
         """
         try:
             logs = self.js.console_dump()
@@ -213,8 +229,8 @@ class Controller(object):
         """
         :Description: Takes a screen shot and saves it specified path.
         :param prefix: Prefix for screenshot.
-        :type prefix: basestring
-        :return: basestring
+        :type prefix: string
+        :return: string
         """
         file_location = os.path.join(
             './', (prefix + '_' if prefix else '') + str(uuid.uuid4()) + '.png')
