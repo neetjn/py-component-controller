@@ -135,10 +135,15 @@ class Controller(object):
         """
         check = lambda: route in self.location if graceful else route == self.location
         if timeout:
-            if error and not check():
-                raise RuntimeError(error if isinstance(error, string_types) else)
+            if error and not self.wait(timeout=timeout, condition=check):
+                raise RuntimeError(
+                    error if isinstance(error, string_types) else 'Location was not matched')
+            return self.wait(timeout=timeout, condition=check)
         else:
-            check
+            if error and not check():
+                raise RuntimeError(
+                    error if isinstance(error, string_types) else 'Location was not matched')
+            return check()
 
     def window_by_title(self, title, graceful=False):
         """
