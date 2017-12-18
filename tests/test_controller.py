@@ -23,6 +23,21 @@ class TestController(BaseTest):
         self.app.navigate('!#/about')
         self.assertEqual(self.app.location, self.app_url + '/!#/about')
 
+    def test_controller_is_location(self):
+        """test controller is_location"""
+        self.app.navigate('!#/about')
+        self.assertTrue(self.app.is_location(self.app.location, self.app_url + '/!#/about'))
+        self.assertFalse(self.app.is_location('/!#/about'))
+        self.assertTrue(self.app.is_location('/!#/about', graceful=True))
+        self.assertTrue(
+            self.app.is_location(self.app.location, self.app_url + '/!#/about', timeout=1))
+        self.assertTrue(self.app.is_location('/!#/about', timeout=1, graceful=True))
+        self.assertFalse(self.app.is_location('/!#/about', timeout=1))
+        with self.assertRaises(RuntimeError):
+            self.app.is_location('/!#/about', error=True)
+        with self.assertRaises(RuntimeError):
+            self.app.is_location('/!#/about', timeout=1, error=True)
+
     def test_controller_env(self):
         """test controller env resource is properly created"""
         self.assertTrue(hasattr(self.app, 'env'))
