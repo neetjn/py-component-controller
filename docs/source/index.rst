@@ -3,10 +3,12 @@ Installation
 ======================
 
 .. toctree::
+    :numbered:
     :maxdepth: 2
 
     index
     getting_started
+    genindex
 
 Introduction
 ============
