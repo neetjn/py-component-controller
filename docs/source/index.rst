@@ -8,7 +8,6 @@ Introduction
 
     installing
     getting_started
-    genindex
 
 What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications.
 This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach.
