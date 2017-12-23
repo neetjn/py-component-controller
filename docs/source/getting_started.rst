@@ -58,8 +58,12 @@ The following code is an example of a controller for Google's search engine:
                 'results': Results
             })
 
+        def number_of_results():
+            return self.components.results.results.count()
+
 
 The sample above can be utilized like so:
+
 
 .. code-block:: python
 
@@ -86,7 +90,17 @@ The sample above can be utilized like so:
     # terminate our controller's webdriver
     google.exit()
 
-Example Explained
-============
 
-Lorem Ipsum
+Example Explained
+=================
+
+As seen in the example above, components can be defined relatively quickly without any hassle.
+Simply import `Component` from pyscc and define your class. When specifying your component properties,
+the following decorators can be used to construct `Element <http://github.com/neetjn/py-component-controller>`_ and `Elements <http://github.com/neetjn/py-component-controller>`_ wrappers.
+
+* **`@component_element`**: Expects a single css or xpath selector, will return an `Element` object when referenced.
+* **`@component_elements`**: Expects a single css or xpath selector, will return an `Elements` object when referenced.
+* **`@component_group`**: Expects a dictionary of element name and selector pairs, will return a resource with attributes relevant to your provided pairs returning `Element` objects when referenced.
+
+Using the intended design pattern, Component instances should never be instantiated outside of the scope of the controller.
+When the controller is intantiated, it will take the provided component name pairs and automatically instantiate them in a `components` attribute.

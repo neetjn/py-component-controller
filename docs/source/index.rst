@@ -3,9 +3,10 @@ Installation
 ======================
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   getting_started
+    index
+    getting_started
 
 Introduction
 ============
