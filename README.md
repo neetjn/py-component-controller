@@ -89,11 +89,8 @@ from project.components import Home
 
 class Product(Controller):
 
-  def __init__(self, webdriver, base_url, **env):
-    super(Product, self).__init__(
-      webdriver=webdriver,
-      base_url=base_url,
-      components={
+  def __init__(self, browser, base_url, **env):
+    super(Product, self).__init__(browser, base_url, {
         'home': Home
       },
       env=**env
