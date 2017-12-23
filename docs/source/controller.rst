@@ -1,5 +1,0 @@
-Controller
-**********
-
-lorem ipsum
-foobar
