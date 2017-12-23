@@ -16,6 +16,27 @@ Official documentation be be read [here](http://py-component-controller.readthed
 
 What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications. This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach. **py-component-controller** also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
 
+## Why
+
+The official selenium bindings for Python feel rather dated, and a single interaction such as checking an element's visibility after clicking it can take a myriad of api calls. Additionally, the official Selenium bindings operate in the most natural way a user would operate against a given web page; simple actions such as clicking on an element can be disasterous for modern web applications using a `z-index` on panels and more commonly modals, because the selenium bindings attempt to get the element's coordinate position before actually executing the click. Using [pyselenium-js](https://github.com/neetjn/pyselenium-js) under the hood, this framework can alleviate the many burdens regularly encountered while using selenium.
+
+**py-component-controller** also offers a very easy-to-use interface for structuring selenium tests, with method chaining functionality. Take the following example,
+
+```python
+app = App(webdriver, base_url, {
+  'header', Header,
+  'footer': Footer,
+  'home': Home
+})
+
+assert app.components.header.log_in\
+  .wait_visible(timeout=1, error=True)\
+  .click()\
+  .wait_invisible(timeout=3)\
+  .get_attribute('toggled')
+```
+Looks easy to maintain, no?
+
 ## Breakdown
 
 A component object represents an area in the web application user interface that your test is interacting with. Component objects were created to represent every possible element a controller and/or test would need to reference. Component objects allow us to define an element once, and reference it however many times we need by it's defined property. If any major changes are made to our target interface, we can change the definition of a component's property once and it will work across all of our given controllers and tests. Reference: [Page Object](http://selenium-python.readthedocs.io/page-objects.html)
@@ -24,9 +45,11 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.6`. Support is available for both Python 2.7 and 3.6.
+This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.6`.
 
-Pyscc can be installed using pip like so,
+Support is available for both Python 2.7 and 3.6.
+
+**py-component-controller** can be installed using pip like so,
 
 ```sh
 pip install pyscc
