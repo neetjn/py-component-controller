@@ -2,13 +2,6 @@
 Introduction
 ======================
 
-.. toctree::
-    :numbered:
-    :maxdepth: 2
-
-    installing
-    getting_started
-
 What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications.
 This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach.
 py-component-controller also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
