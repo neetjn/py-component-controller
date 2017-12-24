@@ -86,7 +86,7 @@ Example Explained
 
 As seen in the example above, components can be defined relatively quickly without any hassle.
 Simply import `Component` from pyscc and define your class. When specifying your component properties,
-the following decorators can be used to construct `Element <http://github.com/neetjn/py-component-controller>`_ and `Elements <http://github.com/neetjn/py-component-controller>`_ wrappers.
+the following decorators can be used to construct `Element <http://py-component-controller.readthedocs.io/en/latest/component.html#element-wrapper>`_ and `Elements <http://py-component-controller.readthedocs.io/en/latest/component.html#elements-wrapper>`_ wrappers.
 
 * **@component_element**: Expects a single css or xpath selector, will return an `Element` object when referenced.
 * **@component_elements**: Expects a single css or xpath selector, will return an `Elements` object when referenced.

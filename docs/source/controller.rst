@@ -5,7 +5,7 @@ Controller
 About
 =====
 
-Controllers were created to utilize our defined components and to farm out tedious rudimentary tasks such as navigating and managing our context.
+*Controllers* were created to utilize our defined components and to farm out tedious rudimentary tasks such as navigating and managing our context.
 Controllers allow us to define our logic in a behavioral manner, outside of our test cases, keeping everything clean, simple, and manageable.
 Controllers also allow us to reference a browser once and pass it to all of our defined components. Reference: `Page Object Model <http://www.guru99.com/page-object-model-pom-page-factory-in-selenium-ultimate-guide.html>`_
 
@@ -15,6 +15,14 @@ There are a vast other quirks to using the controller, component architecture --
 * Clean tests; no need for instance-hacks.
 * Maintainability, easily documentable.
 * Application/website state management.
+
+Best Practices
+==============
+
+Following this architectural pattern (controller, component) your controller **not** contain any accessory methods to search for or provide elements.
+This class of functionality should be handled exclusively by your defined components.
+
+If you haven't already check out `Getting Started <http://py-component-controller.readthedocs.io/en/latest/getting_started.html>`_ for examples.
 
 Polyfills
 =========
@@ -30,7 +38,13 @@ Any irregularities between webdrivers should be reported via the py-component-co
 Contructor
 ==========
 
-When inheriting from the `Controller` class, it's important to understand that
+When a controller is instantiated, the constructor automatically constructs the following attributes:
+
+* **browser**: Webdriver consumed in the constructor.
+* **js**: Reference to instantiated pyselenium-js driver.
+* **logger**: Python logger reference.
+* **components** Resource for instantiated components constructed using the dictionarty provided in the constructor.
+* **env**: Resource for environmental variables consumed in the form of kwargs from the constructor.
 
 Getting Current Location
 ==========================
