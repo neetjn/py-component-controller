@@ -33,17 +33,59 @@ Element (wrapper)
 Formatting Selectors
 --------------------
 
+As shown in `Getting Started <http://py-component-controller.readthedocs.io/en/latest/getting_started.html>`_, elements may be defined with template selectors.
+Take for example the following component element provider:
+
+.. code-block:: python
+
+    @component_element
+    def button(self):
+        return 'button[ng-click="{method}"]'
+
+You can format the element's selector prior to executing any operations.
+
+.. code-block:: python
+
+    component.button.fmt(method="addUser()")\
+        .wait_for(5)\
+        .click()
+
 Fetching a Selenium WebElement
 ------------------------------
+
+The element wrapper will still allow you to fetch selenium WebElement objects and access the standard selenium bindings.
+
+.. code-block:: python
+
+    component.button.get()
+    >> WebElement
 
 Getting Element Text
 --------------------
 
+To scrape text from an element, the element wrapper provides an api method *text*:
+
+.. code-block:: python
+
+    component.button.text()
+
+    # scrape raw text (inner html)
+    component.button.text(raw=True)
+
 Getting Element Value
 ---------------------
 
+Input elements provide a property, **value**, which selenium does not provide explicit bindings for.
+Using the api method *value* you may pull the value from any input element (including select, button, radiobutton).
+
+.. code-block:: python
+
+    component.username_field.value()
+
 Getting and Setting Element Attribute
 -------------------------------------
+
+
 
 Getting and Setting Element Property
 ------------------------------------
