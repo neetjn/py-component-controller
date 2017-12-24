@@ -105,6 +105,7 @@ html_static_path = ['_static']
 html_sidebars = {
     '**': [
         'relations.html',  # needs 'show_related': True theme option to display
+        'locltoc.html',
         'searchbox.html',
     ]
 }
