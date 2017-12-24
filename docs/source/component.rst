@@ -179,7 +179,7 @@ To send input to an element, refer to the *send_input* api method (chainable):
 .. code-block:: python
 
     component.username_field\
-        .send_input('py-component-controller')
+        .send_input('py-component-controller')\
         .get_attribute('class')
 
     # in the event the component element is a custom element that accepts input
@@ -198,7 +198,7 @@ To simply wait for an element to be available, you may use the *wait_for* api me
 
     # wait 5 seconds for element to be available
     component.button\
-        .wait_for(5)
+        .wait_for(5)\
         .click()
 
     # alternatively you can also have the wait automatically error out if the condition is not met
@@ -291,23 +291,104 @@ Elements (wrapper)
 Formatting Selectors
 --------------------
 
+As shown in `Getting Started <http://py-component-controller.readthedocs.io/en/latest/getting_started.html>`_, elements may be defined with template selectors.
+Take for example the following component elements provider:
+
+.. code-block:: python
+
+    @component_elements
+    def users(self):
+        return 'a.users.{class}'
+
+You can format the element's selector prior to executing any operations.
+
+.. code-block:: python
+
+    component.users\
+        .fmt(class="active")\
+        .wait_for(5, length=1)
+
 Fetching List of Selenium WebElements
 -------------------------------------
+
+The elements wrapper will still allow you to fetch selenium WebElements and access the standard selenium bindings.
+
+.. code-block:: python
+
+    component.users.get()
+    >> [WebElement, ...]
+
+.. code-block:: python
+
+    for user in component.users.get():
+        user.click()
 
 Counting Existing Matches
 -------------------------
 
+The elements wrapper provides an api method *count* to allow you to fetch the number of given elements available.
+
+.. code-block:: python
+
+    component.users.count()
+    >> int
+
 Getting List of Element Text
 ----------------------------
 
-Getting List of Element Value
+To pull the text from every available element into a list, you may use the *text* api method like so:
+
+.. code-block:: python
+
+    component.users.text()
+    >> [string, ...]
+
+    # scrape raw text (inner html)
+    component.users.text(raw=True)
+    >> [string, ...]
+
+Getting List of Element Values
 -----------------------------
+
+Input elements provide a property, value, which selenium does not provide explicit bindings for. Using the api method value you may pull the value from any input element (including select, button, radiobutton).
+
+.. code-block:: python
+
+    component.users.value()
+    >> [string, ...]
 
 Waiting For Number of Elements
 ------------------------------
 
+A helpful feature of the elements wrapper, is the ability to wait for a number of elements to become available. This can be done using the `wait_for` api method (chainable).
+
+.. code-block:: python
+
+    component.users.wait_for(5, length=3)
+
+    # alternatively you can also have the wait automatically error out if the condition is not met
+    component.users.wait_for(5, length=3, error=True)
+
+    # custom error messages can also be specified as the error flag
+    component.users.wait_for(5, length=3,
+        error="Expected at least 3 users to be available within 5 seconds")
+
 Waiting For Visibility of Elements
 ----------------------------------
 
+Another powerful feature of the elements wrapper, is the ability to wait for both a number of elements to be available **and** visible.
+Refer to the *wait_visible* api method (chainable):
+
+.. code-block:: python
+
+    component.users.wait_visible(5, length=5, error=True)
+
 Check Visibility
 ----------------
+
+The api method *visible* is a callable check to ensure the currently available elements are all visible.
+
+.. code-block:: python
+
+    component.users.check.visible()
+    >> True, False
