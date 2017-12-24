@@ -427,7 +427,7 @@ class Elements(Resource):
 
         return self
 
-    def wait_visible(self, timeout, length, strict=False, error=None):
+    def wait_visible(self, timeout, length=1, strict=False, error=None):
         """
         :Description: Wait for given length of elements to be available and visible.
         :param timeout: Time in seconds to wait for elements.

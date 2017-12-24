@@ -2,11 +2,14 @@
 Introduction
 ======================
 
+About
+=====
+
 What this project strives to do is deter from redundant tasks, and help provide an interface to tackeling larger web applications.
 This project is a wrapper for the official selenium bindings and pyselenium-js, offering a more object orientated approach.
 py-component-controller also includes polyfills for conforming webdriver behavior -- such as the safari webdriver's handling of multiple element queries.
 
-About
+Why
 =====
 
 The official selenium bindings for Python feel rather dated, and a single interaction such as checking an element's visibility after clicking it can take a myriad of api calls.

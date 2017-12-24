@@ -2,6 +2,9 @@
 Controller
 ==========
 
+About
+=====
+
 Controllers were created to utilize our defined components and to farm out tedious rudimentary tasks such as navigating and managing our context.
 Controllers allow us to define our logic in a behavioral manner, outside of our test cases, keeping everything clean, simple, and manageable.
 Controllers also allow us to reference a browser once and pass it to all of our defined components. Reference: `Page Object Model <http://www.guru99.com/page-object-model-pom-page-factory-in-selenium-ultimate-guide.html>`_
@@ -27,9 +30,34 @@ Any irregularities between webdrivers should be reported via the py-component-co
 Contructor
 ==========
 
-Properties
+When inheriting from the `Controller` class, it's important to understand that
+
+Getting Current Location
+==========================
+
+Getting Current Page Title
+==========================
+
+Navigation
 ==========
 
-Methods
-=======
+Checking Location
+=================
 
+Switching to Window by Title
+===============================
+
+Switching to Window by Location
+===============================
+
+Conditional Waits
+=================
+
+Take a Screenshot
+=================
+
+Get Browser Console Logs
+========================
+
+Terminate Webdriver Session
+===========================

@@ -10,7 +10,7 @@
 
 This project depends on the [pyselenium-js](https://github.com/neetjn/pyselenium-js) project.
 
-Official documentation be be read [here](http://py-component-controller.readthedocs.io/en/latest/).
+Official documentation be be read [here](http://py-component-controller.readthedocs.io).
 
 ## About
 
@@ -55,66 +55,7 @@ Support is available for both Python 2.7 and 3.6.
 pip install pyscc
 ```
 
-To define a new component, simply import `Component`, `component_element`, `component_elements`, and `component_group` from `pyscc`.
-
-```python
-from pyscc import Component, component_element, component_elements, component_group
-
-
-class Home(Component):
-
-  @component_element
-  def username(self):
-    return '#user' if self.env.legacy else '#username'
-
-  @component_elements
-  def articles(self):
-    return 'div.articles'
-
-  @component_group
-  def social_links(self):
-    return {
-      'facebook': 'a#facebook',
-      'twitter': 'a#twitter',
-      'linkedin': 'a#linkedin',
-    }
-```
-
-Controllers can be defined using the `Controller` class which can also be imported from `pyscc`.
-
-```python
-from pyscc import Controller
-from project.components import Home
-
-
-class Product(Controller):
-
-  def __init__(self, browser, base_url, **env):
-    super(Product, self).__init__(browser, base_url, {
-        'home': Home
-      },
-      env=**env
-    )
-    self.logged_in = False
-
-  def count_articles(self):
-    return self.components.home.articles.count()
-
-  def login(self, username, password):
-    home = self.components.home
-    home.username.wait_visible(5, error=True)\
-      .send_input(username)
-    home.password.wait_for(5, error=True)\
-      .send_input(password, force=True)
-    home.country_selection.trigger_event(event='change')\
-      .click()
-    self.wait(timeout=5, condition=home.country_selection.check.invisible)
-    self.logged_in = True
-
-product = Product(webdriver.Chrome(), 'https://mysite.com', legacy=False)
-```
-
-As can be seen in the controller example, a component included in the constructor can be accessed at any time by it's key pair name. The `env` variable we instantiate in our `Product` instance `legacy`, is also trickeled down into each of `Product`'s components which can then be processed as done in the `Component` example.
+For more information refer to the official documentation [here](http://py-component-controller.readthedocs.io)
 
 ## Testing
 
