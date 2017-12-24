@@ -2,7 +2,10 @@
 Controller
 ==========
 
-As explained in the introduction, controllers were created to simplify redundant tasks and approach the selenium framework with a more object orientated approach.
+Controllers were created to utilize our defined components and to farm out tedious rudimentary tasks such as navigating and managing our context.
+Controllers allow us to define our logic in a behavioral manner, outside of our test cases, keeping everything clean, simple, and manageable.
+Controllers also allow us to reference a browser once and pass it to all of our defined components. Reference: `Page Object Model <http://www.guru99.com/page-object-model-pom-page-factory-in-selenium-ultimate-guide.html>`_
+
 There are a vast other quirks to using the controller, component architecture -- such as:
 
 * Simple exportable client packages for larger suites (multi-application end to end tests).
