@@ -150,7 +150,7 @@ If you require the traditional clicking behavior, simplify fetch a selenium WebE
 Scrolling To an Element
 -----------------------
 
-Scroll to an element can be done using the *scroll_to* api method (chainable).
+Scrolling to an element can be done using the *scroll_to* api method (chainable).
 
 .. code-block:: python
 
@@ -174,23 +174,115 @@ This method is chainable as the example details.
 Sending Input
 -------------
 
+To send input to an element, refer to the *send_input* api method (chainable):
+
+.. code-block:: python
+
+    component.username_field\
+        .send_input('py-component-controller')
+        .get_attribute('class')
+
+    # in the event the component element is a custom element that accepts input
+    # and it does not support the focus event, the selenium bindings will raise a WebDriverException
+    # you may use the force flag to overwrite the innerhtml of the element rather than
+    # traditionally sending input
+    component.email_field.send_input('pyscc', force=True)
+
 Waiting For an Element
 ----------------------
+
+One of the more helpful features of the element wrapper is it's suite of built in waits.
+To simply wait for an element to be available, you may use the *wait_for* api method (chainable) like so:
+
+.. code-block:: python
+
+    # wait 5 seconds for element to be available
+    component.button\
+        .wait_for(5)
+        .click()
+
+    # alternatively you can also have the wait automatically error out if the condition is not met
+    component.button\
+        .wait_for(5, error=True)\
+        .click()
+
+    # custom error messages can also be specified as the error flag
+    component.button\
+        .wait_for(5, error='Component button was not avaialable as expected')\
+        .click()
 
 Waiting For Visibility
 ----------------------
 
+If you require the visibility of an element, the element wrapper allows you to wait for the visibility or invisibility of an element with the api methods *wait_visible* and *wait_invisible* (chainable).
+
+.. code-block:: python
+
+    # wait for an element to become visible
+    component.button\
+        .wait_visible(5, error=True)\
+        .click()
+
+    # wait for an element to become invisible
+    component.button\
+        .click()\
+        .wait_invisible(5)
+
 Javascript Conditional Wait
 ---------------------------
+
+Pulling from the pyselenium-js api, you may alternatively asynchronously farm a wait to your target browser.
+This can also be especially useful when waiting for conditions that occur in timespans < 1 second.
+
+Syntax is as follows:
+
+.. code-block:: python
+
+    # wait on an interval of every 150 ms for element to include as class 'btn-danger'
+    component.button.wait_js('$el.getAttribute("class").includes("btn-danger")', 150)
+
+The element can be accessed within the condition by the alias $el.
+To validate the javascript wait status, refer to `Checking Wait Status (javascript) <http://py-component-controller.readthedocs.io/en/latest/component.html#checking-wait-status-javascript>`_.
 
 Checking Availability
 ---------------------
 
+The element wrapper provides two callable, explicit check for element availablity. Refer to the `available` and `not_available` api methods.
+
+.. code-block:: python
+
+    component.button.check.available()
+    >> True, False
+
+    component.button.check.not_available()
+    >> True, False
+
 Checking Visibility
 -------------------
 
+The element wrapper provides two callable, explicit check for element visibility. Refer to the `visible` and `invisible` api methods.
+
+.. code-block:: python
+
+    component.button.check.visible()
+    >> True, False
+
+    component.button.check.invisible()
+    >> True, False
+
 Checking Wait Status (javascript)
 ---------------------------------
+
+The api method *wait_status* can be used to validate the wait status of a previously dispatched wait request on an element instance.
+
+.. code-block:: python
+
+    button = component.button
+    # wait on an interval of every 150 ms for element to include as class 'btn-danger'
+    button.wait_js('$el.getAttribute("class").includes("btn-danger")', 150)
+    ...
+    button.check.wait_status()
+    >> True, False
 
 
 Elements (wrapper)

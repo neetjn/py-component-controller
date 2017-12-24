@@ -194,7 +194,7 @@ class Element(Resource):
         found = self.get()
         if found:
             if force:
-                self.controller.js.set_property(found, 'innerText', value)
+                self.controller.js.set_property(found, 'innerHTML', value)
             else:
                 found.send_keys(value)
             return self
