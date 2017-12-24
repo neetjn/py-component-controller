@@ -26,17 +26,16 @@ class TestController(BaseTest):
     def test_controller_is_location(self):
         """test controller is_location"""
         self.app.navigate('!#/about')
-        self.assertTrue(self.app.is_location(self.app_url + '/!#/about'))
-        self.assertFalse(self.app.is_location('/!#/about'))
-        self.assertTrue(self.app.is_location('/!#/about', graceful=True))
-        self.assertTrue(
-            self.app.is_location(self.app_url + '/!#/about', timeout=1))
-        self.assertTrue(self.app.is_location('/!#/about', timeout=1, graceful=True))
-        self.assertFalse(self.app.is_location('/!#/about', timeout=1))
+        self.assertTrue(self.app.is_location('/!#/about'))
+        self.assertTrue(self.app.is_location(self.app_url + '/!#/about', strict=True))
+        self.assertFalse(self.app.is_location('/!#/about', strict=True))
+        self.assertTrue(self.app.is_location('/!#/about', timeout=1))
+        self.assertTrue(self.app.is_location(self.app_url + '/!#/about', timeout=1, strict=True))
+        self.assertFalse(self.app.is_location('/!#/about', timeout=1, strict=True))
         with self.assertRaises(RuntimeError):
-            self.app.is_location('/!#/about', error=True)
+            self.app.is_location('/!#/about', strict=True, error=True)
         with self.assertRaises(RuntimeError):
-            self.app.is_location('/!#/about', timeout=1, error=True)
+            self.app.is_location('/!#/about', strict=True, timeout=1, error=True)
 
     def test_controller_env(self):
         """test controller env resource is properly created"""
