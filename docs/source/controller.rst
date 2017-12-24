@@ -38,6 +38,7 @@ Getting Current Location
 The controller provides a property *navigation* that can be referenced to fetch your webdriver's current location.
 
 .. code-block:: python
+
     controller.location
     >> http://github.com
 
@@ -47,6 +48,7 @@ Getting Current Page Title
 Refer to the controller's *title* property to pull the current page title from your webdriver.
 
 .. code-block:: python
+
     controller.title
     >> Github
 
@@ -57,11 +59,13 @@ When a controller is instantiated, it will automatically send the webdriver to t
 You may then navigate to other routes off of the base url like so:
 
 .. code-block:: python
+
     controller.navigate('/about')
 
 For a *hard* navigation, you may use the selenium webdriver api method **get**.
 
 .. code-block:: python
+
     controller.browser.get('http://github.com')
 
 Checking Location
@@ -70,6 +74,7 @@ Checking Location
 To check against your webdriver's current location, you can use the *is_location* method:
 
 .. code-block:: python
+
     # check if the route is in your webdrivers location
     controller.is_location('/neetjn/py-component-controller')
     # strict check on absolute location
@@ -87,6 +92,7 @@ Switching to Window by Title
 For window management, the controller provides a method that allows you to switch to a window by title:
 
 .. code-block:: python
+
     # absolute window title check
     self.assertTrue(controller.window_by_title('readthedocs'))
     # partial window title check
@@ -98,6 +104,7 @@ Switching to Window by Location
 The controller also provided a method that allows you to switch to a window by location:
 
 .. code-block:: python
+
     # absolute location check
     self.assertTrue(controller.window_by_title('https://readthedocs.io/neetjn'))
     # partial location title check
