@@ -77,10 +77,13 @@ To check against your webdriver's current location, you can use the *is_location
 
     # check if the route is in your webdrivers location
     controller.is_location('/neetjn/py-component-controller')
+
     # strict check on absolute location
     controller.is_location('https://github.com/neetjn/py-component-controller', strict=True)
+
     # timed location check, will check every second until condition met or timeout exceeded
     controller.is_location('/neetjn/py-component-controller', timeout=5)
+
     # error if condition is not met
     controller.is_location('/neetjn/py-component-controller', timeout=5, error=True)
     controller.is_location('/neetjn/py-component-controller', timeout=5,
@@ -94,9 +97,12 @@ For window management, the controller provides a method that allows you to switc
 .. code-block:: python
 
     # absolute window title check
-    self.assertTrue(controller.window_by_title('readthedocs'))
+    controller.window_by_title('readthedocs')
+    >> True, False
+
     # partial window title check
-    self.assertTrue(controller.window_by_title('readthedocs', graceful=True))
+    controller.window_by_title('readthedocs', graceful=True)
+    >> True, False
 
 Switching to Window by Location
 ===============================
@@ -106,18 +112,73 @@ The controller also provided a method that allows you to switch to a window by l
 .. code-block:: python
 
     # absolute location check
-    self.assertTrue(controller.window_by_title('https://readthedocs.io/neetjn'))
+    controller.window_by_title('https://readthedocs.io/neetjn')
+    >> True, False
+
     # partial location title check
-    self.assertTrue(controller.window_by_title('readthedocs.io', graceful=True))
+    controller.window_by_title('readthedocs.io', graceful=True)
+    >> True, False
 
 Conditional Waits
 =================
 
+Unlike the official selenium bindings, the controller allows an interface for an all-purpose general conditional wait.
+
+.. code-block:: python
+
+    # wait 5 seconds for element to be visible
+    # you may pass any callable object as a condition that returns a truthy value
+    controller.wait(timeout=5, condition=element.check.visible)
+
+    # wait for 10 seconds for window to be available with the title "Github"
+    controller.wait(timeout=10,
+        condition=lambda: controller.window_by_title('Github'))
+    >> True, False
+
+    # by design the wait will ignore any exceptions raised while checking the condition
+    # for debugging purposes, you may toggle the throw_error flag to raise the last error
+    controller.wait(timeout=5, throw_error=True, condition=lambda: 0/0)
+
+    # you may toggle the reverse flag to check for a falsy value
+    controller.wait(timeout=5, reverse=True, condition=element.check.invisible)
+
+
 Take a Screenshot
 =================
+
+To take a screenshot and drop it to your host machine, use the *screen_shot* method:
+
+.. code-block:: python
+
+    controller.screen_shot('logout')
+
+The screenshot prefix is optional, but this method will automatically generate a unique file name to deter from any io errors and preserve your artifacts.
 
 Get Browser Console Logs
 ========================
 
+Using `pyselenium-js <https://github.com/neetjn/pyselenium-js/blob/master/pyseleniumjs/e2ejs.py#L130>`_ under the hood we can log our browser's console output.
+To initialize the logger, you can reference the *console_logger* method from the controller's js attribute (pysjs reference).
+Once you've initialized the logger, use the controller api method *dump_browser_logs* to drop your logs to your host machine.
+
+.. code-block:: python
+
+    # initialize logger
+    controller.js.console_logger()
+
+    # dump browser console logs
+    controller.dump_browser_logs()
+
+    # dump browsers logs with a log name
+    controller.dump_browser_logs('error.logout.redirect')
+
+
 Terminate Webdriver Session
 ===========================
+
+Equipped with the controller is an all-webdriver termination mechanism.
+This can be especially helpful for provisioned environments using both local and remote webdrivers.
+
+.. code-block:: python
+
+    controller.exit()
