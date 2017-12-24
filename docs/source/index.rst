@@ -1,3 +1,13 @@
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+   :numbered:
+
+   installing
+   getting_started
+
+
 ======================
 Introduction
 ======================
