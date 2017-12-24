@@ -124,16 +124,19 @@ class Controller(object):
             route=route
         ))
 
-    def is_location(self, route, timeout=0, graceful=False, error=False):
+    def is_location(self, route, timeout=0, strict=False, error=False):
         """
         :Description: Check current webdriver location.
         :param route: Route to check against.
+        :type route: string
         :param timeout: Time in seconds to wait for route.
-        :param graceful: Adds leniency to route comparison.
+        :type timeout: int
+        :param strict: Adds leniency to route comparison.
+        :type strict: bool
         :param error: Error upon failure.
         :type error: bool, string
         """
-        check = lambda: route in self.location if graceful else route == self.location
+        check = lambda: route == self.location if strict else route in self.location
         if timeout:
             if error and not self.wait(timeout=timeout, condition=check):
                 raise RuntimeError(

@@ -2,7 +2,7 @@
 Getting Started
 ======================
 
-Simple Usage
+Sample Usage
 ============
 
 The following code is an example of a controller for Google's search engine:

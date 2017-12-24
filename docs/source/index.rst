@@ -8,6 +8,6 @@ Table of Contents
 
     introduction
     installing
+    getting_started
     component
     controller
-    getting_started
