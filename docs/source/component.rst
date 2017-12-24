@@ -85,19 +85,91 @@ Using the api method *value* you may pull the value from any input element (incl
 Getting and Setting Element Attribute
 -------------------------------------
 
+Using the element wrapper, an element's attribute can be fetched like so:
 
+.. code-block:: python
+
+    component.username_field.get_attribute('aria-toggled')
+
+Additionally, an element's attribute can be set using the *set_attribute* api method (chainable):
+
+.. code-block:: python
+
+    component.username_field\
+        .set_attribute('hidden', False)\
+        .wait_visible(3, error=True)
+
+Under the hood, pyselenium-js will automatically convert javascript types into pythonic types and inverse.
 
 Getting and Setting Element Property
 ------------------------------------
 
+**This feature is not supported by the official selenium bindings (or remote api).**
+
+Using the element wrapper, an element's property can be fetched like so:
+
+.. code-block:: python
+
+    component.remind_me.get_property('checked')
+
+Additionally, an element's attribute can be set using the *set_attribute* api method (chainable):
+
+.. code-block:: python
+
+    component.username_field\
+        .set_property('checked', True)\
+        .fmt(class='checked')\
+        .wait_for(3, error=True)
+
+As explained in the attribute section, pyselenium-js under the hood will automatically convert javascript types into pythonic types and inverse.
+
 Clicking and Double Clicking an Element
 ---------------------------------------
+
+The official selenium bindings attempt to click on an element based on it's coordinate position, to emulate a natural click event on a given element.
+The problem with this, is more modern websites rely on *z-index* styling rules for pop ups and raised panels; making it impossible to locate the correct coordinates otherwise raising a WebDriverException exception.
+This behavior has also shown to be especially problematic in nested iframes.
+
+The element wrapper's *click* method will dispatch a click event directly to the target element.
+Additionally, the wrapper provides an api method *dbl_click* to double click on a given element -- **this feature is not supported by the official selenium bindings**.
+
+These two methods are also chainable:
+
+.. code-block:: python
+
+    component.button\
+        .click()\
+        .dbl_click()
+
+If you require the traditional clicking behavior, simplify fetch a selenium WebElement like so:
+
+.. code-block:: python
+
+    component.button.get().click()
 
 Scrolling To an Element
 -----------------------
 
+Scroll to an element can be done using the *scroll_to* api method (chainable).
+
+.. code-block:: python
+
+    component.button\
+        .scroll_to()\
+        .click()
+
 Dispatching an Event
 --------------------
+
+Flexing the capabilities of pyselenium-js, we can construct and dispatch events to a given element like so:
+
+.. code-block:: python
+
+    component.button\
+        .trigger_event('click', 'MouseEvent', {'bubbles': True})\
+        .wait_invisible(timeout=5, error=True)
+
+This method is chainable as the example details.
 
 Sending Input
 -------------
