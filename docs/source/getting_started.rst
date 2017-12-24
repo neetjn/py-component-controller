@@ -132,7 +132,8 @@ The following is an example as to how one may structure tests:
 
         def test_search_autocomplete(self):
             home = self.google.components.home
-            home.wait_visible(5, error='Google search bar was not visible')\
+            home.search_bar\
+                .wait_visible(5, error='Google search bar was not visible')\
                 .click()\
                 .send_input("python")
             # ensure autocomplete popup appears
