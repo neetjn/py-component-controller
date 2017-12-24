@@ -86,6 +86,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+#html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -93,16 +94,16 @@ html_theme = 'sphinx_rtd_theme'
 #
 
 html_theme_options = {
-    'typekit_id': '',
-    'canonical_url': '',
-    'analytics_id': '',
-    'logo_only': False,
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
+   'typekit_id': '',
+   'canonical_url': '',
+   'analytics_id': '',
+   'logo_only': False,
+   'display_version': True,
+   'prev_next_buttons_location': 'bottom',
     # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 4
+   'collapse_navigation': False,
+   'sticky_navigation': True,
+   'navigation_depth': 4
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
