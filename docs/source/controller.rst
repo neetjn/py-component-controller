@@ -38,7 +38,7 @@ Any irregularities between webdrivers should be reported via the py-component-co
 Contructor
 ==========
 
-When a controller is instantiated, the constructor automatically constructs the following attributes:
+When a controller is instantiated, the constructor automatically binds the following attributes:
 
 * **browser**: Webdriver consumed in the constructor.
 * **js**: Reference to instantiated pyselenium-js driver.

@@ -21,7 +21,7 @@ If you haven't already check out `Getting Started <http://py-component-controlle
 Contructor
 ==========
 
-When a component is instantiated, the constructor automatically constructs the following attributes:
+When a component is instantiated, the constructor automatically binds the following attributes:
 
 * **controller**: Reference to parent controller instance.
 * **browser**: Reference to parent controller's webdriver.
