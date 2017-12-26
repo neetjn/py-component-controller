@@ -30,9 +30,9 @@ When a component is instantiated, the constructor automatically binds the follow
 Element (wrapper)
 =================
 
-The *Element* object, is a wrapper for managing individual web elements.
-This object provides a catered api for particular elements, rather than having to depend on the selenium webdriver.
-It features many useful short-hand functions, and uses the pyselenium-js driver under the hood for stability.
+The Element object, is a wrapper for managing individual web elements.
+This object provides a targeted api for particular elements, rather than having to depend solely on the selenium webdriver.
+It features many useful short-hand properties and methods, and uses the pyselenium-js driver under the hood for stability.
 
 This entity is not to be confused with the official selenium api's WebElement entity.
 Given the decorator **@component_element**, whenever referenced the component property will return a *new* instance of the Element wrapper catered to the specific element using the provided selector.
@@ -294,6 +294,13 @@ The api method *wait_status* can be used to validate the wait status of a previo
 
 Elements (wrapper)
 ==================
+
+The Elements object, is a wrapper for managing groups of web elements.
+This object provides a targeted api for particular elements, rather than having to depend solely on the selenium webdriver.
+It features many useful short-hand properties and methods, and uses the pyselenium-js driver under the hood for stability.
+
+This entity is not to be confused with the official selenium api's WebElement entity.
+Given the decorator **@component_elements**, whenever referenced the component property will return a *new* instance of the Elements wrapper catered to the specific elements using the provided selector.
 
 Formatting Selectors
 --------------------
