@@ -137,7 +137,7 @@ class Controller(object):
         :type error: bool, string
         """
         def check_location():
-            if hasattr(route, '__iter__'):
+            if hasattr(route, '__iter__') and not isinstance(route, string_types):
                 return any(loc == self.location if strict \
                     else loc in self.location for loc in route)
             return route == self.location if strict else route in self.location
