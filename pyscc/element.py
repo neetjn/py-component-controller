@@ -219,16 +219,20 @@ class Element(Resource):
             return self
         return None
 
-    def wait_for(self, timeout, error=None):
+    def wait_for(self, timeout, available=True, error=None):
         """
         :Description: Wait for a given element to become available.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
+        :available: Used to check whether element is available or not available.
+        :type available: bool
         :param error: Error message, if passed will raise NoSuchElementException.
         :type error: string, bool
         :return: Element, None
         """
-        if not self.controller.wait(timeout=timeout, condition=self.check.available):
+        if not self.controller.wait(timeout=timeout, condition=self.check.available \
+            if available else self.check.not_available):
+
             if error:
                 raise NoSuchElementException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found'.format(self.selector))
