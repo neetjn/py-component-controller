@@ -226,6 +226,11 @@ To simply wait for an element to be available, you may use the *wait_for* api me
         .wait_for(5, error='Component button was not avaialable as expected')\
         .click()
 
+    # when waiting for an element to be unavailable, simply use the available flag
+    component.button\
+        .click()\
+        .wait_for(5, available=False, error=True)
+
 Waiting For Visibility
 ----------------------
 
