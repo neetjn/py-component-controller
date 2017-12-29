@@ -103,6 +103,9 @@ To check against your webdriver's current location, you can use the *is_location
     controller.is_location('/neetjn/py-component-controller', timeout=5,
         error='Expected to be on py-component-controller repository page')
 
+    # check against a list of possible routes
+    controller.is_location('/neetjn/pyselenium-js', '/neetjn/py-component-controller')
+
 Switching to Window by Title
 ===============================
 
