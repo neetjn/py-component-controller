@@ -53,6 +53,7 @@ class TestElement(BaseTest):
         task = self.task.fmt(id=2)
         self.delete_tasks.click()
         self.assertEqual(task.wait_for(timeout=5, available=False), task)
+        self.assertEqual(task.wait_for(timeout=5, available=True), None)
 
     def test_element_wrapper_wait_visibility(self):
         """test element wrapper visibility wait"""
