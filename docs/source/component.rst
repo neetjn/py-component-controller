@@ -154,7 +154,7 @@ If you require the traditional clicking behavior, simplify fetch a selenium WebE
 
     component.button.get().click()
 
-Additionally, not elements that do not listen on the click event but rather mouseup or mousedown, you may refer to the api methods `mouseup` and `mousedown` (chainable).
+Additionally, for elements that do not listen on the click event but rather mouseup or mousedown, you may refer to the api methods `mouseup` and `mousedown` (chainable):
 
 .. code-block:: python
 
