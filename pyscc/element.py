@@ -159,14 +159,16 @@ class Element(Resource):
         :Description: Dispatches a mouseup event on the given element.
         :return: Element, None
         """
-        return self.trigger_event('mouseup', 'MouseEvent')
+        # ignoring from coverage, assume covered by trigger_event test
+        return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
 
     def mousedown(self):
         """
         :Description: Dispatches a mousedown event on the given element.
         :return: Element, None
         """
-        return self.trigger_event('mousedown', 'MouseEvent')
+        # ignoring from coverage, assume covered by trigger_event test
+        return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
 
     def scroll_to(self):
         """
