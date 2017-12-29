@@ -140,8 +140,7 @@ class Controller(object):
             if hasattr(route, '__iter__'):
                 return any(loc == self.location if strict \
                     else loc in self.location for loc in route)
-            else:
-                return route == self.location if strict else route in self.location
+            return route == self.location if strict else route in self.location
         if timeout:
             if error and not self.wait(timeout=timeout, condition=check_location):
                 raise RuntimeError(
