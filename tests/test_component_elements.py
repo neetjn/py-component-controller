@@ -23,9 +23,11 @@ class TestElement(BaseTest):
     def test_element_group(self):
         """test element groups are generated as intended"""
         self.assertIsInstance(self.social_buttons, Resource)
-        for s in ('twitter', 'facebook', 'linkedin'):
-            self.assertTrue(hasattr(self.social_buttons, s))
-            self.assertIsInstance(getattr(self.social_buttons, s), Element)
+        expected_attributes = ('twitter', 'facebook', 'linkedin')
+        self.assertTrue(all(item in expected_attributes for item in self.social_buttons.__group__))
+        for sb in expected_attributes:
+            self.assertTrue(hasattr(self.social_buttons, sb))
+            self.assertIsInstance(getattr(self.social_buttons, sb), Element)
 
     def test_element_wrapper(self):
         """test element wrapper instantiated as intended"""
