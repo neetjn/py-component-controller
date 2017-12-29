@@ -32,6 +32,8 @@ class TestController(BaseTest):
         self.assertTrue(self.app.is_location('/!#/about', timeout=1))
         self.assertTrue(self.app.is_location(self.app_url + '/!#/about', timeout=1, strict=True))
         self.assertFalse(self.app.is_location('/!#/about', timeout=1, strict=True))
+        self.assertTrue(self.app.is_location(['/!#/home', '/!#/about'], timeout=1))
+        self.assertFalse(self.app.is_location(['/!#/home', '/!#/about'], timeout=1, strict=True))
         with self.assertRaises(RuntimeError):
             self.app.is_location('/!#/about', strict=True, error=True)
         with self.assertRaises(RuntimeError):
