@@ -154,6 +154,20 @@ class Element(Resource):
             return self
         return None
 
+    def mouseup(self):
+        """
+        :Description: Dispatches a mouseup event on the given element.
+        :return: Element, None
+        """
+        return self.trigger_event('mouseup', 'MouseEvent')
+
+    def mousedown(self):
+        """
+        :Description: Dispatches a mousedown event on the given element.
+        :return: Element, None
+        """
+        return self.trigger_event('mousedown', 'MouseEvent')
+
     def scroll_to(self):
         """
         :Description: Scroll to the given element.
