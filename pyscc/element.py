@@ -511,7 +511,9 @@ def component_group(ref):
     """
     @property
     def wrapper(self): #pylint: disable=missing-docstring
-        return Resource(**{
-            element: Element(self.controller, selector) \
-                for element, selector in iteritems(ref(self))})
+        group = iteritems(ref(self))
+        resource = Resource(**{
+            element: Element(self.controller, selector) for element, selector in group})
+        resource.__group__ = [element for element, _ in group]
+        return resource
     return wrapper
