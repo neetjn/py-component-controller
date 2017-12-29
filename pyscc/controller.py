@@ -127,7 +127,7 @@ class Controller(object):
     def is_location(self, route, timeout=0, strict=False, error=False):
         """
         :Description: Check current webdriver location.
-        :param route: Route to check against.
+        :param route: Route or list of routes to check against.
         :type route: string, iterable
         :param timeout: Time in seconds to wait for route.
         :type timeout: int
