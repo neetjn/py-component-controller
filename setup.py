@@ -1,10 +1,11 @@
-from setuptools import setup, find_packages
+#pylint: disable=missing-docstring
+from setuptools import setup
 
 
 setup(
     name='pyscc',
     description='py-component-controller is an opinionated framework for structuring selenium test suites. This project depends on the pyselenium-js project.',
-    version='0.0.3',
+    version='0.0.4',
     url='https://neetjn.github.io/py-component-controller/',
     author='John Nolette',
     author_email='john@neetgroup.net',

@@ -15,7 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
+    InvalidSelectorException
 from six import string_types, iteritems
 
 from pyscc.controller import Controller
@@ -32,18 +33,20 @@ class Element(Resource):
     """
     def __init__(self, controller, selector):
         self.controller = controller
-        self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
         self.check = Check(self)
         self.wait_handle = None  # used for js waits
         self.validate()
 
-    def __find_element(self, **kwargs):
+    def __find_element(self):
+        expected_exceptions = (NoSuchElementException, InvalidSelectorException)
         try:
-            return getattr(self.controller.browser, 'find_element_by_{type}'.format(
-                type=self.type))(kwargs.get('selector', self.selector))
-        except NoSuchElementException:
-            return None
+            return self.controller.browser.find_element_by_css_selector(self.selector)
+        except expected_exceptions:
+            try:
+                return self.controller.browser.find_element_by_xpath(self.selector)
+            except expected_exceptions:
+                return None
 
     def fmt(self, **kwargs):
         """
@@ -153,6 +156,22 @@ class Element(Resource):
             self.controller.js.dbl_click(found)
             return self
         return None
+
+    def mouseup(self):
+        """
+        :Description: Dispatches a mouseup event on the given element.
+        :return: Element, None
+        """
+        # ignoring from coverage, assume covered by trigger_event test
+        return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
+
+    def mousedown(self):
+        """
+        :Description: Dispatches a mousedown event on the given element.
+        :return: Element, None
+        """
+        # ignoring from coverage, assume covered by trigger_event test
+        return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
 
     def scroll_to(self):
         """
@@ -346,14 +365,13 @@ class Elements(Resource):
     """
     def __init__(self, controller, selector):
         self.controller = controller
-        self.type = 'xpath' if '/' in selector else 'css_selector'
         self.selector = self._selector = selector
         self.checks = Checks(self)
         self.validate()
 
-    def __find_elements(self, **kwargs):
-        return getattr(self.controller.browser, 'find_elements_by_{type}'.format(
-            type=self.type))(kwargs.get('selector', self.selector))
+    def __find_elements(self):
+        return self.controller.browser.find_elements_by_css_selector(self.selector) \
+            or self.controller.browser.find_elements_by_xpath(self.selector)
 
     def fmt(self, **kwargs):
         """
@@ -511,7 +529,9 @@ def component_group(ref):
     """
     @property
     def wrapper(self): #pylint: disable=missing-docstring
-        return Resource(**{
-            element: Element(self.controller, selector) \
-                for element, selector in iteritems(ref(self))})
+        group = iteritems(ref(self))
+        resource = Resource(**{
+            element: Element(self.controller, selector) for element, selector in group})
+        resource.__group__ = [element for element, _ in group]
+        return resource
     return wrapper
