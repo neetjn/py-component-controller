@@ -128,7 +128,7 @@ class Controller(object):
         """
         :Description: Check current webdriver location.
         :param route: Route to check against.
-        :type route: string
+        :type route: string, iterable
         :param timeout: Time in seconds to wait for route.
         :type timeout: int
         :param strict: Adds leniency to route comparison.
@@ -136,17 +136,22 @@ class Controller(object):
         :param error: Error upon failure.
         :type error: bool, string
         """
-        check = lambda: route == self.location if strict else route in self.location
+        def check_location():
+            if hasattr(route, '__iter__'):
+                return any(loc == self.location if strict \
+                    else loc in self.location for loc in route)
+            else:
+                return route == self.location if strict else route in self.location
         if timeout:
-            if error and not self.wait(timeout=timeout, condition=check):
+            if error and not self.wait(timeout=timeout, condition=check_location):
                 raise RuntimeError(
                     error if isinstance(error, string_types) else 'Location was not matched')
-            return self.wait(timeout=timeout, condition=check)
+            return self.wait(timeout=timeout, condition=check_location)
         else:
-            if error and not check():
+            if error and not check_location():
                 raise RuntimeError(
                     error if isinstance(error, string_types) else 'Location was not matched')
-            return check()
+            return check_location()
 
     def window_by_title(self, title, graceful=False):
         """
