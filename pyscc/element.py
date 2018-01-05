@@ -142,6 +142,7 @@ class Element(Resource):
         """
         found = self.get()
         if found:
+            self.controller.js.scroll_into_view(found)
             self.controller.js.click(found)
             return self
         return None
@@ -153,6 +154,7 @@ class Element(Resource):
         """
         found = self.get()
         if found:
+            self.controller.js.scroll_into_view(found)
             self.controller.js.dbl_click(found)
             return self
         return None
