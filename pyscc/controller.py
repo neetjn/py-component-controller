@@ -22,8 +22,8 @@ import time
 from types import MethodType
 
 from pyseleniumjs import E2EJS
-from selenium.common.exceptions import NoSuchElementException, \
-    WebDriverException
+from selenium.common.exceptions import InvalidSelectorException, \
+    NoSuchElementException, WebDriverException
 from six import iteritems, string_types
 
 from pyscc.resource import Resource
@@ -64,29 +64,30 @@ class Controller(object):
         :type webdriver: WebDriver
         :return: WebDriver
         """
-        if webdriver.capabilities['browserName'] == 'safari':
 
-            def _safari_patch(executor, selector):
-                try:
-                    return executor(selector)
-                except NoSuchElementException:
-                    return []
+        def safari_selector_patch(executor, selector):
+            try:
+                return executor(selector)
+            except (NoSuchElementException, InvalidSelectorException):
+                return []
 
-            methods = (
-                'css_selector',
-                'tag_name',
-                'id',
-                'xpath',
-                'name',
-                'link_text',
-                'partial_link_text')
+        methods = (
+            'css_selector',
+            'tag_name',
+            'id',
+            'xpath',
+            'name',
+            'link_text',
+            'partial_link_text')
 
-            for method in methods:
-                complete_method_name = 'find_elements_by_{method}'.format(method=method)
-                method = getattr(webdriver, complete_method_name)
-                setattr(webdriver, complete_method_name, MethodType(
-                    lambda self, selector: _safari_patch(executor=method, selector=selector), #pylint: disable=cell-var-from-loop
-                    webdriver))
+        for method in methods:
+            complete_method_name = 'find_elements_by_{method}'.format(method=method)
+            method = getattr(webdriver, complete_method_name)
+            # pylint: disable=cell-var-from-loop
+            setattr(webdriver, complete_method_name, MethodType(
+                lambda self, selector: safari_selector_patch(
+                    executor=method, selector=selector
+                ), webdriver))
 
         return webdriver
 
