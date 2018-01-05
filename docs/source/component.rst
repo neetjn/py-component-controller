@@ -193,9 +193,14 @@ To send input to an element, refer to the *send_input* api method (chainable):
 
 .. code-block:: python
 
+    # send_input will always clear the provided field or element before sending input
     component.username_field\
         .send_input('py-component-controller')\
         .get_attribute('class')
+
+    # you may disable the field or element clearing by using the clear flag
+    component.username_field\
+        .send_input('rocks', clear=False)
 
     # in the event the component element is a custom element that accepts input
     # and it does not support the focus event, the selenium bindings will raise a WebDriverException
