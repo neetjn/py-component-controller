@@ -85,7 +85,12 @@ class TestElement(BaseTest):
     def test_element_wraooer_send_input_get_value(self):
         """test element wrapper send input and get value"""
         random_str = str(uuid4())
-        self.assertEqual(self.create_task_assignee.send_input(random_str), self.create_task_assignee)
+        self.assertEqual(self.create_task_assignee.send_input(random_str),
+                         self.create_task_assignee)
+        self.assertEqual(self.create_task_assignee.value(), random_str)
+        self.create_task_assignee.send_input(random_str, clear=False)
+        self.assertEqual(self.create_task_assignee.value(), random_str + random_str)
+        self.create_task_assignee.send_input(random_str)
         self.assertEqual(self.create_task_assignee.value(), random_str)
 
     def test_element_wrapper_get_text(self):

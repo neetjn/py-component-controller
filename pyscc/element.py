@@ -201,20 +201,26 @@ class Element(Resource):
             return self
         return None
 
-    def send_input(self, value, force=False):
+    def send_input(self, value, force=False, clear=True):
         """
         :Description: Send input to element.
         :param value: Input to send to given element.
         :type value: string
         :param force: Use for elements without an focus event handler.
         :type force: bool
+        :param clear_field: Clear the element's input text prior to sending input.
+        :type clear_field: bool
         :return: Element, none
         """
         found = self.get()
         if found:
             if force:
-                self.controller.js.set_property(found, 'innerHTML', value)
+                self.controller.js.set_property(
+                    found, 'innerHTML',
+                    value if clear else self.controller.js.get_raw_text(found) + value)
             else:
+                if clear:
+                    found.clear()
                 found.send_keys(value)
             return self
         return None
