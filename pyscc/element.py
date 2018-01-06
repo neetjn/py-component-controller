@@ -544,6 +544,7 @@ def component_group(ref):
         for element in self.__group__:
             getattr(self, element).fmt(**kwargs)
             getattr(self, element).__group__ = kwargs
+        return self
 
     @property
     def wrapper(self): #pylint: disable=missing-docstring

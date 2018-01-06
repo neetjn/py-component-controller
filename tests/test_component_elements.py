@@ -17,6 +17,7 @@ class TestElement(BaseTest):
         self.create_task_assignee = self.app.components.home.create_task_assignee
         self.task = self.app.components.home.task
         self.tasks = self.app.components.home.tasks
+        self.task_form = self.app.components.home.task_form
         self.delete_tasks = self.app.components.home.delete_tasks_button
         self.author = self.app.components.footer.author
 
@@ -28,6 +29,13 @@ class TestElement(BaseTest):
         for sb in expected_attributes:
             self.assertTrue(hasattr(self.social_buttons, sb))
             self.assertIsInstance(getattr(self.social_buttons, sb), Element)
+
+    def test_element_group_fmt(self):
+        """test element groups format selectors as intended"""
+        self.assertEqual(self.task_form.fmt(form='create-todo'), self.task_form)
+        self.assertEqual(self.task_form.assignee.selector, 'create-todo #taskAssignee')
+        self.task_form.title.fmt(class_name='u-full-width')
+        self.assertEqual(self.task_form.title.selector, 'create-todo #taskTitle.u-full-width')
 
     def test_element_wrapper(self):
         """test element wrapper instantiated as intended"""
