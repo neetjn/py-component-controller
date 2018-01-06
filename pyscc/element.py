@@ -389,6 +389,8 @@ class Elements(Resource):
         :return: Elements
         """
         self.selector = self._selector.format(**kwargs)
+        if hasattr(self, '__group__'):
+            self.selector.format(**self.__group__)
         return self
 
     def get(self):
@@ -541,6 +543,7 @@ def component_group(ref):
     def fmt(self, **kwargs): #pylint: disable=missing-docstring
         for element in self.__group__:
             getattr(self, element).fmt(**kwargs)
+            getattr(self, element).__group__ = kwargs
 
     @property
     def wrapper(self): #pylint: disable=missing-docstring
