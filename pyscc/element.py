@@ -537,11 +537,17 @@ def component_group(ref):
     :Description: Wrapper for component element groups.
     :return: Resource
     """
+
+    def fmt(self, **kwargs): #pylint: disable=missing-docstring
+        for element in self.__group__:
+            getattr(self, element).fmt(**kwargs)
+
     @property
     def wrapper(self): #pylint: disable=missing-docstring
         group = iteritems(ref(self))
         resource = Resource(**{
             element: Element(self.controller, selector) for element, selector in group})
         resource.__group__ = [element for element, _ in group]
+        resource.fmt = fmt
         return resource
     return wrapper
