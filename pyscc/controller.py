@@ -67,27 +67,29 @@ class Controller(object):
 
         def safari_selector_patch(executor, selector):
             try:
+                print executor
                 return executor(selector)
             except (NoSuchElementException, InvalidSelectorException):
                 return []
 
         methods = (
-            'css_selector',
-            'tag_name',
-            'id',
-            'xpath',
-            'name',
-            'link_text',
-            'partial_link_text')
+            'find_elements_by_css_selector',
+            'find_elements_by_tag_name',
+            'find_elements_by_id',
+            'find_elements_by_xpath',
+            'find_elements_by_name',
+            'find_elements_by_link_text',
+            'find_elements_by_partial_link_text')
 
-        for method in methods:
-            complete_method_name = 'find_elements_by_{method}'.format(method=method)
-            method = getattr(webdriver, complete_method_name)
-            # pylint: disable=cell-var-from-loop
-            setattr(webdriver, complete_method_name, MethodType(
-                lambda self, selector: safari_selector_patch(
-                    executor=method, selector=selector
-                ), webdriver))
+        method_map = {method: getattr(webdriver, method) for method in methods}
+
+        # TODO: left here, referencing last item in the methods list?
+        # why are all method references being routed to partial link text?
+
+        # pylint: disable=cell-var-from-loop
+        for name, method in iteritems(method_map):
+            setattr(webdriver, name, MethodType(lambda self, selector: safari_selector_patch(
+                method, selector), webdriver))
 
         return webdriver
 
