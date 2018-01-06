@@ -374,7 +374,6 @@ class Elements(Resource):
         self.validate()
 
     def __find_elements(self):
-        print self.controller.browser.find_elements_by_css_selector(self.selector)
         return self.controller.browser.find_elements_by_css_selector(self.selector) \
             or self.controller.browser.find_elements_by_xpath(self.selector)
 
@@ -408,7 +407,6 @@ class Elements(Resource):
         :return: [string, ...], None
         """
         found = self.get()
-        print(found)
         if found:
             collection = []
             if raw:
