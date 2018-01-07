@@ -75,18 +75,9 @@ class Controller(object):
         webdriver.find_elements_by_css_selector = MethodType(lambda self, selector:\
             safari_selector_patch(by_css_selector, selector), webdriver)
 
-<<<<<<< HEAD
         by_xpath = webdriver.find_elements_by_xpath
         webdriver.find_elements_by_xpath = MethodType(lambda self, selector: safari_selector_patch(
             by_xpath, selector), webdriver)
-=======
-            for method in methods:
-                complete_method_name = 'find_elements_by_{method}'.format(method=method)
-                method = getattr(webdriver, complete_method_name)
-                setattr(webdriver, complete_method_name, MethodType(
-                    lambda self, selector: _safari_patch(executor=method, selector=selector), # pylint: disable=cell-var-from-loop
-                    webdriver))
->>>>>>> master
 
         return webdriver
 
