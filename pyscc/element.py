@@ -553,6 +553,6 @@ def component_group(ref):
         resource = Resource(**{
             element: Element(self.controller, selector) for element, selector in iteritems(group)})
         resource.__group__ = [element for element, _ in iteritems(group)]
-        resource.fmt = MethodType(lambda self, **kwargs: fmt(self, **kwargs), resource)
+        resource.fmt = MethodType(fmt, resource)
         return resource
     return wrapper
