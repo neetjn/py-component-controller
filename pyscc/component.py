@@ -19,7 +19,7 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-class Component(Resource): #pylint: disable=too-few-public-methods
+class Component(Resource): # pylint: disable=too-few-public-methods
     """
     :Description: Base resource for web components.
     :param controller: Parent controller reference.

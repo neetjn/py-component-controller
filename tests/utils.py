@@ -59,6 +59,14 @@ class HomePage(Component):
     def create_task_content(self):
         return '#taskContent'
 
+    @component_group
+    def task_form(self):
+        return {
+            'assignee': '{form} #taskAssignee',
+            'title': '{form} #taskTitle.{{class_name}}',
+            'content': '{form} #taskContent'
+        }
+
 
 class Footer(Component):
 
