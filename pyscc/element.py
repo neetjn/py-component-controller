@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from types import MethodType
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
     InvalidSelectorException
 from six import string_types, iteritems
@@ -548,10 +549,10 @@ def component_group(ref):
 
     @property
     def wrapper(self): #pylint: disable=missing-docstring
-        group = iteritems(ref(self))
+        group = ref(self)
         resource = Resource(**{
-            element: Element(self.controller, selector) for element, selector in group})
-        resource.__group__ = [element for element, _ in group]
-        resource.fmt = fmt
+            element: Element(self.controller, selector) for element, selector in iteritems(group)})
+        resource.__group__ = [element for element, _ in iteritems(group)]
+        resource.fmt = MethodType(lambda self, **kwargs: fmt(self, **kwargs), resource)
         return resource
     return wrapper
