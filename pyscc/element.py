@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from types import MethodType
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
     InvalidSelectorException
 from six import string_types, iteritems
@@ -142,6 +143,7 @@ class Element(Resource):
         """
         found = self.get()
         if found:
+            self.controller.js.scroll_into_view(found)
             self.controller.js.click(found)
             return self
         return None
@@ -153,6 +155,7 @@ class Element(Resource):
         """
         found = self.get()
         if found:
+            self.controller.js.scroll_into_view(found)
             self.controller.js.dbl_click(found)
             return self
         return None
@@ -500,7 +503,7 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  #pylint: disable=len-as-condition
+        if len(found):  # pylint: disable=len-as-condition
             for element in found:
                 if not self.elements.controller.js.is_visible(element):
                     return False
@@ -517,7 +520,7 @@ def component_element(ref):
     :return: Element
     """
     @property
-    def wrapper(self):  #pylint: disable=missing-docstring
+    def wrapper(self):  # pylint: disable=missing-docstring
         return Element(self.controller, ref(self))
     return wrapper
 
@@ -528,7 +531,7 @@ def component_elements(ref):
     :return: Elements
     """
     @property
-    def wrapper(self):  #pylint: disable=missing-docstring
+    def wrapper(self):  # pylint: disable=missing-docstring
         return Elements(self.controller, ref(self))
     return wrapper
 
@@ -537,11 +540,21 @@ def component_group(ref):
     :Description: Wrapper for component element groups.
     :return: Resource
     """
+
+    def fmt(self, **kwargs): # pylint: disable=missing-docstring
+        # pylint: disable=C0103, W0212
+        for element in self.__group__:
+            el = getattr(self, element)
+            el._selector = el._selector.format(**kwargs)
+            el.selector = el._selector
+        return self
+
     @property
-    def wrapper(self): #pylint: disable=missing-docstring
-        group = iteritems(ref(self))
+    def wrapper(self): # pylint: disable=missing-docstring
+        group = ref(self)
         resource = Resource(**{
-            element: Element(self.controller, selector) for element, selector in group})
-        resource.__group__ = [element for element, _ in group]
+            element: Element(self.controller, selector) for element, selector in iteritems(group)})
+        resource.__group__ = [element for element, _ in iteritems(group)]
+        resource.fmt = MethodType(fmt, resource)
         return resource
     return wrapper

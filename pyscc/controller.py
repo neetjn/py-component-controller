@@ -43,7 +43,7 @@ class Controller(object):
     """
     def __init__(self, browser, base_url, components, **env):
         self.browser = self.__patch_webdriver(browser)
-        self.js = E2EJS(browser) #pylint: disable=invalid-name
+        self.js = E2EJS(browser) # pylint: disable=invalid-name
         self.base_url = base_url
         self.logger = logger
         if not isinstance(components, (tuple, list, dict)):
@@ -75,9 +75,18 @@ class Controller(object):
         webdriver.find_elements_by_css_selector = MethodType(lambda self, selector:\
             safari_selector_patch(by_css_selector, selector), webdriver)
 
+<<<<<<< HEAD
         by_xpath = webdriver.find_elements_by_xpath
         webdriver.find_elements_by_xpath = MethodType(lambda self, selector: safari_selector_patch(
             by_xpath, selector), webdriver)
+=======
+            for method in methods:
+                complete_method_name = 'find_elements_by_{method}'.format(method=method)
+                method = getattr(webdriver, complete_method_name)
+                setattr(webdriver, complete_method_name, MethodType(
+                    lambda self, selector: _safari_patch(executor=method, selector=selector), # pylint: disable=cell-var-from-loop
+                    webdriver))
+>>>>>>> master
 
         return webdriver
 
@@ -201,12 +210,12 @@ class Controller(object):
                     else:
                         if condition():
                             return True
-                except Exception as exc: #pylint: disable=broad-except
+                except Exception as exc: # pylint: disable=broad-except
                     if throw_error:
                         error = exc
                 time.sleep(1)
             if error and throw_error:
-                raise error #pylint: disable=raising-bad-type
+                raise error # pylint: disable=raising-bad-type
             return reverse
         else:
             time.sleep(timeout)
