@@ -141,8 +141,8 @@ class TestElement(BaseTest):
 
     def test_elements_wrapper_text(self):
         self.app.wait(timeout=1)  # wait for transitions
+        self.assertEqual(len(self.tasks.text()), 3)
         for task in self.tasks.text():
             self.assertIn('2017', task)
         for task in self.tasks.text(raw=True):
             self.assertIn('r-sref="/profile/', task)
-
