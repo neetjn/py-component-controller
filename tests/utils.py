@@ -63,7 +63,7 @@ class HomePage(Component):
     def task_form(self):
         return {
             'assignee': '{form} #taskAssignee',
-            'title': '{form} #taskTitle.{class_name}',
+            'title': '{form} #taskTitle.{{class_name}}',
             'content': '{form} #taskContent'
         }
 

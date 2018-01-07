@@ -390,8 +390,6 @@ class Elements(Resource):
         :return: Elements
         """
         self.selector = self._selector.format(**kwargs)
-        if hasattr(self, '__group__'):
-            self.selector.format(**self.__group__)
         return self
 
     def get(self):
@@ -503,7 +501,7 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  #pylint: disable=len-as-condition
+        if len(found):  # pylint: disable=len-as-condition
             for element in found:
                 if not self.elements.controller.js.is_visible(element):
                     return False
@@ -520,7 +518,7 @@ def component_element(ref):
     :return: Element
     """
     @property
-    def wrapper(self):  #pylint: disable=missing-docstring
+    def wrapper(self):  # pylint: disable=missing-docstring
         return Element(self.controller, ref(self))
     return wrapper
 
@@ -531,7 +529,7 @@ def component_elements(ref):
     :return: Elements
     """
     @property
-    def wrapper(self):  #pylint: disable=missing-docstring
+    def wrapper(self):  # pylint: disable=missing-docstring
         return Elements(self.controller, ref(self))
     return wrapper
 
@@ -541,14 +539,16 @@ def component_group(ref):
     :return: Resource
     """
 
-    def fmt(self, **kwargs): #pylint: disable=missing-docstring
+    def fmt(self, **kwargs): # pylint: disable=missing-docstring
+        # pylint: disable=C0103, W0212
         for element in self.__group__:
-            getattr(self, element).fmt(**kwargs)
-            getattr(self, element).__group__ = kwargs
+            el = getattr(self, element)
+            el._selector = el._selector.format(**kwargs)
+            el.selector = el._selector
         return self
 
     @property
-    def wrapper(self): #pylint: disable=missing-docstring
+    def wrapper(self): # pylint: disable=missing-docstring
         group = ref(self)
         resource = Resource(**{
             element: Element(self.controller, selector) for element, selector in iteritems(group)})
