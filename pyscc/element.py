@@ -545,8 +545,11 @@ def component_group(ref):
         # pylint: disable=C0103, W0212
         for element in self.__group__:
             el = getattr(self, element)
-            el._selector = el._selector.format(**kwargs)
-            el.selector = el._selector
+            try:
+                el._selector = el._selector.format(**kwargs)
+                el.selector = el._selector
+            except KeyError:
+                pass
         return self
 
     @property
