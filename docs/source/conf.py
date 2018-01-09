@@ -179,6 +179,3 @@ texinfo_documents = [
      author, 'py-component-controller', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

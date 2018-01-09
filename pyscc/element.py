@@ -535,12 +535,12 @@ def component_elements(ref):
         return Elements(self.controller, ref(self))
     return wrapper
 
+
 def component_group(ref):
     """
     :Description: Wrapper for component element groups.
     :return: Resource
     """
-
     def fmt(self, **kwargs): # pylint: disable=missing-docstring
         # pylint: disable=C0103, W0212
         for element in self.__group__:
@@ -554,10 +554,64 @@ def component_group(ref):
 
     @property
     def wrapper(self): # pylint: disable=missing-docstring
-        group = ref(self)
-        resource = Resource(**{
-            element: Element(self.controller, selector) for element, selector in iteritems(group)})
-        resource.__group__ = [element for element, _ in iteritems(group)]
-        resource.fmt = MethodType(fmt, resource)
-        return resource
+        cgrp = ref(self)
+        group = Resource(**{
+            element: Element(self.controller, selector) for element, selector in iteritems(cgrp)})
+        group.__group__ = [element for element, _ in iteritems(cgrp)]
+        group.fmt = MethodType(fmt, group)
+        group.check = CheckGroup(group)
+        return group
     return wrapper
+
+
+class CheckGroup(Resource):
+    """
+    :Description: Base resource for component group element checks.
+    :param group: Group resource to reference.
+    :type group: Resource
+    """
+    def __init__(self, group):
+        self.group = group
+        self.validate()
+
+    def available(self):
+        """
+        :Description: Check group of elements available.
+        :return: bool
+        """
+        for element in self.group.__group__:
+            if not getattr(self.group, element).check.available():
+                return False
+        return True
+
+    def not_available(self):
+        """
+        :Description: Check group of elements not available.
+        :return: bool
+        """
+        for element in self.group.__group__:
+            if not getattr(self.group, element).check.not_available():
+                return False
+        return True
+
+    def visible(self):
+        """
+        :Description: Check group of elements visible.
+        :return: bool
+        """
+        for element in self.group.__group__:
+            if not getattr(self.group, element).check.visible():
+                return False
+        return True
+
+    def invisible(self):
+        """
+        :Description: Check group of elements invisible.
+        :return: bool
+        """
+        for element in self.group.__group__:
+            if not getattr(self.group, element).check.invisible():
+                return False
+        return True
+
+    meta = {'required_fields': [('group', Resource)]}
