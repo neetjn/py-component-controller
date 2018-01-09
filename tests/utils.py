@@ -29,7 +29,7 @@ class HomePage(Component):
 
     @component_element
     def task(self):
-        return 'todo-task#task-{id}'
+        return 'todo-task#task-${id}'
 
     @component_elements
     def tasks(self):
@@ -62,9 +62,9 @@ class HomePage(Component):
     @component_group
     def task_form(self):
         return {
-            'assignee': '{form} #taskAssignee',
-            'title': '{form} #taskTitle.{{class_name}}',
-            'content': '{form} #taskContent'
+            'assignee': '${form} #taskAssignee',
+            'title': '${form} #taskTitle.${class_name}',
+            'content': '${form} #taskContent'
         }
 
 
