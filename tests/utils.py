@@ -16,8 +16,8 @@ class Header(Component):
     def social_buttons(self):
         return {
             'twitter': 'a[title="twitter"]',
-            'linkedin': 'a[title="linked"]',
-            'facebook': 'a[title="facebook"]'
+            'linkedin': 'a[title="linkedin"]',
+            'github': 'a[title="github"]'
         }
 
 
