@@ -581,7 +581,6 @@ class CheckGroup(Resource):
         """
         for element in self.group.__group__:
             if not getattr(self.group, element).check.available():
-                print element
                 return False
         return True
 
