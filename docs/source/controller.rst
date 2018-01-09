@@ -176,7 +176,7 @@ Get Browser Console Logs
 
 Using `pyselenium-js <https://github.com/neetjn/pyselenium-js/blob/master/pyseleniumjs/e2ejs.py#L130>`_ under the hood we can log our browser's console output.
 To initialize the logger, you can reference the *console_logger* method from the controller's js attribute (pysjs reference).
-Once you've initialized the logger, use the controller api method *dump_browser_logs* to drop your logs to your host machine.
+Once you've initialized the logger, use the controller api method *browser_logs* to drop your logs to your host machine.
 
 .. code-block:: python
 
@@ -184,10 +184,10 @@ Once you've initialized the logger, use the controller api method *dump_browser_
     controller.js.console_logger()
 
     # dump browser console logs
-    controller.dump_browser_logs()
+    controller.browser_logs()
 
     # dump browsers logs with a log name
-    controller.dump_browser_logs('error.logout.redirect')
+    controller.browser_logs('error.logout.redirect')
 
 
 Terminate Webdriver Session
