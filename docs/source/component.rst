@@ -380,7 +380,7 @@ To pull the text from every available element into a list, you may use the *text
     >> [string, ...]
 
 Getting List of Element Values
------------------------------
+------------------------------
 
 Input elements provide a property, value, which selenium does not provide explicit bindings for. Using the api method value you may pull the value from any input element (including select, button, radiobutton).
 
@@ -428,4 +428,70 @@ The api method *visible* is a callable check to ensure the currently available e
 .. code-block:: python
 
     component.users.check.visible()
+    >> True, False
+
+
+Component Groups
+================
+
+Several elements that can be attributed to a particular root element, can be denoted as a component group.
+Component groups help keep our component objects clean, readable, and maintanable.
+The following is an example of when you would use a component group,
+
+.. image:: https://image.prntscr.com/image/Frqjg7b5Ru_96NURbUHT7g.png
+   :height: 500
+   :scale: 50
+
+As can be seen from the image above, a *task* can be interpreted as a component group because each task is composed of
+several elements that are a child of the task's container. This can be converted into a component group like so:
+
+... code-block:: python
+
+    @component_group
+    def task(self):
+        return {
+            'checkbox': 'todo-task#{id} input[type="checkbox"]',
+            'title': 'todo-task#{id} span#title',
+            'created': 'todo-task#{id} span#created',
+            'assignee': 'todo-task#{id} a#assignee'
+        }
+
+    ...
+
+    task = component.task.fmt(id=1)
+    task.check.available()
+    task.checkbox\
+        .wait_visible(5, error=True)\
+        .click()
+
+Component groups also have a very simplistic api to exercise basic checks on their child elements.
+
+Check For Availability of Elements
+----------------------------------
+
+You may check if a component group's child elements are available with a single call to the *available* api method:
+
+... code-block:: python
+
+    component.group.check.available()
+    >> True, False
+
+Alternatively, you may also check if all child elements are unavailable by using *not_available*.
+
+... code-block:: python
+
+    component.group.check.not_available()
+    >> True, False
+
+Check For Visibility of Elements
+--------------------------------
+
+To check the visibility of a component group's child elements, you may refer to the api methods *visible* and *invisible*.
+
+... code-block:: python
+
+    component.group.check.visible()
+    >> True, False
+
+    component.group.check.invisible()
     >> True, False
