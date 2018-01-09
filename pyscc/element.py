@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from string import Template
 from types import MethodType
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
     InvalidSelectorException
@@ -54,7 +55,7 @@ class Element(Resource):
         :Description: Used to format selectors.
         :return: Element
         """
-        self.selector = self._selector.format(**kwargs)
+        self.selector = Template(self._selector).safe_substitute(**kwargs)
         return self
 
     def get(self):
@@ -391,7 +392,7 @@ class Elements(Resource):
         :Description: Used to format selectors.
         :return: Elements
         """
-        self.selector = self._selector.format(**kwargs)
+        self.selector = Template(self._selector).safe_substitute(**kwargs)
         return self
 
     def get(self):
@@ -545,11 +546,8 @@ def component_group(ref):
         # pylint: disable=C0103, W0212
         for element in self.__group__:
             el = getattr(self, element)
-            try:
-                el._selector = el._selector.format(**kwargs)
-                el.selector = el._selector
-            except KeyError:
-                pass
+            el._selector = Template(el._selector).safe_substitute(**kwargs)
+            el.selector = el._selector
         return self
 
     @property
