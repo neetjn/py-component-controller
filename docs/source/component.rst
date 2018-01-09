@@ -330,7 +330,7 @@ Take for example the following component elements provider:
 
     @component_elements
     def users(self):
-        return 'a.users.{class}'
+        return 'a.users.${class}'
 
 You can format the element's selector prior to executing any operations.
 
