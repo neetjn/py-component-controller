@@ -9,6 +9,13 @@ class TestController(BaseTest):
         file_name = self.app.screen_shot(prefix='test')
         self.assertTrue(os.stat(file_name))
 
+    def test_controller_browser_logs(self):
+        """test controller browser log dump"""
+        self.app.js.console_logger()
+        self.app.browser.execute_script('console.log("foobar")')
+        log_path = self.app.browser_logs(name='test', path='target/')
+        self.assertTrue(os.stat(log_path))
+
     def test_controller_wait(self):
         """"test controller conditional wait"""
         self.app.delete_tasks(tasks=1)
