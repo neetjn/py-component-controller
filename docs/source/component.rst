@@ -445,7 +445,7 @@ The following is an example of when you would use a component group,
 As can be seen from the image above, a *task* can be interpreted as a component group because each task is composed of
 several elements that are a child of the task's container. This can be converted into a component group like so:
 
-... code-block:: python
+.. code-block:: python
 
     @component_group
     def task(self):
@@ -471,14 +471,14 @@ Check For Availability of Elements
 
 You may check if a component group's child elements are available with a single call to the *available* api method:
 
-... code-block:: python
+.. code-block:: python
 
     component.group.check.available()
     >> True, False
 
 Alternatively, you may also check if all child elements are unavailable by using *not_available*.
 
-... code-block:: python
+.. code-block:: python
 
     component.group.check.not_available()
     >> True, False
@@ -488,7 +488,7 @@ Check For Visibility of Elements
 
 To check the visibility of a component group's child elements, you may refer to the api methods *visible* and *invisible*.
 
-... code-block:: python
+.. code-block:: python
 
     component.group.check.visible()
     >> True, False
