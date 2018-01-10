@@ -1,5 +1,5 @@
 clean:
-	rm -rf build dist *.egg-info venv *.pyc .cache
+	rm -rf target build dist *.egg-info venv *.pyc .cache test*.png
 	rm -rf pyscc/*.pyc tests/*.pyc tests/__pycache__
 
 setup:
