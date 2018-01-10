@@ -5,7 +5,9 @@ clean:
 setup:
 # create virtualenv and install test dependencies
 	virtualenv venv && venv/bin/pip install -r tests/test-requirements.txt
-	npm --prefix tests/mock-site install
+	# TODO: https://github.com/neetjn/py-component-controller/issues/38
+	# npm --prefix tests/mock-site install
+	# npm --prefix tests/mock-site rebuild node-sass
 
 app:
 	npm run --prefix tests/mock-site app:detached

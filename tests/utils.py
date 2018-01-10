@@ -16,8 +16,8 @@ class Header(Component):
     def social_buttons(self):
         return {
             'twitter': 'a[title="twitter"]',
-            'linkedin': 'a[title="linked"]',
-            'facebook': 'a[title="facebook"]'
+            'linkedin': 'a[title="linkedin"]',
+            'github': 'a[title="github"]'
         }
 
 
@@ -29,7 +29,7 @@ class HomePage(Component):
 
     @component_element
     def task(self):
-        return 'todo-task#task-{id}'
+        return 'todo-task#task-${id}'
 
     @component_elements
     def tasks(self):
@@ -62,9 +62,9 @@ class HomePage(Component):
     @component_group
     def task_form(self):
         return {
-            'assignee': '{form} #taskAssignee',
-            'title': '{form} #taskTitle.{{class_name}}',
-            'content': '{form} #taskContent'
+            'assignee': '${form} #taskAssignee',
+            'title': '${form} #taskTitle.${class_name}',
+            'content': '${form} #taskContent'
         }
 
 
@@ -117,7 +117,9 @@ class AppController(Controller):
 class BaseTest(TestCase):
 
     def setUp(self):
-        self.app_url = 'http://localhost:3000'
+        # TODO: https://github.com/neetjn/py-component-controller/issues/38
+        # self.app_url = 'http://localhost:3000'
+        self.app_url = 'https://riot-todo-84334.firebaseapp.com/#!/'
         self.created = time()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')

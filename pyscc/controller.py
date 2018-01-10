@@ -212,21 +212,25 @@ class Controller(object):
             time.sleep(timeout)
             return True
 
-    def dump_browser_logs(self, name=None):
+    def browser_logs(self, name=None, path=None):
         """
         :Description: Dumps browser logs to local directory.
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: string
+        :return: string
         """
+        if path and not os.path.exists(path):
+            os.mkdir(path)
         try:
-            logs = self.js.console_dump()
             timestamp = str(int(time.time()))
-            log_name = 'console.%s.json' % (('%s.%s' % (name, timestamp)) if name else timestamp)
-            with open('%s' % log_name, 'a') as logfile:
-                logfile.write(logs)
+            log_path = '%sconsole.%s.json' % (path, ('%s.%s' % (name, timestamp)) if \
+                name else timestamp)
+            with open(log_path, 'a') as logfile:
+                logfile.write(self.js.console_dump())
+            return log_path
         except WebDriverException:
-            self.logger.critical('Browser console was not overridden, could not return any logs.')
+            self.logger.critical('Browser logger object not found, could not return any logs.')
 
     def screen_shot(self, prefix=None):
         """

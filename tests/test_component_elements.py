@@ -24,11 +24,18 @@ class TestElement(BaseTest):
     def test_element_group(self):
         """test element groups are generated as intended"""
         self.assertIsInstance(self.social_buttons, Resource)
-        expected_attributes = ('twitter', 'facebook', 'linkedin')
+        expected_attributes = ('twitter', 'github', 'linkedin')
         self.assertTrue(all(item in expected_attributes for item in self.social_buttons.__group__))
         for sb in expected_attributes:
             self.assertTrue(hasattr(self.social_buttons, sb))
             self.assertIsInstance(getattr(self.social_buttons, sb), Element)
+
+    def test_element_group_checks(self):
+        """test element group checks work as intended"""
+        self.assertTrue(self.social_buttons.check.available())
+        self.assertFalse(self.social_buttons.check.not_available())
+        self.assertTrue(self.social_buttons.check.visible())
+        self.assertFalse(self.social_buttons.check.invisible())
 
     def test_element_group_fmt(self):
         """test element groups format selectors as intended"""
