@@ -123,6 +123,7 @@ class BaseTest(TestCase):
         self.created = time()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
         self.app = AppController(
             webdriver.Chrome(chrome_options=chrome_options), self.app_url, created=self.created)
 
