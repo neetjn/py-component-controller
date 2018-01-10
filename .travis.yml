@@ -5,7 +5,7 @@ python:
 env:
   - NODE_VERSION="8"
 before_install:
-  - nvm install $NODE_VERSION
+#  - nvm install $NODE_VERSION
   - npm install -g chromedriver
   - pip install virtualenv
   - pip install codecov
@@ -15,10 +15,10 @@ install:
   - make setup
 cache:
   directories:
-    - tests/mock-site/node_modules
+#    - tests/mock-site/node_modules
     - venv
 script:
-  - make app
+#  - make app
   - make test
   - if [ "$TRAVIS_BRANCH" == "master" ]; then codecov; fi
 deploy:

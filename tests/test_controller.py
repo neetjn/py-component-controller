@@ -27,24 +27,24 @@ class TestController(BaseTest):
 
     def test_controller_navigate(self):
         """test controller navigation"""
-        self.app.navigate('!#/about')
-        self.assertEqual(self.app.location, self.app_url + '/!#/about')
+        self.app.navigate('notfound')
+        self.assertEqual(self.app.location, self.app_url + 'notfound')
 
     def test_controller_is_location(self):
         """test controller is_location"""
-        self.app.navigate('!#/about')
-        self.assertTrue(self.app.is_location('/!#/about'))
-        self.assertTrue(self.app.is_location(self.app_url + '/!#/about', strict=True))
-        self.assertFalse(self.app.is_location('/!#/about', strict=True))
-        self.assertTrue(self.app.is_location('/!#/about', timeout=1))
-        self.assertTrue(self.app.is_location(self.app_url + '/!#/about', timeout=1, strict=True))
-        self.assertFalse(self.app.is_location('/!#/about', timeout=1, strict=True))
-        self.assertTrue(self.app.is_location(['/!#/home', '/!#/about'], timeout=1))
-        self.assertFalse(self.app.is_location(['/!#/home', '/!#/about'], timeout=1, strict=True))
+        self.app.navigate('notfound')
+        self.assertTrue(self.app.is_location('notfound'))
+        self.assertTrue(self.app.is_location(self.app_url + 'notfound', strict=True))
+        self.assertFalse(self.app.is_location('notfound', strict=True))
+        self.assertTrue(self.app.is_location('notfound', timeout=1))
+        self.assertTrue(self.app.is_location(self.app_url + 'notfound', timeout=1, strict=True))
+        self.assertFalse(self.app.is_location('notfound', timeout=1, strict=True))
+        self.assertTrue(self.app.is_location(['home', 'notfound'], timeout=1))
+        self.assertFalse(self.app.is_location(['home', 'notfound'], timeout=1, strict=True))
         with self.assertRaises(RuntimeError):
-            self.app.is_location('/!#/about', strict=True, error=True)
+            self.app.is_location('notfound', strict=True, error=True)
         with self.assertRaises(RuntimeError):
-            self.app.is_location('/!#/about', strict=True, timeout=1, error=True)
+            self.app.is_location('notfound', strict=True, timeout=1, error=True)
 
     def test_controller_env(self):
         """test controller env resource is properly created"""
@@ -60,10 +60,11 @@ class TestController(BaseTest):
     def test_controller_window_detection(self):
         """test controller window detection"""
         header = self.app.components.header
+        window_title = self.app.title
         header.social_buttons.twitter.get().click()
         self.assertTrue(
             self.app.wait(timeout=5, condition=lambda: self.app.window_by_location(
                 'https://twitter.com/neet_jn')))
         self.assertEqual(self.app.location, 'https://twitter.com/neet_jn')
-        self.assertTrue(self.app.window_by_title('Home'))
+        self.assertTrue(self.app.window_by_title(window_title))
         self.assertIn(self.app_url, self.app.location)
