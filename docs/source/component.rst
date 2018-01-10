@@ -47,7 +47,7 @@ Take for example the following component element provider:
 
     @component_element
     def button(self):
-        return 'button[ng-click="{method}"]'
+        return 'button[ng-click="${method}"]'
 
 You can format the element's selector prior to executing any operations.
 
@@ -330,7 +330,7 @@ Take for example the following component elements provider:
 
     @component_elements
     def users(self):
-        return 'a.users.{class}'
+        return 'a.users.${class}'
 
 You can format the element's selector prior to executing any operations.
 
@@ -450,10 +450,10 @@ several elements that are a child of the task's container. This can be converted
     @component_group
     def task(self):
         return {
-            'checkbox': 'todo-task#{id} input[type="checkbox"]',
-            'title': 'todo-task#{id} span#title',
-            'created': 'todo-task#{id} span#created',
-            'assignee': 'todo-task#{id} a#assignee'
+            'checkbox': 'todo-task#${id} input[type="checkbox"]',
+            'title': 'todo-task#${id} span#title',
+            'created': 'todo-task#${id} span#created',
+            'assignee': 'todo-task#${id} a#assignee'
         }
 
     ...
