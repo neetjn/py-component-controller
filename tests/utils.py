@@ -117,7 +117,9 @@ class AppController(Controller):
 class BaseTest(TestCase):
 
     def setUp(self):
-        self.app_url = 'http://localhost:3000'
+        # TODO: https://github.com/neetjn/py-component-controller/issues/38
+        # self.app_url = 'http://localhost:3000'
+        self.app_url = 'http://riot-todo-84334.firebaseapp.com/'
         self.created = time()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
