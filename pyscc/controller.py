@@ -16,7 +16,6 @@
 # under the License.
 
 import os
-import uuid
 import logging as logger
 import time
 from types import MethodType
@@ -132,6 +131,7 @@ class Controller(object):
                 return any(loc == self.location if strict \
                     else loc in self.location for loc in route)
             return route == self.location if strict else route in self.location
+
         if timeout:
             if error and not self.wait(timeout=timeout, condition=check_location):
                 raise RuntimeError(
@@ -143,39 +143,53 @@ class Controller(object):
                     error if isinstance(error, string_types) else 'Location was not matched')
             return check_location()
 
-    def window_by_title(self, title, graceful=False):
+    def window_by_title(self, title, timeout=0, strict=False):
         """
         :Description: Changes to window context by window title.
         :param title: Title of window to switch into.
         :type title: string
-        :param graceful: Adds leniency to window title search.
-        :type graceful: bool
+        :param timeout: Time in seconds to wait for window.
+        :type timeout: int
+        :param strict: Adds leniency to window title search.
+        :type strict: bool
         :return: bool
         """
-        for handle in self.browser.window_handles:
-            self.browser.switch_to_window(handle)
-            if graceful and title in self.title:
-                return True
-            if not graceful and self.title == title:
-                return True
-        return False
+        def search():
+            for handle in self.browser.window_handles:
+                self.browser.switch_to_window(handle)
+                if strict and title == self.title:
+                    return True
+                elif not strict and title in self.title:
+                    return True
+            return False
 
-    def window_by_location(self, location, graceful=False):
+        if timeout:
+            return self.wait(timeout=timeout, condition=search)
+        return search()
+
+    def window_by_location(self, location, timeout=0, strict=False):
         """
         :Description: Changes to window context by window path.
         :param location: Path of window to switch into.
         :type location: string
-        :param graceful: Adds leniency to window path search.
-        :type graceful: bool
+        :param timeout: Time in seconds to wait for window.
+        :type timeout: int
+        :param strict: Adds leniency to window path search.
+        :type strict: bool
         :return: bool
         """
-        for handle in self.browser.window_handles:
-            self.browser.switch_to_window(handle)
-            if graceful and location in self.location:
-                return True
-            if not graceful and self.location == location:
-                return True
-        return False
+        def search():
+            for handle in self.browser.window_handles:
+                self.browser.switch_to_window(handle)
+                if strict and location == self.location:
+                    return True
+                elif not strict and location in self.location:
+                    return True
+            return False
+
+        if timeout:
+            return self.wait(timeout=timeout, condition=search)
+        return search()
 
     @classmethod
     def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
@@ -240,7 +254,7 @@ class Controller(object):
         :return: string
         """
         file_location = os.path.join(
-            './', (prefix + '_' if prefix else '') + str(uuid.uuid4()) + '.png')
+            './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 

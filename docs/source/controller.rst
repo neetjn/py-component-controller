@@ -113,12 +113,16 @@ For window management, the controller provides a method that allows you to switc
 
 .. code-block:: python
 
-    # absolute window title check
+    # partial window title check
     controller.window_by_title('readthedocs')
     >> True, False
 
-    # partial window title check
-    controller.window_by_title('readthedocs', graceful=True)
+    # strict window title check
+    controller.window_by_title('readthedocs - My Docs', strict=True)
+    >> True, False
+
+    # polling for window by title
+    controller.window_by_title('readthedocs', timeout=5)
     >> True, False
 
 Switching to Window by Location
@@ -128,12 +132,16 @@ The controller also provided a method that allows you to switch to a window by l
 
 .. code-block:: python
 
-    # absolute location check
-    controller.window_by_title('https://readthedocs.io/neetjn')
+    # partial window location check
+    controller.window_by_location('readthedocs.io')
     >> True, False
 
-    # partial location title check
-    controller.window_by_title('readthedocs.io', graceful=True)
+    # strict window location check
+    controller.window_by_location('https://readthedocs.io/neetjn', strict=True)
+    >> True, False
+
+    # poll for window by location
+    controller.window_by_location('readthedocs.io', timeout=5)
     >> True, False
 
 Conditional Waits
