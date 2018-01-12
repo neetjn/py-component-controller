@@ -160,7 +160,7 @@ class Controller(object):
                 self.browser.switch_to_window(handle)
                 if strict and title == self.title:
                     return True
-                elif not strict and self.title == title:
+                elif not strict and title in self.title:
                     return True
             return False
 
@@ -185,7 +185,7 @@ class Controller(object):
                 self.browser.switch_to_window(handle)
                 if strict and location == self.location:
                     return True
-                elif not strict and self.location == location:
+                elif not strict and location in self.location:
                     return True
             return False
 
