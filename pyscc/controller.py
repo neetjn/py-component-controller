@@ -166,8 +166,7 @@ class Controller(object):
 
         if timeout:
             return self.wait(timeout=timeout, condition=search)
-        else:
-            return search()
+        return search()
 
     def window_by_location(self, location, timeout=0, strict=False):
         """
@@ -191,8 +190,7 @@ class Controller(object):
 
         if timeout:
             return self.wait(timeout=timeout, condition=search)
-        else:
-            return search()
+        return search()
 
     @classmethod
     def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
