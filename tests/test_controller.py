@@ -60,11 +60,21 @@ class TestController(BaseTest):
     def test_controller_window_detection(self):
         """test controller window detection"""
         header = self.app.components.header
-        window_title = self.app.title
+        app_title = self.app.title
         header.social_buttons.twitter.get().click()
         self.assertTrue(
             self.app.wait(timeout=5, condition=lambda: self.app.window_by_location(
                 'https://twitter.com/neet_jn')))
         self.assertEqual(self.app.location, 'https://twitter.com/neet_jn')
-        self.assertTrue(self.app.window_by_title(window_title))
+        self.assertTrue(self.app.window_by_title(app_title))
         self.assertIn(self.app_url, self.app.location)
+
+    def test_controller_window_detection_timeout(self):
+        """test controller window detection with timeouts"""
+        header = self.app.components.header
+        app_title = self.app.title
+        header.social_buttons.twitter.get().click()
+        self.assertTrue(self.app.window_by_location('twitter.com/neet_jn', timeout=5))
+        self.assertFalse(self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1))
+        self.assertTrue(self.app.window_by_title(app_title[-1], timeout=5))
+        self.assertFalse(self.app.window_by_title(app_title[-1], strict=True, timeout=1))
