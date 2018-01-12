@@ -16,7 +16,6 @@
 # under the License.
 
 import os
-import uuid
 import logging as logger
 import time
 from types import MethodType
@@ -255,7 +254,7 @@ class Controller(object):
         :return: string
         """
         file_location = os.path.join(
-            './', (prefix + '_' if prefix else '') + str(uuid.uuid4()) + '.png')
+            './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 
