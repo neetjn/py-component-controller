@@ -655,8 +655,9 @@ def component_group(ref):
     @property
     def wrapper(self): # pylint: disable=missing-docstring
         cgrp = ref(self)
-        group = Resource(**{
-            element: Element(self.controller, selector) for element, selector in iteritems(cgrp)})
+        group = Resource(**{element: Element(self.controller, (cgrp.get('_') + ' ' + selector) if \
+            cgrp.get('_') else selector) for element, selector in iteritems(cgrp) \
+            if selector != '_'})
         group.__group__ = [element for element, _ in iteritems(cgrp)]
         group.fmt = MethodType(fmt, group)
         group.check = CheckGroup(group)

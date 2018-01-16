@@ -16,6 +16,7 @@ class TestElement(BaseTest):
         self.create_task_assignee_label = self.app.components.home.create_task_assignee_label
         self.create_task_assignee = self.app.components.home.create_task_assignee
         self.task = self.app.components.home.task
+        self.task_group = self.app.components.home.task_group
         self.tasks = self.app.components.home.tasks
         self.task_form = self.app.components.home.task_form
         self.delete_tasks = self.app.components.home.delete_tasks_button
@@ -43,6 +44,11 @@ class TestElement(BaseTest):
         self.assertEqual(self.task_form.assignee.selector, 'create-todo #taskAssignee')
         self.task_form.title.fmt(class_name='u-full-width')
         self.assertEqual(self.task_form.title.selector, 'create-todo #taskTitle.u-full-width')
+
+    def test_element_group_root(self):
+        """test element group root element"""
+        task = self.task_group.fmt(id='1')
+        self.assertEqual(task.desc.selector, 'todo-task#task-1 h4')
 
     def test_element_wrapper(self):
         """test element wrapper instantiated as intended"""
@@ -155,6 +161,7 @@ class TestElement(BaseTest):
             self.tasks.wait_visible(timeout=1, length=4, error=True)
 
     def test_elements_wrapper_text(self):
+        """test elements wrapper text aggregation"""
         self.app.wait(timeout=1)  # wait for transitions
         self.assertEqual(len(self.tasks.text()), 3)
         for task in self.tasks.text():
@@ -163,6 +170,7 @@ class TestElement(BaseTest):
             self.assertIn('r-sref="/profile/', task)
 
     def test_elements_wrapper_attributes(self):
+        """test elements wrapper attribute aggregation and specification"""
         self.app.wait(timeout=1)  # wait for transitions
         self.assertEqual(self.tasks.count(), 3)
         self.assertEqual(self.tasks.set_attribute('foobar', 'barfoo'), self.tasks)
@@ -172,6 +180,7 @@ class TestElement(BaseTest):
             self.assertEqual(attr, 'barfoo')
 
     def test_elements_wrapper_properties(self):
+        """test elements wrapper property aggregation and specification"""
         self.app.wait(timeout=1)  # wait for transitions
         self.assertEqual(self.tasks.count(), 3)
         self.assertEqual(self.tasks.set_property('foobar', 'barfoo'), self.tasks)
