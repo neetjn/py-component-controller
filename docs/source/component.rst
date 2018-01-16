@@ -451,7 +451,7 @@ several elements that are a child of the task's container. This can be converted
     def task(self):
         return {
             '_': 'todo-task#${id}',  # optional root selector
-            'checkbox': ' input[type="checkbox"]', # becomes: 'todo-task#${id} input[type="checkbox"]'
+            'checkbox': 'input[type="checkbox"]', # becomes: 'todo-task#${id} input[type="checkbox"]'
             'title': 'span#title',
             'created': 'span#created',
             'assignee': 'a#assignee'
