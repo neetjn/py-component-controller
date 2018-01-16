@@ -119,7 +119,7 @@ Using the element wrapper, an element's property can be fetched like so:
 
     component.remind_me.get_property('checked')
 
-Additionally, an element's attribute can be set using the *set_attribute* api method (chainable):
+Additionally, an element's attribute can be set using the *set_property* api method (chainable):
 
 .. code-block:: python
 
@@ -495,3 +495,44 @@ To check the visibility of a component group's child elements, you may refer to 
 
     component.group.check.invisible()
     >> True, False
+
+Getting and Setting Elements' Attribute
+-------------------------------------
+
+Using the elements wrapper, an attribute of a given list of elements can be fetched like so:
+
+.. code-block:: python
+
+    component.user_list.get_attribute('aria-toggled')
+
+Additionally, a list of elements' attribute can be set using the *set_attribute* api method (chainable):
+
+.. code-block:: python
+
+    component.user_list\
+        .set_attribute('hidden', False)\
+        .wait_visible(3, error=True)
+
+Under the hood, pyselenium-js will automatically convert javascript types into pythonic types and inverse.
+
+Getting and Setting Elements' Property
+----------------------------------------
+
+**This feature is not supported by the official selenium bindings (or remote api).**
+
+Using the elements wrapper, a property of a given list of elements can be fetched like so:
+
+.. code-block:: python
+
+    component.user_list.get_property('disabled')
+
+Additionally, a list of elements' properties can be set using the *set_property* api method (chainable):
+
+.. code-block:: python
+
+    component.user_list\
+        .set_property('disabled', True)\
+        .fmt(class='disabled')\
+        .wait_for(3, error=True)
+
+As explained in the attribute section, pyselenium-js under the hood will automatically convert javascript types into pythonic types and inverse.

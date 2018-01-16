@@ -161,3 +161,21 @@ class TestElement(BaseTest):
             self.assertIn('2017', task)
         for task in self.tasks.text(raw=True):
             self.assertIn('r-sref="/profile/', task)
+
+    def test_elements_wrapper_attributes(self):
+        self.app.wait(timeout=1)  # wait for transitions
+        self.assertEqual(self.tasks.count(), 3)
+        self.assertEqual(self.tasks.set_attribute('foobar', 'barfoo'), self.tasks)
+        attributes = self.tasks.get_attribute('foobar')
+        self.assertEqual(len(attributes), 3)
+        for attr in attributes:
+            self.assertEqual(attr, 'barfoo')
+
+    def test_elements_wrapper_properties(self):
+        self.app.wait(timeout=1)  # wait for transitions
+        self.assertEqual(self.tasks.count(), 3)
+        self.assertEqual(self.tasks.set_property('foobar', 'barfoo'), self.tasks)
+        properties = self.tasks.get_property('foobar')
+        self.assertEqual(len(properties), 3)
+        for prop in properties:
+            self.assertEqual(prop, 'barfoo')
