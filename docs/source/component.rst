@@ -450,10 +450,11 @@ several elements that are a child of the task's container. This can be converted
     @component_group
     def task(self):
         return {
-            'checkbox': 'todo-task#${id} input[type="checkbox"]',
-            'title': 'todo-task#${id} span#title',
-            'created': 'todo-task#${id} span#created',
-            'assignee': 'todo-task#${id} a#assignee'
+            '_': 'todo-task#${id}',  # optional root selector
+            'checkbox': ' input[type="checkbox"]', # becomes: 'todo-task#${id} input[type="checkbox"]'
+            'title': 'span#title',
+            'created': 'span#created',
+            'assignee': 'a#assignee'
         }
 
     ...
