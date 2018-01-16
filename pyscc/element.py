@@ -167,6 +167,7 @@ class Element(Resource):
         :return: Element, None
         """
         # ignoring from coverage, assume covered by trigger_event test
+        self.controller.js.scroll_into_view(found)
         return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
 
     def mousedown(self):
@@ -175,6 +176,7 @@ class Element(Resource):
         :return: Element, None
         """
         # ignoring from coverage, assume covered by trigger_event test
+        self.controller.js.scroll_into_view(found)
         return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
 
     def scroll_to(self):
