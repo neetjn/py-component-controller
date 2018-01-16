@@ -497,7 +497,7 @@ To check the visibility of a component group's child elements, you may refer to 
     >> True, False
 
 Getting and Setting Elements' Attribute
--------------------------------------
+---------------------------------------
 
 Using the elements wrapper, an attribute of a given list of elements can be fetched like so:
 
@@ -516,7 +516,7 @@ Additionally, a list of elements' attribute can be set using the *set_attribute*
 Under the hood, pyselenium-js will automatically convert javascript types into pythonic types and inverse.
 
 Getting and Setting Elements' Property
-----------------------------------------
+--------------------------------------
 
 **This feature is not supported by the official selenium bindings (or remote api).**
 
