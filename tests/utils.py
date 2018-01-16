@@ -31,6 +31,15 @@ class HomePage(Component):
     def task(self):
         return 'todo-task#task-${id}'
 
+    @component_group
+    def task_group(self):
+        return {
+            '_': 'todo-task#task-${id}',
+            'desc': 'h4',
+            'assignee': 'span:nth-child(2)',
+            'created': 'span:nth-child(4)'
+        }
+
     @component_elements
     def tasks(self):
         return 'todo-task'

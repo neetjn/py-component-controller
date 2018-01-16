@@ -1,5 +1,5 @@
 selenium==3.6.0
-pyseleniumjs==1.3.6
+pyseleniumjs==1.3.7
 six
 pylint
 pytest-cov

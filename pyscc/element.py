@@ -167,7 +167,11 @@ class Element(Resource):
         :return: Element, None
         """
         # ignoring from coverage, assume covered by trigger_event test
-        return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
+        return None
 
     def mousedown(self):
         """
@@ -175,7 +179,11 @@ class Element(Resource):
         :return: Element, None
         """
         # ignoring from coverage, assume covered by trigger_event test
-        return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
+        return None
 
     def scroll_to(self):
         """
@@ -318,57 +326,6 @@ class Element(Resource):
     }
 
 
-class Check(Resource):
-    """
-    :Description: Base resource for individual element checks.
-    :param element: Element instance to reference.
-    :type element: Element
-    """
-    def __init__(self, element):
-        self.element = element
-        self.validate()
-
-    def available(self):
-        """
-        :Description: Check element available.
-        :return: bool
-        """
-        return bool(self.element.get())
-
-    def not_available(self):
-        """
-        :Description: Check element not available.
-        :return: bool
-        """
-        return not bool(self.element.get())
-
-    def visible(self):
-        """
-        :Description: Check element visibility.
-        :return: bool
-        """
-        found = self.element.get()
-        return found and \
-            self.element.controller.js.is_visible(found)
-
-    def invisible(self):
-        """
-        :Description: Check element invisible.
-        :return: bool
-        """
-        found = self.element.get()
-        return found and \
-            not self.element.controller.js.is_visible(found)
-
-    def wait_status(self):
-        """
-        :Description: Check javascript wait status.
-        """
-        return self.element.controller.js.wait_status(self.element.wait_handle)
-
-    meta = {'required_fields': [('element', Element)]}
-
-
 class Elements(Resource):
     """
     :Description: Base resource for component elements.
@@ -433,10 +390,51 @@ class Elements(Resource):
         :Description: Get list of input element values.
         :return: [string, ...], None
         """
-        found = self.get()
-        if found:
-            return [self.controller.js.get_value(element) for element in found]
-        return []
+        return [self.controller.js.get_value(element) for element in self.get()]
+
+    def get_attribute(self, attribute):
+        """
+        :Description: Used to fetch list of elements attributes.
+        :param attribute: Attribute of elements to target.
+        :type attribute: string
+        :return: [(None, bool, int, float, string), ...]
+        """
+        return [self.controller.js.get_attribute(element, attribute) for element in self.get()]
+
+    def set_attribute(self, attribute, value):
+        """
+        :Description: Used to set specified element attribute.
+        :param attribute: Attribute of element to target.
+        :type attribute: string
+        :param value: Value to set elements attributes to.
+        :type value: None, bool, int, float, string
+        :return: Element, None
+        """
+        for element in self.get():
+            self.controller.js.set_attribute(element, attribute, value)
+        return self
+
+    def get_property(self, prop):
+        """
+        :Description: Used to fetch list of elements properties.
+        :param prop: Property of elements to target.
+        :type prop: string
+        :return: None, bool, int, float, string
+        """
+        return [self.controller.js.get_property(element, prop) for element in self.get()]
+
+    def set_property(self, prop, value):
+        """
+        :Description: Used to set specified element property.
+        :param prop: Property of element to target.
+        :type prop: string
+        :param value: Value to set specified element property to.
+        :type value: None, bool, int, float, string
+        :return: Element, None
+        """
+        for element in self.get():
+            self.controller.js.set_property(element, prop, value)
+        return self
 
     def wait_for(self, timeout, length=1, strict=False, error=None):
         """
@@ -488,6 +486,57 @@ class Elements(Resource):
     }
 
 
+class Check(Resource):
+    """
+    :Description: Base resource for individual element checks.
+    :param element: Element instance to reference.
+    :type element: Element
+    """
+    def __init__(self, element):
+        self.element = element
+        self.validate()
+
+    def available(self):
+        """
+        :Description: Check element available.
+        :return: bool
+        """
+        return bool(self.element.get())
+
+    def not_available(self):
+        """
+        :Description: Check element not available.
+        :return: bool
+        """
+        return not bool(self.element.get())
+
+    def visible(self):
+        """
+        :Description: Check element visibility.
+        :return: bool
+        """
+        found = self.element.get()
+        return found and \
+            self.element.controller.js.is_visible(found)
+
+    def invisible(self):
+        """
+        :Description: Check element invisible.
+        :return: bool
+        """
+        found = self.element.get()
+        return found and \
+            not self.element.controller.js.is_visible(found)
+
+    def wait_status(self):
+        """
+        :Description: Check javascript wait status.
+        """
+        return self.element.controller.js.wait_status(self.element.wait_handle)
+
+    meta = {'required_fields': [('element', Element)]}
+
+
 class Checks(Resource):
     """
     :Description: Base resource for multiple element checks.
@@ -513,53 +562,6 @@ class Checks(Resource):
         return True
 
     meta = {'required_fields': [('elements', Elements)]}
-
-
-def component_element(ref):
-    """
-    :Description: Wrapper for singular component element.
-    :return: Element
-    """
-    @property
-    def wrapper(self):  # pylint: disable=missing-docstring
-        return Element(self.controller, ref(self))
-    return wrapper
-
-
-def component_elements(ref):
-    """
-    :Description: Wrapper for multiple component element.
-    :return: Elements
-    """
-    @property
-    def wrapper(self):  # pylint: disable=missing-docstring
-        return Elements(self.controller, ref(self))
-    return wrapper
-
-
-def component_group(ref):
-    """
-    :Description: Wrapper for component element groups.
-    :return: Resource
-    """
-    def fmt(self, **kwargs): # pylint: disable=missing-docstring
-        # pylint: disable=C0103, W0212
-        for element in self.__group__:
-            el = getattr(self, element)
-            el._selector = Template(el._selector).safe_substitute(**kwargs)
-            el.selector = el._selector
-        return self
-
-    @property
-    def wrapper(self): # pylint: disable=missing-docstring
-        cgrp = ref(self)
-        group = Resource(**{
-            element: Element(self.controller, selector) for element, selector in iteritems(cgrp)})
-        group.__group__ = [element for element, _ in iteritems(cgrp)]
-        group.fmt = MethodType(fmt, group)
-        group.check = CheckGroup(group)
-        return group
-    return wrapper
 
 
 class CheckGroup(Resource):
@@ -613,3 +615,51 @@ class CheckGroup(Resource):
         return True
 
     meta = {'required_fields': [('group', Resource)]}
+
+
+def component_element(ref):
+    """
+    :Description: Wrapper for singular component element.
+    :return: Element
+    """
+    @property
+    def wrapper(self):  # pylint: disable=missing-docstring
+        return Element(self.controller, ref(self))
+    return wrapper
+
+
+def component_elements(ref):
+    """
+    :Description: Wrapper for multiple component element.
+    :return: Elements
+    """
+    @property
+    def wrapper(self):  # pylint: disable=missing-docstring
+        return Elements(self.controller, ref(self))
+    return wrapper
+
+
+def component_group(ref):
+    """
+    :Description: Wrapper for component element groups.
+    :return: Resource
+    """
+    def fmt(self, **kwargs): # pylint: disable=missing-docstring
+        # pylint: disable=C0103, W0212
+        for element in self.__group__:
+            el = getattr(self, element)
+            el._selector = Template(el._selector).safe_substitute(**kwargs)
+            el.selector = el._selector
+        return self
+
+    @property
+    def wrapper(self): # pylint: disable=missing-docstring
+        cgrp = ref(self)
+        group = Resource(**{element: Element(self.controller, (cgrp.get('_') + ' ' + selector) if \
+            cgrp.get('_') else selector) for element, selector in iteritems(cgrp) \
+            if selector != '_'})
+        group.__group__ = [element for element, _ in iteritems(cgrp)]
+        group.fmt = MethodType(fmt, group)
+        group.check = CheckGroup(group)
+        return group
+    return wrapper
