@@ -132,7 +132,8 @@ class Controller(object):
                     else loc in self.location for loc in route)
             return route == self.location if strict else route in self.location
 
-        result = self.wait(timeout=timeout, condition=check_location) if timeout else check_location()
+        result = self.wait(timeout=timeout, condition=check_location) \
+            if timeout else check_location()
         if error and not result:
             raise RuntimeError(
                 error if isinstance(error, string_types) else 'Location was not matched')
