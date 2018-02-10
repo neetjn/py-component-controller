@@ -47,6 +47,7 @@ class TestElement(BaseTest):
 
     def test_element_group_root(self):
         """test element group root element"""
+        self.assertTrue('_' not in self.task_group.__group__)  # gh issue 54
         task = self.task_group.fmt(id='1')
         self.assertEqual(task.desc.selector, 'todo-task#task-1 h4')
 
