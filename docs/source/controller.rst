@@ -125,6 +125,11 @@ For window management, the controller provides a method that allows you to switc
     controller.window_by_title('readthedocs', timeout=5)
     >> True, False
 
+    # error if condition is not met
+    controller.window_by_title('readthedocs', timeout=5, error=True)
+    controller.window_by_title('readthedocs', timeout=5,
+        error='Could not find the expected readthedocs window')
+
 Switching to Window by Location
 ===============================
 
@@ -143,6 +148,11 @@ The controller also provided a method that allows you to switch to a window by l
     # poll for window by location
     controller.window_by_location('readthedocs.io', timeout=5)
     >> True, False
+
+    # error if condition is not met
+    controller.window_by_location('readthedocs.io', timeout=5, error=True)
+    controller.window_by_location('readthedocs.io', timeout=5,
+        error='Could not find the expected readthedocs window')
 
 Conditional Waits
 =================
