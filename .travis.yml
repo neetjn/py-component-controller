@@ -7,7 +7,7 @@ env:
   - NODE_VERSION="8"
 before_install:
 # - nvm install $NODE_VERSION
-  - npm install -g chromedriver --unsafe-perm=true
+  - npm install -g chromedriver@2.33 --unsafe-perm=true
   - pip install virtualenv
   - pip install codecov
 addons:

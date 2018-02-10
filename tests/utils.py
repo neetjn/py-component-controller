@@ -104,12 +104,12 @@ class AppController(Controller):
             for task in tasks:
                 task_el = home.task.fmt(id=task)
                 if 'disabled' not in task_el.get_attribute('class'):
-                    task_el.click()
+                    task_el.get().click()
         elif isinstance(tasks, int):
             task_el = home.task.fmt(id=tasks).wait_for(timeout=5, error=True)
             task_class = task_el.get_attribute('class')
             if not task_class or 'disabled' not in task_class:
-                task_el.click()
+                task_el.get().click()
         else:
             raise RuntimeError('Expected a task or list of tasks')
         home.delete_tasks_button.get().click()
@@ -126,8 +126,6 @@ class AppController(Controller):
 class BaseTest(TestCase):
 
     def setUp(self):
-        # TODO: https://github.com/neetjn/py-component-controller/issues/38
-        # self.app_url = 'http://localhost:3000'
         self.app_url = 'https://riot-todo-84334.firebaseapp.com/#!/'
         self.created = time()
         chrome_options = webdriver.ChromeOptions()

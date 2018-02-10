@@ -47,6 +47,7 @@ class TestElement(BaseTest):
 
     def test_element_group_root(self):
         """test element group root element"""
+        self.assertTrue('_' not in self.task_group.__group__)  # gh issue 54
         task = self.task_group.fmt(id='1')
         self.assertEqual(task.desc.selector, 'todo-task#task-1 h4')
 
@@ -60,10 +61,10 @@ class TestElement(BaseTest):
 
     def test_element_wrapper_fmt(self):
         """test element wrapper selector formatting"""
-        task = self.task.fmt(id=1)
-        self.app.wait(timeout=5, condition=task.get)
-        self.assertIsInstance(task.get(), WebElement)
-        self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
+        with self.task.fmt(id=1) as task:
+            self.app.wait(timeout=5, condition=task.get)
+            self.assertIsInstance(task.get(), WebElement)
+            self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
 
     def test_element_wrapper_wait(self):
         """test element wrapper wait"""
@@ -90,7 +91,7 @@ class TestElement(BaseTest):
             self.delete_tasks.wait_js(
                 '$el.getAttribute("class").indexOf("is-danger") == -1', 50), self.delete_tasks)
         self.assertFalse(self.delete_tasks.check.wait_status())
-        self.task.click()
+        self.task.get().click()
         self.assertTrue(self.app.wait(timeout=5, condition=self.delete_tasks.check.wait_status))
 
     def test_element_wrapper_attribute(self):
@@ -167,7 +168,7 @@ class TestElement(BaseTest):
         for task in self.tasks.text():
             self.assertIn('2017', task)
         for task in self.tasks.text(raw=True):
-            self.assertIn('r-sref="/profile/', task)
+            self.assertIn('href="/#!/profile', task)
 
     def test_elements_wrapper_attributes(self):
         """test elements wrapper attribute aggregation and specification"""

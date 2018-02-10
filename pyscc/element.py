@@ -40,6 +40,12 @@ class Element(Resource):
         self.wait_handle = None  # used for js waits
         self.validate()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _type, value, traceback):
+        return True
+
     def __find_element(self):
         expected_exceptions = (NoSuchElementException, InvalidSelectorException)
         try:
@@ -340,6 +346,12 @@ class Elements(Resource):
         self.checks = Checks(self)
         self.validate()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _type, value, traceback):
+        return True
+
     def __find_elements(self):
         return self.controller.browser.find_elements_by_css_selector(self.selector) \
             or self.controller.browser.find_elements_by_xpath(self.selector)
@@ -574,6 +586,12 @@ class CheckGroup(Resource):
         self.group = group
         self.validate()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _type, value, traceback):
+        return True
+
     def available(self):
         """
         :Description: Check group of elements available.
@@ -654,11 +672,12 @@ def component_group(ref):
 
     @property
     def wrapper(self): # pylint: disable=missing-docstring
-        cgrp = ref(self)
-        group = Resource(**{element: Element(self.controller, (cgrp.get('_') + ' ' + selector) if \
-            cgrp.get('_') else selector) for element, selector in iteritems(cgrp) \
+        group_def = ref(self)
+        # pylint: disable=line-too-long
+        group = Resource(**{element: Element(self.controller, (group_def.get('_') + ' ' + selector) if \
+            group_def.get('_') else selector) for element, selector in iteritems(group_def) \
             if selector != '_'})
-        group.__group__ = [element for element, _ in iteritems(cgrp)]
+        group.__group__ = [element for element, _ in iteritems(group_def) if element != '_']
         group.fmt = MethodType(fmt, group)
         group.check = CheckGroup(group)
         return group

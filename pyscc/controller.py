@@ -55,6 +55,12 @@ class Controller(object):
 
         self.browser.get(self.base_url)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, value, traceback):
+        self.exit()
+
     @staticmethod
     def __patch_webdriver(webdriver):
         """
@@ -132,18 +138,15 @@ class Controller(object):
                     else loc in self.location for loc in route)
             return route == self.location if strict else route in self.location
 
-        if timeout:
-            if error and not self.wait(timeout=timeout, condition=check_location):
-                raise RuntimeError(
-                    error if isinstance(error, string_types) else 'Location was not matched')
-            return self.wait(timeout=timeout, condition=check_location)
-        else:
-            if error and not check_location():
-                raise RuntimeError(
-                    error if isinstance(error, string_types) else 'Location was not matched')
-            return check_location()
+        result = self.wait(timeout=timeout, condition=check_location) \
+            if timeout else check_location()
+        if error and not result:
+            raise RuntimeError(
+                error if isinstance(error, string_types) else 'Location was not matched')
 
-    def window_by_title(self, title, timeout=0, strict=False):
+        return result
+
+    def window_by_title(self, title, timeout=0, strict=False, error=False):
         """
         :Description: Changes to window context by window title.
         :param title: Title of window to switch into.
@@ -152,6 +155,8 @@ class Controller(object):
         :type timeout: int
         :param strict: Adds leniency to window title search.
         :type strict: bool
+        :param error: Error upon failure.
+        :type error: bool, string
         :return: bool
         """
         def search():
@@ -161,13 +166,17 @@ class Controller(object):
                     return True
                 elif not strict and title in self.title:
                     return True
+
             return False
 
-        if timeout:
-            return self.wait(timeout=timeout, condition=search)
-        return search()
+        result = self.wait(timeout=timeout, condition=search) if timeout else search()
+        if error and not result:
+            raise RuntimeError(
+                error if isinstance(error, string_types) else 'Window not found')
 
-    def window_by_location(self, location, timeout=0, strict=False):
+        return result
+
+    def window_by_location(self, location, timeout=0, strict=False, error=False):
         """
         :Description: Changes to window context by window path.
         :param location: Path of window to switch into.
@@ -176,6 +185,8 @@ class Controller(object):
         :type timeout: int
         :param strict: Adds leniency to window path search.
         :type strict: bool
+        :param error: Error upon failure.
+        :type error: bool, string
         :return: bool
         """
         def search():
@@ -187,9 +198,12 @@ class Controller(object):
                     return True
             return False
 
-        if timeout:
-            return self.wait(timeout=timeout, condition=search)
-        return search()
+        result = self.wait(timeout=timeout, condition=search) if timeout else search()
+        if error and not result:
+            raise RuntimeError(
+                error if isinstance(error, string_types) else 'Window not found')
+
+        return result
 
     @classmethod
     def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):

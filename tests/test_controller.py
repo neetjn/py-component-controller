@@ -76,5 +76,21 @@ class TestController(BaseTest):
         header.social_buttons.twitter.get().click()
         self.assertTrue(self.app.window_by_location('twitter.com/neet_jn', timeout=5))
         self.assertFalse(self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1))
+        with self.assertRaises(RuntimeError):
+            self.app.window_by_location('twitter.com/neet_jn', strict=True, error=True)
+        with self.assertRaises(RuntimeError):
+            self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1, error=True)
         self.assertTrue(self.app.window_by_title(app_title[-1], timeout=5))
         self.assertFalse(self.app.window_by_title(app_title[-1], strict=True, timeout=1))
+        with self.assertRaises(RuntimeError):
+            self.app.window_by_title(app_title[-1], strict=True, error=True)
+        with self.assertRaises(RuntimeError):
+            self.app.window_by_title(app_title[-1], strict=True, timeout=1, error=True)
+
+    def test_controller_context_management(self):
+        """test controller with context management"""
+        with self.app as app:
+            self.assertEqual(app, self.app)
+            app.navigate('notfound')
+        with self.assertRaises(Exception):
+            self.app.navigate('notfound')
