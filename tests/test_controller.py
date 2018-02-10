@@ -86,3 +86,11 @@ class TestController(BaseTest):
             self.app.window_by_title(app_title[-1], strict=True, error=True)
         with self.assertRaises(RuntimeError):
             self.app.window_by_title(app_title[-1], strict=True, timeout=1, error=True)
+
+    def test_controller_context_management(self):
+        """test controller with context management"""
+        with self.app as app:
+            self.assertEqual(app, self.app)
+            app.navigate('notfound')
+        with self.assertRaises(Exception):
+            self.app.navigate('notfound')

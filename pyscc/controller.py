@@ -55,6 +55,12 @@ class Controller(object):
 
         self.browser.get(self.base_url)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, value, traceback):
+        self.exit()
+
     @staticmethod
     def __patch_webdriver(webdriver):
         """

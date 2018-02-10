@@ -61,10 +61,10 @@ class TestElement(BaseTest):
 
     def test_element_wrapper_fmt(self):
         """test element wrapper selector formatting"""
-        task = self.task.fmt(id=1)
-        self.app.wait(timeout=5, condition=task.get)
-        self.assertIsInstance(task.get(), WebElement)
-        self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
+        with self.task.fmt(id=1) as task:
+            self.app.wait(timeout=5, condition=task.get)
+            self.assertIsInstance(task.get(), WebElement)
+            self.assertEqual(task.fmt(id=str(uuid4())).get(), None)
 
     def test_element_wrapper_wait(self):
         """test element wrapper wait"""
