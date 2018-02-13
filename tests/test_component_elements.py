@@ -152,6 +152,7 @@ class TestElement(BaseTest):
     def test_elements_wrapper_wait_for(self):
         """test elements wrapper wait for"""
         self.assertEqual(self.tasks.wait_for(timeout=5, length=3), self.tasks)
+        self.assertEqual(self.tasks.wait_for(timeout=1, length=4), None)
         with self.assertRaises(NoSuchElementException):
             self.tasks.wait_for(timeout=1, length=4, error=True)
 
