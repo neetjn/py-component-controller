@@ -542,6 +542,24 @@ class Check(Resource):
         return found and \
             not self.element.controller.js.is_visible(found)
 
+    def enabled(self):
+        """
+        :Description: Check element DOM node enabled.
+        :return: bool
+        """
+        found = self.element.get()
+        return found and \
+            not self.element.controller.js.get_property(found, 'disabled')
+
+    def disabled(self):
+        """
+        :Description: Check element DOM node disabled.
+        :return: bool
+        """
+        found = self.element.get()
+        return found and \
+            self.element.controller.js.get_property(found, 'disabled')
+
     def wait_status(self):
         """
         :Description: Check javascript wait status.
@@ -634,6 +652,26 @@ class CheckGroup(Resource):
                 return False
         return True
 
+    def enabled(self):
+        """
+        :Description: Check group elements enabled.
+        :return: bool
+        """
+        for element in self.__group__:
+            if not getattr(self.group, element).check.enabled():
+                return False
+        return True
+
+    def disabled(self):
+        """
+        :Description: Check group elements disabled.
+        :return: bool
+        """
+        for element in self.__group__:
+            if not getattr(self.group, element).check.disabled():
+                return False
+        return True
+
     meta = {'required_fields': [('group', Resource)]}
 
 
@@ -683,4 +721,5 @@ def component_group(ref):
         group.fmt = MethodType(fmt, group)
         group.check = CheckGroup(group)
         return group
+
     return wrapper

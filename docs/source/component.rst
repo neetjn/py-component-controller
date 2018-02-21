@@ -295,6 +295,19 @@ The element wrapper provides two callable, explicit check for element visibility
     component.button.check.invisible()
     >> True, False
 
+Checking Enabled
+----------------
+
+Refer to the api methods `enabled` and `disabled` to check wether a DOM node is disabled.
+
+.. code-block:: python
+
+    component.button.check.enabled()
+    >> True, False
+
+    component.button.check.disabled()
+    >> True, False
+
 Checking Wait Status (javascript)
 ---------------------------------
 
@@ -536,4 +549,18 @@ To check the visibility of a component group's child elements, you may refer to 
     >> True, False
 
     component.group.check.invisible()
+    >> True, False
+
+
+Checking Elements Enabled
+-------------------------
+
+Refer to the api methods `enabled` and `disabled` to check wether a DOM node is disabled.
+
+.. code-block:: python
+
+    component.group.check.enabled()
+    >> True, False
+
+    component.group.check.disabled()
     >> True, False
