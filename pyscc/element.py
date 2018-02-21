@@ -549,7 +549,7 @@ class Check(Resource):
         """
         found = self.element.get()
         return found and \
-            not self.element.controller.js.get_property('disabled')
+            not self.element.controller.js.get_property(found, 'disabled')
 
     def wait_status(self):
         """
