@@ -61,12 +61,12 @@ For more information refer to the official documentation [here](http://py-compon
 
 ## Testing
 
-All module related e2e tests are in the `tests` subdirectory. To setup your environment run `make setup`. To run the test suite, use `make test`.
+All module related e2e tests are in the `tests` subdirectory. This project uses pipenv, so to setup your environment install pipenv from pip using `pip install pipenv` and create your environment with `pipenv install --dev`. For test coverage pytest is used; to run the suite use `pipenv run pytest tests`.
 
 The mock site can be accessed [here](http://riot-todo-84334.firebaseapp.com/); it was created using Riot.js 3, SkeletonCSS, and webpack 3. It was designed to represent a common website layout with responsive capabilities.
 
 Requirements:
-* Python 2.7, 3.6 (with pip)
+* Python 2.7, 3.6 (with pip/pipenv)
 * Chrome or Chromium (Chrome 60-64)
 * ChromeDriver (version 2.3.3)
 * Node.js 6+ (with npm)

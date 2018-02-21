@@ -6,21 +6,15 @@ python:
 env:
   - NODE_VERSION="8"
 before_install:
-# - nvm install $NODE_VERSION
   - npm install -g chromedriver@2.33 --unsafe-perm=true
-  - pip install virtualenv
+  - pip install pipenv
   - pip install codecov
 addons:
   chrome: stable
 install:
-  - make setup
-cache:
-  directories:
-#   - tests/mock-site/node_modules
-    - venv
+  - pipenv install --dev
 script:
-# - make app
-  - make test
+  - pipenv run pytest --cov=pyscc tests
   - if [ "$TRAVIS_BRANCH" == "master" ]; then codecov; fi
 deploy:
   provider: pypi
