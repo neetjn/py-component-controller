@@ -465,7 +465,8 @@ class Elements(Resource):
             strict else self.count() >= length):
             if error:
                 raise NoSuchElementException(error if isinstance(error, string_types) else \
-                    '{} elements by selector "{}" not found'.format(length, self.selector))
+                    '"{}" elements by selector "{}" found, expected "{}"'\
+                    .format(self.count(), self.selector, length))
             else:
                 return None
 
