@@ -41,10 +41,14 @@ class TestController(BaseTest):
         self.assertFalse(self.app.is_location('notfound', timeout=1, strict=True))
         self.assertTrue(self.app.is_location(['home', 'notfound'], timeout=1))
         self.assertFalse(self.app.is_location(['home', 'notfound'], timeout=1, strict=True))
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(RuntimeError) as err:
             self.app.is_location('notfound', strict=True, error=True)
-        with self.assertRaises(RuntimeError):
+        self.assertIn('notfound', str(err.exception))
+        self.assertIn(self.app.location, str(err.exception))
+        with self.assertRaises(RuntimeError) as err:
             self.app.is_location('notfound', strict=True, timeout=1, error=True)
+        self.assertIn('notfound', str(err.exception))
+        self.assertIn(self.app.location, str(err.exception))
 
     def test_controller_env(self):
         """test controller env resource is properly created"""
@@ -76,16 +80,24 @@ class TestController(BaseTest):
         header.social_buttons.twitter.get().click()
         self.assertTrue(self.app.window_by_location('twitter.com/neet_jn', timeout=5))
         self.assertFalse(self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1))
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(RuntimeError) as err:
             self.app.window_by_location('twitter.com/neet_jn', strict=True, error=True)
-        with self.assertRaises(RuntimeError):
+        self.assertIn('twitter.com/neet_jn', str(err.exception))
+        self.assertIn(self.app.location, str(err.exception))
+        with self.assertRaises(RuntimeError) as err:
             self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1, error=True)
+        self.assertIn('twitter.com/neet_jn', str(err.exception))
+        self.assertIn(self.app.location, str(err.exception))
         self.assertTrue(self.app.window_by_title(app_title[-1], timeout=5))
         self.assertFalse(self.app.window_by_title(app_title[-1], strict=True, timeout=1))
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(RuntimeError) as err:
             self.app.window_by_title(app_title[-1], strict=True, error=True)
-        with self.assertRaises(RuntimeError):
+        self.assertIn(app_title[-1], str(err.exception))
+        self.assertIn(self.app.title, str(err.exception))
+        with self.assertRaises(RuntimeError) as err:
             self.app.window_by_title(app_title[-1], strict=True, timeout=1, error=True)
+        self.assertIn(app_title[-1], str(err.exception))
+        self.assertIn(self.app.title, str(err.exception))
 
     def test_controller_context_management(self):
         """test controller with context management"""

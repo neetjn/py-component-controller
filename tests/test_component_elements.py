@@ -138,8 +138,12 @@ class TestElement(BaseTest):
         self.assertTrue(self.logo.check.available())
         self.assertTrue(self.logo.check.visible())
         self.assertTrue(self.app.wait(timeout=5, condition=self.logo.check.invisible))
+        self.assertTrue(self.delete_tasks.check.enabled())
+        self.assertFalse(self.delete_tasks.check.disabled())
         self.app.delete_tasks(tasks=2)
         self.assertTrue(self.app.wait(timeout=5, condition=self.task.fmt(id=2).check.not_available))
+        self.assertFalse(self.delete_tasks.check.enabled())
+        self.assertTrue(self.delete_tasks.check.disabled())
 
     def test_elements_wrapper(self):
         """test elements wrapper instantiated as intended"""
@@ -153,8 +157,11 @@ class TestElement(BaseTest):
         """test elements wrapper wait for"""
         self.assertEqual(self.tasks.wait_for(timeout=5, length=3), self.tasks)
         self.assertEqual(self.tasks.wait_for(timeout=1, length=4), None)
-        with self.assertRaises(NoSuchElementException):
+        with self.assertRaises(NoSuchElementException) as err:
             self.tasks.wait_for(timeout=1, length=4, error=True)
+        self.assertIn('"4"', str(err.exception))
+        self.assertIn('"3"', str(err.exception))
+
 
     def test_elements_wrapper_wait_visible(self):
         """test elements wrapper wait visible"""
