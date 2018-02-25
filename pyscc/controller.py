@@ -18,6 +18,7 @@
 import os
 import logging as logger
 import time
+from string import Template
 from types import MethodType
 
 from pyseleniumjs import E2EJS
@@ -141,7 +142,8 @@ class Controller(object):
         result = self.wait(timeout=timeout, condition=check_location) \
             if timeout else check_location()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
+            raise RuntimeError(Template(error).safe_substitute(expected=route, found=self.location) \
+                if isinstance(error, string_types) else \
                 'Location "{}" was not matched, instead found: "{}"'.format(route, self.location))
 
         return result
@@ -171,7 +173,8 @@ class Controller(object):
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
+            raise RuntimeError(Template(error).safe_substitute(expected=title, found=self.title) \
+                if isinstance(error, string_types) else \
                 'Window by title "{}" not found, found: {}'.format(title, self.title))
 
         return result
@@ -200,7 +203,8 @@ class Controller(object):
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
+            raise RuntimeError(Template(error).safe_substitute(expected=location, found=self.location) \
+                if isinstance(error, string_types) else \
                 'Window by location "{}" not found, found: "{}"'.format(location, self.location))
 
         return result
