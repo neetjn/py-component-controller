@@ -18,7 +18,7 @@
 from string import Template
 from types import MethodType
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
-    InvalidSelectorException
+    InvalidSelectorException, InvalidElementStateException
 from six import string_types, iteritems
 
 from pyscc.controller import Controller
@@ -267,10 +267,10 @@ class Element(Resource):
 
     def wait_visible(self, timeout, error=None):
         """
-        :Description: Wait for given element to become visible.
+        :Description: Wait for given element to be visible.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
-        :param error: Raise NoSuchElementException on failure.
+        :param error: Raise ElementNotVisibleException on failure.
         :type error: bool, string
         :return: Element, None
         """
@@ -285,17 +285,53 @@ class Element(Resource):
 
     def wait_invisible(self, timeout, error=None):
         """
-        :Description: Wait for given element to become invisible.
+        :Description: Wait for given element to be invisible.
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
-        :param error: Raise NoSuchElementException on failure.
+        :param error: Raise InvalidElementStateException on failure.
         :type error: bool, string
         :return: Element, None
         """
         if not self.controller.wait(timeout=timeout, condition=self.check.invisible):
             if error:
-                raise NoSuchElementException(error if isinstance(error, string_types) else \
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found or is visible'.format(self.selector))
+            else:
+                return None
+
+        return self
+
+    def wait_enabled(self, timeout, error=None):
+        """
+        :Description: Wait for given element to be enabled.
+        :param timeout: Time in seconds to wait for element.
+        :type timeout: int
+        :param error: Raise InvalidElementStateException on failure.
+        :type error: bool, string
+        :return: Element, None
+        """
+        if not self.controller.wait(timeout=timeout, condition=self.check.enabled):
+            if error:
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
+                    'Element by selector "{}" not found or is disabled'.format(self.selector))
+            else:
+                return None
+
+        return self
+
+    def wait_disabled(self, timeout, error=None):
+        """
+        :Description: Wait for given element to be disabled.
+        :param timeout: Time in seconds to wait for element.
+        :type timeout: int
+        :param error: Raise InvalidElementStateException on failure.
+        :type error: bool, string
+        :return: Element, None
+        """
+        if not self.controller.wait(timeout=timeout, condition=self.check.disabled):
+            if error:
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
+                    'Element by selector "{}" not found or is enabled'.format(self.selector))
             else:
                 return None
 
@@ -488,11 +524,82 @@ class Elements(Resource):
         :type error: bool, string
         :return: Elements
         """
-        self.wait_for(timeout, length, strict, error)
-        if not self.checks.visible():
+        def check():
+            return self.count() == length if strict else self.count() >= length and self.checks.visible()
+
+        if not self.wait(timeout=timeout, condition=check):
             if error:
                 raise ElementNotVisibleException(error if isinstance(error, string_types) else \
                     '{} elements by selector "{}" not visible'.format(length, self.selector))
+
+        return self
+
+    def wait_invisible(self, timeout, length=1, strict=False, error=None):
+        """
+        :Description: Wait for given length of elements to be available and invisible.
+        :param timeout: Time in seconds to wait for elements.
+        :type timeout: int
+        :param length: Number of elements to wait for.
+        :type length: int
+        :param strict: Expect exactly the length of elements, no more.
+        :type strict: bool
+        :param error: Raise InvalidElementStateException on failure.
+        :type error: bool, string
+        :return: Elements
+        """
+        def check():
+            return self.count() == length if strict else self.count() >= length and self.checks.invisible()
+
+        if not self.wait(timeout=timeout, condition=check):
+            if error:
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
+                    '{} elements by selector "{}" not invisible'.format(length, self.selector))
+
+        return self
+
+    def wait_enabled(self, timeout, length=1, strict=False, error=None):
+        """
+        :Description: Wait for given length of elements to be available and enabled.
+        :param timeout: Time in seconds to wait for elements.
+        :type timeout: int
+        :param length: Number of elements to wait for.
+        :type length: int
+        :param strict: Expect exactly the length of elements, no more.
+        :type strict: bool
+        :param error: Raise InvalidElementStateException on failure.
+        :type error: bool, string
+        :return: Elements
+        """
+        def check():
+            return self.count() == length if strict else self.count() >= length and self.checks.enabled()
+
+        if not self.wait(timeout=timeout, condition=check):
+            if error:
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
+                    '{} elements by selector "{}" not enabled'.format(length, self.selector))
+
+        return self
+
+    def wait_disabled(self, timeout, length=1, strict=False, error=None):
+        """
+        :Description: Wait for given length of elements to be available and disabled.
+        :param timeout: Time in seconds to wait for elements.
+        :type timeout: int
+        :param length: Number of elements to wait for.
+        :type length: int
+        :param strict: Expect exactly the length of elements, no more.
+        :type strict: bool
+        :param error: Raise InvalidElementStateException on failure.
+        :type error: bool, string
+        :return: Elements
+        """
+        def check():
+            return self.count() == length if strict else self.count() >= length and self.checks.disabled()
+
+        if not self.wait(timeout=timeout, condition=check):
+            if error:
+                raise InvalidElementStateException(error if isinstance(error, string_types) else \
+                    '{} elements by selector "{}" not disabled'.format(length, self.selector))
 
         return self
 
@@ -585,13 +692,55 @@ class Checks(Resource):
 
     def visible(self):
         """
-        :Description: Used to check at least one element is available and all visible.
+        :Description: Used to check at least one element is available and all are visible.
         :return: bool
         """
         found = self.elements.get()
         if len(found):  # pylint: disable=len-as-condition
             for element in found:
                 if not self.elements.controller.js.is_visible(element):
+                    return False
+        else:
+            return False
+        return True
+
+    def invisible(self):
+        """
+        :Description: Used to check at least one element is available and all are invisible.
+        :return: bool
+        """
+        found = self.elements.get()
+        if len(found):  # pylint: disable=len-as-condition
+            for element in found:
+                if self.elements.controller.js.is_visible(element):
+                    return False
+        else:
+            return False
+        return True
+
+    def enabled(self):
+        """
+        :Description: Used to check at least one element is available and all are enabled.
+        :return: bool
+        """
+        found = self.elements.get()
+        if len(found):  # pylint: disable=len-as-condition
+            for element in found:
+                if self.element.controller.js.get_property(found, 'disabled'):
+                    return False
+        else:
+            return False
+        return True
+
+    def disabled(self):
+        """
+        :Description: Used to check at least one element is available and all are disabled.
+        :return: bool
+        """
+        found = self.elements.get()
+        if len(found):  # pylint: disable=len-as-condition
+            for element in found:
+                if not self.element.controller.js.get_property(found, 'disabled'):
                     return False
         else:
             return False
