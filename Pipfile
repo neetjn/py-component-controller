@@ -16,6 +16,7 @@ configparser = "*"
 funcsigs = "*"
 "backports.functools-lru-cache" = "*"
 "enum34" = "*"
+singledispatch = "*"
 
 
 [packages]
