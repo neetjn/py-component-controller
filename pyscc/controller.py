@@ -142,9 +142,12 @@ class Controller(object):
         result = self.wait(timeout=timeout, condition=check_location) \
             if timeout else check_location()
         if error and not result:
-            raise RuntimeError(Template(error).safe_substitute(expected=route, found=self.location) \
-                if isinstance(error, string_types) else \
-                'Location "{}" was not matched, instead found: "{}"'.format(route, self.location))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=route, found=self.location)
+            else:
+                # pylint: disable=line-too-long
+                msg = 'Location "{}" was not matched, instead found: "{}"'.format(route, self.location)
+            raise RuntimeError(msg)
 
         return result
 
@@ -168,14 +171,15 @@ class Controller(object):
                     return True
                 elif not strict and title in self.title:
                     return True
-
             return False
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(Template(error).safe_substitute(expected=title, found=self.title) \
-                if isinstance(error, string_types) else \
-                'Window by title "{}" not found, found: {}'.format(title, self.title))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=title, found=self.title)
+            else:
+                msg = 'Window by title "{}" not found, found: {}'.format(title, self.title)
+            raise RuntimeError(msg)
 
         return result
 
@@ -203,9 +207,12 @@ class Controller(object):
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(Template(error).safe_substitute(expected=location, found=self.location) \
-                if isinstance(error, string_types) else \
-                'Window by location "{}" not found, found: "{}"'.format(location, self.location))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=location, found=self.location)
+            else:
+                # pylint: disable=line-too-long
+                msg = 'Window by location "{}" not found, found: "{}"'.format(location, self.location)
+            raise RuntimeError(msg)
 
         return result
 
