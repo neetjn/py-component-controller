@@ -161,7 +161,9 @@ class TestElement(BaseTest):
             self.tasks.wait_for(timeout=1, length=4, error=True)
         self.assertIn('"4"', str(err.exception))
         self.assertIn('"3"', str(err.exception))
-
+        with self.assertRaises(NoSuchElementException) as err:
+            self.tasks.wait_for(timeout=1, length=4, error="f: ${found}, e: ${expected}")
+        self.assertIn('f: 3, e: 4', str(err.exception))
 
     def test_elements_wrapper_wait_visible(self):
         """test elements wrapper wait visible"""
