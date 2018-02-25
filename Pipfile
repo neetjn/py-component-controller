@@ -13,6 +13,8 @@ six = "*"
 pylint = "*"
 pytest-cov = "*"
 singledispatch = "*"
+"enum34" = "*"
 
 
 [packages]
+
