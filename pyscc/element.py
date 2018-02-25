@@ -464,9 +464,12 @@ class Elements(Resource):
         if not self.controller.wait(timeout=timeout, condition=lambda: self.count() == length if \
             strict else self.count() >= length):
             if error:
-                raise NoSuchElementException(error if isinstance(error, string_types) else \
-                    '"{}" elements by selector "{}" found, expected "{}"'\
-                    .format(self.count(), self.selector, length))
+                if isinstance(error, string_types):
+                    msg = Template(error).safe_substitute(expected=length, found=self.count())
+                else:
+                    msg = '"{}" elements by selector "{}" found, expected "{}"'\
+                          .format(self.count(), self.selector, length)
+                raise NoSuchElementException(msg)
             else:
                 return None
 

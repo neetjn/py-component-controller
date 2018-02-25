@@ -418,6 +418,10 @@ A helpful feature of the elements wrapper, is the ability to wait for a number o
     component.users.wait_for(5, length=3,
         error="Expected at least 3 users to be available within 5 seconds")
 
+    # formatting error messages
+    component.users.wait_for(5, length=3,
+        error="Expected at least ${expected} users to be available found ${found}")
+
     # by default, wait_for will wait for the number of specified elements to be present
     # to execute a strict wait on length, you may use the strict flag
     component.users.wait_for(5, length=5, strict=True,

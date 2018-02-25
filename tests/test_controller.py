@@ -78,6 +78,7 @@ class TestController(BaseTest):
         header = self.app.components.header
         app_title = self.app.title
         header.social_buttons.twitter.get().click()
+        # window by location
         self.assertTrue(self.app.window_by_location('twitter.com/neet_jn', timeout=5))
         self.assertFalse(self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1))
         with self.assertRaises(RuntimeError) as err:
@@ -88,6 +89,11 @@ class TestController(BaseTest):
             self.app.window_by_location('twitter.com/neet_jn', strict=True, timeout=1, error=True)
         self.assertIn('twitter.com/neet_jn', str(err.exception))
         self.assertIn(self.app.location, str(err.exception))
+        with self.assertRaises(RuntimeError) as err:
+            self.app.window_by_location(
+                'twitter.com/neet_jn', strict=True, timeout=1, error='f: ${found}, e: ${expected}')
+        self.assertEqual(str(err.exception), 'f: https://twitter.com/neet_jn, e: twitter.com/neet_jn')
+        # window by title
         self.assertTrue(self.app.window_by_title(app_title[-1], timeout=5))
         self.assertFalse(self.app.window_by_title(app_title[-1], strict=True, timeout=1))
         with self.assertRaises(RuntimeError) as err:
