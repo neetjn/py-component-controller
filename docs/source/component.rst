@@ -459,14 +459,17 @@ You may also use the `wait_invisible` api method (chainable) to wait for your ta
 Waiting For Elements To Be Enabled
 ----------------------------------
 
-Another powerful feature of the elements wrapper, is the ability to wait for both a number of elements to be available **and** visible.
-Refer to the *wait_visible* api method (chainable):
+To wait for a collection of elements to be available and enabled, you may leverage the *wait_enabled* api method (chainable):
 
 .. code-block:: python
 
-    component.users.wait_visible(5, length=5, error=True)
+    component.users.wait_enabled(5, length=5, error=True)
 
-You may also use the `wait_invisible` api method (chainable) to wait for your target elements to be invisible.
+You may also use the `wait_disabled` api method (chainable) to wait for your target elements to be disabled.
+
+.. code-block:: python
+
+    component.users.wait_disabled(5, length=5)
 
 Check Visibility
 ----------------
