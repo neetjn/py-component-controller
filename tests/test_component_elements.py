@@ -4,7 +4,8 @@ from pyscc.element import Element, Elements
 from pyscc.resource import Resource
 from tests.utils import BaseTest
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
+    InvalidElementStateException
 
 
 class TestElement(BaseTest):
@@ -83,6 +84,18 @@ class TestElement(BaseTest):
         self.assertEqual(self.logo.wait_invisible(timeout=5), self.logo)
         with self.assertRaises(ElementNotVisibleException):
             self.logo.wait_visible(timeout=1, error=True)
+
+    def test_element_wrapper_wait_enabled_disabled(self):
+        """test element wrapper enabled wait"""
+        self.assertEqual(self.delete_tasks.wait_enabled(1), None)
+        self.assertEqual(self.delete_tasks.wait_disabled(1), self.delete_tasks)
+        with self.assertRaises(InvalidElementStateException) as err:
+            self.delete_tasks.wait_enabled(1, error=True)
+        self.delete_tasks.click()
+        self.assertEqual(self.delete_tasks.wait_enabled(1), self.delete_tasks)
+        self.assertEqual(self.delete_tasks.wait_disabled(1), None)
+        with self.assertRaises(InvalidElementStateException) as err:
+            self.delete_tasks.wait_disabled(1, error=True)
 
     def test_element_wrapper_js_wait(self):
         """test element wrapper javascript wait"""
@@ -168,8 +181,11 @@ class TestElement(BaseTest):
     def test_elements_wrapper_wait_visible(self):
         """test elements wrapper wait visible"""
         self.assertEqual(self.tasks.wait_visible(timeout=5, length=3), self.tasks)
+        self.assertEqual(self.tasks.wait_invisible(timeout=1, length=3), None)
         with self.assertRaises(NoSuchElementException):
             self.tasks.wait_visible(timeout=1, length=4, error=True)
+        with self.assertRaises(InvalidElementStateException):
+            self.tasks.wait_invisible(timeout=1, length=4, error=True)
 
     def test_elements_wrapper_text(self):
         """test elements wrapper text aggregation"""
