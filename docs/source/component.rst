@@ -253,6 +253,23 @@ If you require the visibility of an element, the element wrapper allows you to w
         .click()\
         .wait_invisible(5)
 
+Waiting For an Element To Be Enabled
+------------------------------------
+
+To wait for an element to be enabled or disabled, refer to the api methods *wait_enabled* and *wait_disabled* (chainable)
+
+.. code-block:: python
+
+    # wait for an element to become enabled
+    component.button\
+        .wait_enabled(5, error=True)\
+        .click()
+
+    # wait for an element to become disabled
+    component.button\
+        .click()\
+        .wait_disabled(5)
+
 Javascript Conditional Wait
 ---------------------------
 
@@ -298,7 +315,7 @@ The element wrapper provides two callable, explicit check for element visibility
 Checking Enabled
 ----------------
 
-Refer to the api methods `enabled` and `disabled` to check wether a DOM node is disabled.
+Refer to the api methods `enabled` and `disabled` to check whether a DOM node is enabled or disabled.
 
 .. code-block:: python
 
@@ -437,6 +454,27 @@ Refer to the *wait_visible* api method (chainable):
 
     component.users.wait_visible(5, length=5, error=True)
 
+You may also use the `wait_invisible` api method (chainable) to wait for your target elements to be invisible.
+
+.. code-block:: python
+
+    component.users.wait_invisible(5, length=5, error=True)
+
+Waiting For Elements To Be Enabled
+----------------------------------
+
+To wait for a collection of elements to be available and enabled, you may leverage the *wait_enabled* api method (chainable):
+
+.. code-block:: python
+
+    component.users.wait_enabled(5, length=5, error=True)
+
+You may also use the `wait_disabled` api method (chainable) to wait for your target elements to be disabled.
+
+.. code-block:: python
+
+    component.users.wait_disabled(5, length=5)
+
 Check Visibility
 ----------------
 
@@ -445,6 +483,19 @@ The api method *visible* is a callable check to ensure the currently available e
 .. code-block:: python
 
     component.users.check.visible()
+    >> True, False
+
+Check Enabled
+-------------
+
+Refer to the api methods `enabled` and `disabled` to check whether the currently available elements are enabled or disabled.
+
+.. code-block:: python
+
+    component.users.check.enabled()
+    >> True, False
+
+    component.users.check.disabled()
     >> True, False
 
 Getting and Setting Elements' Attribute
@@ -559,7 +610,7 @@ To check the visibility of a component group's child elements, you may refer to 
 Checking Elements Enabled
 -------------------------
 
-Refer to the api methods `enabled` and `disabled` to check wether a DOM node is disabled.
+Refer to the api methods `enabled` and `disabled` to check whether a component group's child elements are enabled or disabled.
 
 .. code-block:: python
 
