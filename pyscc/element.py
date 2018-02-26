@@ -525,9 +525,10 @@ class Elements(Resource):
         :return: Elements
         """
         def check():
+            # pylint: disable=line-too-long
             return self.count() == length if strict else self.count() >= length and self.checks.visible()
 
-        if not self.wait(timeout=timeout, condition=check):
+        if not self.controller.wait(timeout=timeout, condition=check):
             if error:
                 raise ElementNotVisibleException(error if isinstance(error, string_types) else \
                     '{} elements by selector "{}" not visible'.format(length, self.selector))
@@ -548,9 +549,10 @@ class Elements(Resource):
         :return: Elements
         """
         def check():
+            # pylint: disable=line-too-long
             return self.count() == length if strict else self.count() >= length and self.checks.invisible()
 
-        if not self.wait(timeout=timeout, condition=check):
+        if not self.controller.wait(timeout=timeout, condition=check):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     '{} elements by selector "{}" not invisible'.format(length, self.selector))
@@ -571,9 +573,10 @@ class Elements(Resource):
         :return: Elements
         """
         def check():
+            # pylint: disable=line-too-long
             return self.count() == length if strict else self.count() >= length and self.checks.enabled()
 
-        if not self.wait(timeout=timeout, condition=check):
+        if not self.controller.wait(timeout=timeout, condition=check):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     '{} elements by selector "{}" not enabled'.format(length, self.selector))
@@ -594,9 +597,10 @@ class Elements(Resource):
         :return: Elements
         """
         def check():
+            # pylint: disable=line-too-long
             return self.count() == length if strict else self.count() >= length and self.checks.disabled()
 
-        if not self.wait(timeout=timeout, condition=check):
+        if not self.controller.wait(timeout=timeout, condition=check):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     '{} elements by selector "{}" not disabled'.format(length, self.selector))

@@ -87,15 +87,15 @@ class TestElement(BaseTest):
 
     def test_element_wrapper_wait_enabled_disabled(self):
         """test element wrapper enabled wait"""
-        self.assertEqual(self.delete_tasks.wait_enabled(1), None)
-        self.assertEqual(self.delete_tasks.wait_disabled(1), self.delete_tasks)
-        with self.assertRaises(InvalidElementStateException) as err:
-            self.delete_tasks.wait_enabled(1, error=True)
-        self.delete_tasks.click()
         self.assertEqual(self.delete_tasks.wait_enabled(1), self.delete_tasks)
         self.assertEqual(self.delete_tasks.wait_disabled(1), None)
         with self.assertRaises(InvalidElementStateException) as err:
             self.delete_tasks.wait_disabled(1, error=True)
+        self.delete_tasks.click()
+        self.assertEqual(self.delete_tasks.wait_enabled(1), None)
+        self.assertEqual(self.delete_tasks.wait_disabled(1), self.delete_tasks)
+        with self.assertRaises(InvalidElementStateException) as err:
+            self.delete_tasks.wait_enabled(1, error=True)
 
     def test_element_wrapper_js_wait(self):
         """test element wrapper javascript wait"""
