@@ -456,6 +456,10 @@ Refer to the *wait_visible* api method (chainable):
 
 You may also use the `wait_invisible` api method (chainable) to wait for your target elements to be invisible.
 
+.. code-block:: python
+
+    component.users.wait_invisible(5, length=5, error=True)
+
 Waiting For Elements To Be Enabled
 ----------------------------------
 
