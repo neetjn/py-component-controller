@@ -25,6 +25,7 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
+# pylint: disable=too-many-public-methods
 class Element(Resource):
     """
     :Description: Base resource for component element.
@@ -260,8 +261,7 @@ class Element(Resource):
             if error:
                 raise NoSuchElementException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found'.format(self.selector))
-            else:
-                return None
+            return None
 
         return self
 
@@ -278,8 +278,7 @@ class Element(Resource):
             if error:
                 raise ElementNotVisibleException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found or is not visible'.format(self.selector))
-            else:
-                return None
+            return None
 
         return self
 
@@ -296,8 +295,7 @@ class Element(Resource):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found or is visible'.format(self.selector))
-            else:
-                return None
+            return None
 
         return self
 
@@ -314,8 +312,7 @@ class Element(Resource):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found or is disabled'.format(self.selector))
-            else:
-                return None
+            return None
 
         return self
 
@@ -332,8 +329,7 @@ class Element(Resource):
             if error:
                 raise InvalidElementStateException(error if isinstance(error, string_types) else \
                     'Element by selector "{}" not found or is enabled'.format(self.selector))
-            else:
-                return None
+            return None
 
         return self
 
@@ -730,7 +726,7 @@ class Checks(Resource):
         found = self.elements.get()
         if len(found):  # pylint: disable=len-as-condition
             for element in found:
-                if self.element.controller.js.get_property(found, 'disabled'):
+                if self.elements.controller.js.get_property(element, 'disabled'):
                     return False
         else:
             return False
@@ -744,7 +740,7 @@ class Checks(Resource):
         found = self.elements.get()
         if len(found):  # pylint: disable=len-as-condition
             for element in found:
-                if not self.element.controller.js.get_property(found, 'disabled'):
+                if not self.elements.controller.js.get_property(element, 'disabled'):
                     return False
         else:
             return False

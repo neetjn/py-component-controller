@@ -1,3 +1,4 @@
+import datetime
 from uuid import uuid4
 
 from pyscc.element import Element, Elements
@@ -89,12 +90,12 @@ class TestElement(BaseTest):
         """test element wrapper enabled wait"""
         self.assertEqual(self.delete_tasks.wait_enabled(1), self.delete_tasks)
         self.assertEqual(self.delete_tasks.wait_disabled(1), None)
-        with self.assertRaises(InvalidElementStateException) as err:
+        with self.assertRaises(InvalidElementStateException):
             self.delete_tasks.wait_disabled(1, error=True)
-        self.delete_tasks.click()
+        self.delete_tasks.get().click()
+        self.assertEqual(self.delete_tasks.wait_disabled(5), self.delete_tasks)
         self.assertEqual(self.delete_tasks.wait_enabled(1), None)
-        self.assertEqual(self.delete_tasks.wait_disabled(1), self.delete_tasks)
-        with self.assertRaises(InvalidElementStateException) as err:
+        with self.assertRaises(InvalidElementStateException):
             self.delete_tasks.wait_enabled(1, error=True)
 
     def test_element_wrapper_js_wait(self):
@@ -117,7 +118,7 @@ class TestElement(BaseTest):
         self.assertEqual(self.logo.set_property(prop='some', value='value'), self.logo)
         self.assertEqual(self.logo.get_property(prop='some'), 'value')
 
-    def test_element_wraooer_send_input_get_value(self):
+    def test_element_wrapper_send_input_get_value(self):
         """test element wrapper send input and get value"""
         random_str = str(uuid4())
         self.assertEqual(self.create_task_assignee.send_input(random_str),
@@ -180,9 +181,15 @@ class TestElement(BaseTest):
 
     def test_elements_wrapper_wait_visible(self):
         """test elements wrapper wait visible"""
+        start = datetime.datetime.now()
         self.assertEqual(self.tasks.wait_visible(timeout=5, length=3), self.tasks)
-        self.assertEqual(self.tasks.wait_invisible(timeout=1, length=3), None)
-        with self.assertRaises(NoSuchElementException):
+        # time delta, check should have passed so it should not have taken 5 seconds
+        self.assertTrue(datetime.datetime.now() - start < datetime.timedelta(seconds=5))
+        start = datetime.datetime.now()
+        self.assertEqual(self.tasks.wait_invisible(timeout=5, length=3), self.tasks)
+        # time delta, check should have failed so it should have taken 5 seconds
+        self.assertTrue(datetime.datetime.now() - start >= datetime.timedelta(seconds=5))
+        with self.assertRaises(ElementNotVisibleException):
             self.tasks.wait_visible(timeout=1, length=4, error=True)
         with self.assertRaises(InvalidElementStateException):
             self.tasks.wait_invisible(timeout=1, length=4, error=True)
