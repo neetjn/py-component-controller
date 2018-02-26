@@ -103,6 +103,10 @@ To check against your webdriver's current location, you can use the *is_location
     controller.is_location('/neetjn/py-component-controller', timeout=5,
         error='Expected to be on py-component-controller repository page')
 
+    # alternatively format provided error message
+    controller.is_location('/neetjn/py-component-controller', timeout=5,
+        error='Expected to be on ${expected} found ${found}')
+
     # check against a list of possible routes
     controller.is_location('/neetjn/pyselenium-js', '/neetjn/py-component-controller')
 
@@ -130,6 +134,10 @@ For window management, the controller provides a method that allows you to switc
     controller.window_by_title('readthedocs', timeout=5,
         error='Could not find the expected readthedocs window')
 
+    # alternatively format error message
+    controller.window_by_title('readthedocs', timeout=5,
+        error='Could not find the window by title ${expected} found ${found}')
+
 Switching to Window by Location
 ===============================
 
@@ -153,6 +161,10 @@ The controller also provided a method that allows you to switch to a window by l
     controller.window_by_location('readthedocs.io', timeout=5, error=True)
     controller.window_by_location('readthedocs.io', timeout=5,
         error='Could not find the expected readthedocs window')
+
+    # alternatively format error message
+    controller.window_by_location('readthedocs.io', timeout=5,
+        error='Could not find the window by location ${expected} found ${found}')
 
 Conditional Waits
 =================

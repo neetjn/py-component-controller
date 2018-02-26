@@ -18,6 +18,7 @@
 import os
 import logging as logger
 import time
+from string import Template
 from types import MethodType
 
 from pyseleniumjs import E2EJS
@@ -141,8 +142,12 @@ class Controller(object):
         result = self.wait(timeout=timeout, condition=check_location) \
             if timeout else check_location()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
-                'Location "{}" was not matched, instead found: "{}"'.format(route, self.location))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=route, found=self.location)
+            else:
+                # pylint: disable=line-too-long
+                msg = 'Location "{}" was not matched, instead found: "{}"'.format(route, self.location)
+            raise RuntimeError(msg)
 
         return result
 
@@ -166,13 +171,15 @@ class Controller(object):
                     return True
                 elif not strict and title in self.title:
                     return True
-
             return False
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
-                'Window by title "{}" not found, found: {}'.format(title, self.title))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=title, found=self.title)
+            else:
+                msg = 'Window by title "{}" not found, found: {}'.format(title, self.title)
+            raise RuntimeError(msg)
 
         return result
 
@@ -200,8 +207,12 @@ class Controller(object):
 
         result = self.wait(timeout=timeout, condition=search) if timeout else search()
         if error and not result:
-            raise RuntimeError(error if isinstance(error, string_types) else \
-                'Window by location "{}" not found, found: "{}"'.format(location, self.location))
+            if isinstance(error, string_types):
+                msg = Template(error).safe_substitute(expected=location, found=self.location)
+            else:
+                # pylint: disable=line-too-long
+                msg = 'Window by location "{}" not found, found: "{}"'.format(location, self.location)
+            raise RuntimeError(msg)
 
         return result
 
@@ -246,6 +257,8 @@ class Controller(object):
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: string
+        :param path: Path to drop conole log in.
+        :type path: string
         :return: string
         """
         if path and not os.path.exists(path):
@@ -260,15 +273,17 @@ class Controller(object):
         except WebDriverException:
             self.logger.critical('Browser logger object not found, could not return any logs.')
 
-    def screen_shot(self, prefix=None):
+    def screen_shot(self, prefix=None, path=None):
         """
         :Description: Takes a screen shot and saves it specified path.
         :param prefix: Prefix for screenshot.
         :type prefix: string
+        :param path: Path to drop screen shot in.
+        :type path: string
         :return: string
         """
         file_location = os.path.join(
-            './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
+            path if path else './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 
