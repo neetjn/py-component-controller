@@ -257,6 +257,8 @@ class Controller(object):
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: string
+        :param path: Path to drop conole log in.
+        :type path: string
         :return: string
         """
         if path and not os.path.exists(path):
@@ -271,15 +273,17 @@ class Controller(object):
         except WebDriverException:
             self.logger.critical('Browser logger object not found, could not return any logs.')
 
-    def screen_shot(self, prefix=None):
+    def screen_shot(self, prefix=None, path=None):
         """
         :Description: Takes a screen shot and saves it specified path.
         :param prefix: Prefix for screenshot.
         :type prefix: string
+        :param path: Path to drop screen shot in.
+        :type path: string
         :return: string
         """
         file_location = os.path.join(
-            './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
+            path if path else './', (prefix + '_' if prefix else '') + str(time.time()) + '.png')
         self.browser.get_screenshot_as_file(filename=file_location)
         return file_location
 

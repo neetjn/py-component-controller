@@ -6,7 +6,7 @@ class TestController(BaseTest):
 
     def test_controller_screenshot(self):
         """test controller screenshot"""
-        file_name = self.app.screen_shot(prefix='test')
+        file_name = self.app.screen_shot(prefix='test', path='target/')
         self.assertTrue(os.stat(file_name))
 
     def test_controller_browser_logs(self):

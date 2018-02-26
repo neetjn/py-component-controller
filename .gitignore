@@ -107,4 +107,3 @@ venv.bak/
 node_modules/
 venv/
 .vscode/
-test_*.png
