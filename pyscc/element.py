@@ -89,10 +89,7 @@ class Element(Resource):
         :Description: Get input element value.
         :return: string
         """
-        found = self.get()
-        if found:
-            return self.controller.js.get_value(found)
-        return None
+        return self.controller.js.get_value(self.get())
 
     def get_attribute(self, attribute):
         """
@@ -696,12 +693,11 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  # pylint: disable=len-as-condition
-            for element in found:
-                if not self.elements.controller.js.is_visible(element):
-                    return False
-        else:
+        if not len(found):  # pylint: disable=len-as-condition
             return False
+        for element in found:
+            if not self.elements.controller.js.is_visible(element):
+                return False
         return True
 
     def invisible(self):
@@ -710,12 +706,11 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  # pylint: disable=len-as-condition
-            for element in found:
-                if self.elements.controller.js.is_visible(element):
-                    return False
-        else:
+        if not len(found):  # pylint: disable=len-as-condition
             return False
+        for element in found:
+            if self.elements.controller.js.is_visible(element):
+                return False
         return True
 
     def enabled(self):
@@ -724,12 +719,11 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  # pylint: disable=len-as-condition
-            for element in found:
-                if self.elements.controller.js.get_property(element, 'disabled'):
-                    return False
-        else:
+        if not len(found):  # pylint: disable=len-as-condition
             return False
+        for element in found:
+            if self.elements.controller.js.get_property(element, 'disabled'):
+                return False
         return True
 
     def disabled(self):
@@ -738,12 +732,11 @@ class Checks(Resource):
         :return: bool
         """
         found = self.elements.get()
-        if len(found):  # pylint: disable=len-as-condition
-            for element in found:
-                if not self.elements.controller.js.get_property(element, 'disabled'):
-                    return False
-        else:
+        if not len(found):  # pylint: disable=len-as-condition
             return False
+        for element in found:
+            if not self.elements.controller.js.get_property(element, 'disabled'):
+                return False
         return True
 
     meta = {'required_fields': [('elements', Elements)]}
