@@ -257,7 +257,8 @@ class Element(Resource):
 
             if error:
                 raise NoSuchElementException(error if isinstance(error, string_types) else \
-                    'Element by selector "{}" not found'.format(self.selector))
+                    'Element by selector "{}" was {}'\
+                    .format(self.selector, 'not found' if available else 'found'))
             return None
 
         return self
