@@ -69,7 +69,6 @@ Requirements:
 * Python 2.7, 3.6 (with pip/pipenv)
 * Chrome or Chromium (Chrome 60-64)
 * ChromeDriver (version 2.3.3)
-* Node.js 6+ (with npm)
 
 ### Contributors
 
