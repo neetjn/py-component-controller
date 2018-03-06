@@ -32,6 +32,7 @@ class TestElement(BaseTest):
         for sb in expected_attributes:
             self.assertTrue(hasattr(self.social_buttons, sb))
             self.assertIsInstance(getattr(self.social_buttons, sb), Element)
+        self.assertEqual(self.social_buttons.find('twitter'), self.social_buttons.twitter)
 
     def test_element_group_checks(self):
         """test element group checks work as intended"""
