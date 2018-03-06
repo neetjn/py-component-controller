@@ -606,7 +606,6 @@ To check the visibility of a component group's child elements, you may refer to 
     component.group.check.invisible()
     >> True, False
 
-
 Checking Elements Enabled
 -------------------------
 
@@ -619,3 +618,13 @@ Refer to the api methods `enabled` and `disabled` to check whether a component g
 
     component.group.check.disabled()
     >> True, False
+
+Finding Child Elements
+----------------------
+
+Component group's offer a the `find` api method to dynamically search for child elements by their name.
+
+.. code-block:: python
+
+    component.social.find('twitter')
+    >> Element
