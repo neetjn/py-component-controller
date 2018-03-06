@@ -5,7 +5,7 @@ from setuptools import setup
 setup(
     name='pyscc',
     description='py-component-controller is an opinionated framework for structuring selenium test suites. This project depends on the pyselenium-js project.',
-    version='0.1.6',
+    version='0.1.7',
     url='https://neetjn.github.io/py-component-controller/',
     author='John Nolette',
     author_email='john@neetgroup.net',

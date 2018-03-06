@@ -867,6 +867,8 @@ def component_group(ref):
         group.__group__ = [element for element, _ in iteritems(group_def) if element != '_']
         group.fmt = MethodType(fmt, group)
         group.check = CheckGroup(group)
+        # pylint: disable=no-value-for-parameter
+        group.find = lambda x: getattr(group, x)
         return group
 
     return wrapper
