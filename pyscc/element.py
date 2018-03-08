@@ -212,7 +212,8 @@ class Element(Resource):
 
         :return: Element, None
         """
-        # ignoring from coverage, assume covered by trigger_event test
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to and trigger_event
         found = self.get()
         if found:
             self.controller.js.scroll_into_view(found)
@@ -226,7 +227,8 @@ class Element(Resource):
 
         :return: Element, None
         """
-        # ignoring from coverage, assume covered by trigger_event test
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to and trigger_event
         found = self.get()
         if found:
             self.controller.js.scroll_into_view(found)
@@ -240,6 +242,8 @@ class Element(Resource):
 
         :return: Element, None
         """
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to, set_property, and trigger_event
         found = self.get()
         if found:
             self.controller.js.scroll_into_view(found)
