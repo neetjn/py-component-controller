@@ -31,7 +31,8 @@ from pyscc.resource import Resource
 
 class Controller(object):
     """
-    :Description: Controller for managing components.
+    Controller for managing components.
+
     :param browser: Webdriver for controller and components to reference.
     :type browser: webdriver
     :param base_url: Base url for navigations, will navigate to this url in init.
@@ -65,7 +66,8 @@ class Controller(object):
     @staticmethod
     def __patch_webdriver(webdriver):
         """
-        :Description: Patches webdriver instance with polyfills for conformity.
+        Patches webdriver instance with polyfills for conformity.
+
         :param webdriver: Webdriver instance to patch.
         :type webdriver: WebDriver
         :return: WebDriver
@@ -90,7 +92,8 @@ class Controller(object):
     @property
     def location(self):
         """
-        :Description: Fetch the current url of controller's webdriver instance.
+        Fetch the current url of controller's webdriver instance.
+
         :return: string
         """
         return self.browser.current_url
@@ -98,21 +101,23 @@ class Controller(object):
     @property
     def title(self):
         """
-        :Description: Fetch the title of the controller's webdriver instance.
+        Fetch the title of the controller's webdriver instance.
+
         :return: string
         """
         return self.browser.title
 
     def refresh(self):
         """
-        :Description: Refreshes primary window.
+        Refreshes primary window.
         """
         self.browser.switch_to_default_content()  # necessary for safari
         self.browser.refresh()
 
     def navigate(self, route):
         """
-        :Description: Navigate to a route using your defined base url.
+        Navigate to a route using your defined base url.
+
         :param route: Route to navigate to using defined base url.
         :type route: string
         """
@@ -123,7 +128,8 @@ class Controller(object):
 
     def is_location(self, route, timeout=0, strict=False, error=False):
         """
-        :Description: Check current webdriver location.
+        Check current webdriver location.
+
         :param route: Route or list of routes to check against.
         :type route: string, iterable
         :param timeout: Time in seconds to wait for route.
@@ -153,7 +159,8 @@ class Controller(object):
 
     def window_by_title(self, title, timeout=0, strict=False, error=False):
         """
-        :Description: Changes to window context by window title.
+        Changes to window context by window title.
+
         :param title: Title of window to switch into.
         :type title: string
         :param timeout: Time in seconds to wait for window.
@@ -185,7 +192,8 @@ class Controller(object):
 
     def window_by_location(self, location, timeout=0, strict=False, error=False):
         """
-        :Description: Changes to window context by window path.
+        Changes to window context by window path.
+
         :param location: Path of window to switch into.
         :type location: string
         :param timeout: Time in seconds to wait for window.
@@ -219,7 +227,8 @@ class Controller(object):
     @classmethod
     def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
         """
-        :Description: Assisted delays between browser and main thread.
+        Assisted delays between browser and main thread.
+
         :param timeout: Time in seconds to wait.
         :type timeout: int
         :param condition: (callable) Wait 1 to timeout seconds until condition met.
@@ -253,7 +262,8 @@ class Controller(object):
 
     def browser_logs(self, name=None, path=None):
         """
-        :Description: Dumps browser logs to local directory.
+        Dumps browser logs to local directory.
+
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: string
@@ -275,7 +285,8 @@ class Controller(object):
 
     def screen_shot(self, prefix=None, path=None):
         """
-        :Description: Takes a screen shot and saves it specified path.
+        Takes a screen shot and saves it specified path.
+
         :param prefix: Prefix for screenshot.
         :type prefix: string
         :param path: Path to drop screen shot in.
@@ -289,7 +300,8 @@ class Controller(object):
 
     def exit(self, safe_exit=False):
         """
-        :Description: Safely exit instance of webdriver.
+        Safely exit instance of webdriver.
+
         :param safe_exit: Disable any possible alert or confirmation popup windows.
         :type safe_exit: bool
         """

@@ -28,7 +28,8 @@ from pyscc.resource import Resource
 # pylint: disable=too-many-public-methods
 class Element(Resource):
     """
-    :Description: Base resource for component element.
+    Base resource for component element.
+
     :param controller: Parent controller reference.
     :type controller: Controller
     :param selector: Selector of given element.
@@ -59,7 +60,8 @@ class Element(Resource):
 
     def fmt(self, **kwargs):
         """
-        :Description: Used to format selectors.
+        Used to format selectors.
+
         :return: Element
         """
         self.selector = Template(self._selector).safe_substitute(**kwargs)
@@ -67,14 +69,16 @@ class Element(Resource):
 
     def get(self):
         """
-        :Description: Used to fetch a selenium WebElement.
+        Used to fetch a selenium WebElement.
+
         :return: WebElement, None
         """
         return self.__find_element()
 
     def text(self, raw=False):
         """
-        :Description: Get element text value.
+        Get element text value.
+
         :param raw: Extract inner html from element.
         :type raw: bool
         :return: string
@@ -86,14 +90,16 @@ class Element(Resource):
 
     def value(self):
         """
-        :Description: Get input element value.
+        Get input element value.
+
         :return: string
         """
         return self.controller.js.get_value(self.get())
 
     def get_attribute(self, attribute):
         """
-        :Description: Used to fetch specified element attribute.
+        Used to fetch specified element attribute.
+
         :Warning: This method does not check if element is available.
         :param attribute: Attribute of element to target.
         :type attribute: string
@@ -103,7 +109,8 @@ class Element(Resource):
 
     def set_attribute(self, attribute, value):
         """
-        :Description: Used to set specified element attribute.
+        Used to set specified element attribute.
+
         :param attribute: Attribute of element to target.
         :type attribute: string
         :param value: Value to set specified element attribute to.
@@ -118,7 +125,8 @@ class Element(Resource):
 
     def get_property(self, prop):
         """
-        :Description: Used to fetch specified element property.
+        Used to fetch specified element property.
+
         :Warning: This method does not check if element is available.
         :param prop: Property of element to target.
         :type prop: string
@@ -128,7 +136,8 @@ class Element(Resource):
 
     def set_property(self, prop, value):
         """
-        :Description: Used to set specified element property.
+        Used to set specified element property.
+
         :param prop: Property of element to target.
         :type prop: string
         :param value: Value to set specified element property to.
@@ -141,57 +150,10 @@ class Element(Resource):
             return self
         return None
 
-    def click(self):
-        """
-        :Description: Execute a click on the given element.
-        :return: Element, None
-        """
-        found = self.get()
-        if found:
-            self.controller.js.scroll_into_view(found)
-            self.controller.js.click(found)
-            return self
-        return None
-
-    def dbl_click(self):
-        """
-        :Description: Execute a double click on the given element.
-        :return: Element, None
-        """
-        found = self.get()
-        if found:
-            self.controller.js.scroll_into_view(found)
-            self.controller.js.dbl_click(found)
-            return self
-        return None
-
-    def mouseup(self):
-        """
-        :Description: Dispatches a mouseup event on the given element.
-        :return: Element, None
-        """
-        # ignoring from coverage, assume covered by trigger_event test
-        found = self.get()
-        if found:
-            self.controller.js.scroll_into_view(found)
-            return self.trigger_event('mouseup', 'MouseEvent') # pragma: no cover
-        return None
-
-    def mousedown(self):
-        """
-        :Description: Dispatches a mousedown event on the given element.
-        :return: Element, None
-        """
-        # ignoring from coverage, assume covered by trigger_event test
-        found = self.get()
-        if found:
-            self.controller.js.scroll_into_view(found)
-            return self.trigger_event('mousedown', 'MouseEvent') # pragma: no cover
-        return None
-
     def scroll_to(self):
         """
-        :Description: Scroll to the given element.
+        Scroll to the given element.
+
         :return: Element, None
         """
         found = self.get()
@@ -202,7 +164,8 @@ class Element(Resource):
 
     def trigger_event(self, event, event_type=None, options=None):
         """
-        :Description: Dispatch event to given element.
+        Dispatch event to given element.
+
         :param event: Name of event to dispatch.
         :type event: string
         :param event_type: Type of the event to dispatch.
@@ -217,9 +180,82 @@ class Element(Resource):
             return self
         return None
 
+    def click(self):
+        """
+        Execute a click on the given element.
+
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.click(found)
+            return self
+        return None
+
+    def dbl_click(self):
+        """
+        Execute a double click on the given element.
+
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.dbl_click(found)
+            return self
+        return None
+
+    def mouseup(self):
+        """
+        Dispatches a mouseup event on the given element.
+
+        :return: Element, None
+        """
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to and trigger_event
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.trigger_event(found, 'mouseup', 'MouseEvent')
+            return self
+        return None
+
+    def mousedown(self):
+        """
+        Dispatches a mousedown event on the given element.
+
+        :return: Element, None
+        """
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to and trigger_event
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.trigger_event(found, 'mousedown', 'MouseEvent')
+            return self
+        return None
+
+    def select(self):
+        """
+        Selects an option child element of a select element naturally.
+
+        :return: Element, None
+        """
+        # pragma: no cover
+        # ignoring from coverage, assume covered in scroll_to, set_property, and trigger_event
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.set_property(found, 'selected', True)
+            self.controller.js.trigger_event(found, 'change')
+            return self
+        return None
+
     def send_input(self, value, force=False, clear=True):
         """
-        :Description: Send input to element.
+        Send input to element.
+
         :param value: Input to send to given element.
         :type value: string
         :param force: Use for elements without an focus event handler.
@@ -243,7 +279,8 @@ class Element(Resource):
 
     def wait_for(self, timeout, available=True, error=None):
         """
-        :Description: Wait for a given element to become available.
+        Wait for a given element to become available.
+
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :available: Used to check whether element is available or not available.
@@ -265,7 +302,8 @@ class Element(Resource):
 
     def wait_visible(self, timeout, error=None):
         """
-        :Description: Wait for given element to be visible.
+        Wait for given element to be visible.
+
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Raise ElementNotVisibleException on failure.
@@ -282,7 +320,8 @@ class Element(Resource):
 
     def wait_invisible(self, timeout, error=None):
         """
-        :Description: Wait for given element to be invisible.
+        Wait for given element to be invisible.
+
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Raise InvalidElementStateException on failure.
@@ -299,7 +338,8 @@ class Element(Resource):
 
     def wait_enabled(self, timeout, error=None):
         """
-        :Description: Wait for given element to be enabled.
+        Wait for given element to be enabled.
+
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Raise InvalidElementStateException on failure.
@@ -316,7 +356,8 @@ class Element(Resource):
 
     def wait_disabled(self, timeout, error=None):
         """
-        :Description: Wait for given element to be disabled.
+        Wait for given element to be disabled.
+
         :param timeout: Time in seconds to wait for element.
         :type timeout: int
         :param error: Raise InvalidElementStateException on failure.
@@ -333,7 +374,8 @@ class Element(Resource):
 
     def wait_js(self, condition, interval):
         """
-        :Description: Wait for element by javascript condition.
+        Wait for element by javascript condition.
+
         :param condition: Javascript condition to execute.
         :type condition: string
         :param interval: Interval to check condition by in ms.
@@ -345,7 +387,8 @@ class Element(Resource):
 
     def switch_to(self):
         """
-        :Description: Switch into an iframe element context.
+        Switch into an iframe element context.
+
         :return: Element, None
         """
         found = self.get()
@@ -364,7 +407,8 @@ class Element(Resource):
 
 class Elements(Resource):
     """
-    :Description: Base resource for component elements.
+    Base resource for component elements.
+
     :param controller: Parent controller reference.
     :type controller: Controller
     :param selector: Selector of given elements.
@@ -388,7 +432,8 @@ class Elements(Resource):
 
     def fmt(self, **kwargs):
         """
-        :Description: Used to format selectors.
+        Used to format selectors.
+
         :return: Elements
         """
         self.selector = Template(self._selector).safe_substitute(**kwargs)
@@ -396,21 +441,24 @@ class Elements(Resource):
 
     def get(self):
         """
-        :Description: Used to fetch a selenium WebElement.
+        Used to fetch a selenium WebElement.
+
         :return: [WebElement, ...], None
         """
         return self.__find_elements()
 
     def count(self):
         """
-        :Description: Used to count number of found elements.
+        Used to count number of found elements.
+
         :return: int
         """
         return len(self.get())
 
     def text(self, raw=False):
         """
-        :Description: Get list of element text values.
+        Get list of element text values.
+
         :param raw: Extract inner html from element.
         :type raw: bool
         :return: [string, ...], None
@@ -429,14 +477,16 @@ class Elements(Resource):
 
     def value(self):
         """
-        :Description: Get list of input element values.
+        Get list of input element values.
+
         :return: [string, ...], None
         """
         return [self.controller.js.get_value(element) for element in self.get()]
 
     def get_attribute(self, attribute):
         """
-        :Description: Used to fetch list of elements attributes.
+        Used to fetch list of elements attributes.
+
         :param attribute: Attribute of elements to target.
         :type attribute: string
         :return: [(None, bool, int, float, string), ...]
@@ -445,7 +495,8 @@ class Elements(Resource):
 
     def set_attribute(self, attribute, value):
         """
-        :Description: Used to set specified element attribute.
+        Used to set specified element attribute.
+
         :param attribute: Attribute of element to target.
         :type attribute: string
         :param value: Value to set elements attributes to.
@@ -458,7 +509,8 @@ class Elements(Resource):
 
     def get_property(self, prop):
         """
-        :Description: Used to fetch list of elements properties.
+        Used to fetch list of elements properties.
+
         :param prop: Property of elements to target.
         :type prop: string
         :return: None, bool, int, float, string
@@ -467,7 +519,8 @@ class Elements(Resource):
 
     def set_property(self, prop, value):
         """
-        :Description: Used to set specified element property.
+        Used to set specified element property.
+
         :param prop: Property of element to target.
         :type prop: string
         :param value: Value to set specified element property to.
@@ -480,7 +533,8 @@ class Elements(Resource):
 
     def wait_for(self, timeout, length=1, strict=False, error=None):
         """
-        :Description: Wait for given length of elements to be available.
+        Wait for given length of elements to be available.
+
         :param timeout: Time in seconds to wait for elements.
         :type timeout: int
         :param length: Number of elements to wait for.
@@ -507,7 +561,8 @@ class Elements(Resource):
 
     def wait_visible(self, timeout, length=1, strict=False, error=None):
         """
-        :Description: Wait for given length of elements to be available and visible.
+        Wait for given length of elements to be available and visible.
+
         :param timeout: Time in seconds to wait for elements.
         :type timeout: int
         :param length: Number of elements to wait for.
@@ -531,7 +586,8 @@ class Elements(Resource):
 
     def wait_invisible(self, timeout, length=1, strict=False, error=None):
         """
-        :Description: Wait for given length of elements to be available and invisible.
+        Wait for given length of elements to be available and invisible.
+
         :param timeout: Time in seconds to wait for elements.
         :type timeout: int
         :param length: Number of elements to wait for.
@@ -555,7 +611,8 @@ class Elements(Resource):
 
     def wait_enabled(self, timeout, length=1, strict=False, error=None):
         """
-        :Description: Wait for given length of elements to be available and enabled.
+        Wait for given length of elements to be available and enabled.
+
         :param timeout: Time in seconds to wait for elements.
         :type timeout: int
         :param length: Number of elements to wait for.
@@ -579,7 +636,8 @@ class Elements(Resource):
 
     def wait_disabled(self, timeout, length=1, strict=False, error=None):
         """
-        :Description: Wait for given length of elements to be available and disabled.
+        Wait for given length of elements to be available and disabled.
+
         :param timeout: Time in seconds to wait for elements.
         :type timeout: int
         :param length: Number of elements to wait for.
@@ -611,7 +669,8 @@ class Elements(Resource):
 
 class Check(Resource):
     """
-    :Description: Base resource for individual element checks.
+    Base resource for individual element checks.
+
     :param element: Element instance to reference.
     :type element: Element
     """
@@ -621,21 +680,24 @@ class Check(Resource):
 
     def available(self):
         """
-        :Description: Check element available.
+        Check element available.
+
         :return: bool
         """
         return bool(self.element.get())
 
     def not_available(self):
         """
-        :Description: Check element not available.
+        Check element not available.
+
         :return: bool
         """
         return not bool(self.element.get())
 
     def visible(self):
         """
-        :Description: Check element visibility.
+        Check element visibility.
+
         :return: bool
         """
         found = self.element.get()
@@ -644,7 +706,8 @@ class Check(Resource):
 
     def invisible(self):
         """
-        :Description: Check element invisible.
+        Check element invisible.
+
         :return: bool
         """
         found = self.element.get()
@@ -653,7 +716,8 @@ class Check(Resource):
 
     def enabled(self):
         """
-        :Description: Check element DOM node enabled.
+        Check element DOM node enabled.
+
         :return: bool
         """
         found = self.element.get()
@@ -662,7 +726,8 @@ class Check(Resource):
 
     def disabled(self):
         """
-        :Description: Check element DOM node disabled.
+        Check element DOM node disabled.
+
         :return: bool
         """
         found = self.element.get()
@@ -671,7 +736,7 @@ class Check(Resource):
 
     def wait_status(self):
         """
-        :Description: Check javascript wait status.
+        Check javascript wait status.
         """
         return self.element.controller.js.wait_status(self.element.wait_handle)
 
@@ -680,7 +745,8 @@ class Check(Resource):
 
 class Checks(Resource):
     """
-    :Description: Base resource for multiple element checks.
+    Base resource for multiple element checks.
+
     :param elements: Elements instance to reference.
     :type element: Elements
     """
@@ -690,7 +756,8 @@ class Checks(Resource):
 
     def visible(self):
         """
-        :Description: Used to check at least one element is available and all are visible.
+        Used to check at least one element is available and all are visible.
+
         :return: bool
         """
         found = self.elements.get()
@@ -703,7 +770,8 @@ class Checks(Resource):
 
     def invisible(self):
         """
-        :Description: Used to check at least one element is available and all are invisible.
+        Used to check at least one element is available and all are invisible.
+
         :return: bool
         """
         found = self.elements.get()
@@ -716,7 +784,8 @@ class Checks(Resource):
 
     def enabled(self):
         """
-        :Description: Used to check at least one element is available and all are enabled.
+        Used to check at least one element is available and all are enabled.
+
         :return: bool
         """
         found = self.elements.get()
@@ -729,7 +798,8 @@ class Checks(Resource):
 
     def disabled(self):
         """
-        :Description: Used to check at least one element is available and all are disabled.
+        Used to check at least one element is available and all are disabled.
+
         :return: bool
         """
         found = self.elements.get()
@@ -745,7 +815,8 @@ class Checks(Resource):
 
 class CheckGroup(Resource):
     """
-    :Description: Base resource for component group element checks.
+    Base resource for component group element checks.
+
     :param group: Group resource to reference.
     :type group: Resource
     """
@@ -761,7 +832,8 @@ class CheckGroup(Resource):
 
     def available(self):
         """
-        :Description: Check group of elements available.
+        Check group of elements available.
+
         :return: bool
         """
         for element in self.group.__group__:
@@ -771,7 +843,8 @@ class CheckGroup(Resource):
 
     def not_available(self):
         """
-        :Description: Check group of elements not available.
+        Check group of elements not available.
+
         :return: bool
         """
         for element in self.group.__group__:
@@ -781,7 +854,8 @@ class CheckGroup(Resource):
 
     def visible(self):
         """
-        :Description: Check group of elements visible.
+        Check group of elements visible.
+
         :return: bool
         """
         for element in self.group.__group__:
@@ -791,7 +865,8 @@ class CheckGroup(Resource):
 
     def invisible(self):
         """
-        :Description: Check group of elements invisible.
+        Check group of elements invisible.
+
         :return: bool
         """
         for element in self.group.__group__:
@@ -801,7 +876,8 @@ class CheckGroup(Resource):
 
     def enabled(self):
         """
-        :Description: Check group elements enabled.
+        Check group elements enabled.
+
         :return: bool
         """
         for element in self.__group__:
@@ -811,7 +887,8 @@ class CheckGroup(Resource):
 
     def disabled(self):
         """
-        :Description: Check group elements disabled.
+        Check group elements disabled.
+
         :return: bool
         """
         for element in self.__group__:
@@ -824,7 +901,8 @@ class CheckGroup(Resource):
 
 def component_element(ref):
     """
-    :Description: Wrapper for singular component element.
+    Wrapper for singular component element.
+
     :return: Element
     """
     @property
@@ -835,7 +913,8 @@ def component_element(ref):
 
 def component_elements(ref):
     """
-    :Description: Wrapper for multiple component element.
+    Wrapper for multiple component element.
+
     :return: Elements
     """
     @property
@@ -846,7 +925,8 @@ def component_elements(ref):
 
 def component_group(ref):
     """
-    :Description: Wrapper for component element groups.
+    Wrapper for component element groups.
+
     :return: Resource
     """
     def fmt(self, **kwargs): # pylint: disable=missing-docstring

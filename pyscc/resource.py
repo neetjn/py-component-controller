@@ -20,7 +20,7 @@ from six import iteritems
 
 class Resource(object): # pylint: disable=too-few-public-methods
     """
-    :Description: Base object for shenanigans.
+    Base object for shenanigans.
     """
     def __init__(self, **kwargs):
         for prop, val in iteritems(kwargs):
@@ -29,7 +29,7 @@ class Resource(object): # pylint: disable=too-few-public-methods
 
     def validate(self):
         """
-        :Description: Validate resource with defined meta data.
+        Validate resource with defined meta data.
         """
         meta = getattr(self, 'meta', None)
         if meta and meta.get('required_fields'):
