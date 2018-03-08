@@ -162,6 +162,12 @@ Additionally, for elements that do not listen on the click event but rather mous
         .mouseup()\
         .mousedown()
 
+You may also leverage the `select` api method for option child elements of select elements for proper selection.
+
+.. code-block:: python
+
+    component.language_options.python.select()
+
 Scrolling To an Element
 -----------------------
 
