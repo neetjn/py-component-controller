@@ -248,7 +248,7 @@ class Element(Resource):
         if found:
             self.controller.js.scroll_into_view(found)
             self.controller.js.set_property(found, 'selected', True)
-            self.controller.js.trigger_event(found, 'change')
+            self.controller.js.trigger_event(found, 'change', options={'bubbles': True})
             return self
         return None
 
