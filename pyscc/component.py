@@ -16,6 +16,7 @@
 # under the License.
 
 from pyscc.controller import Controller
+from pyscc.element import Element, Elements
 from pyscc.resource import Resource
 
 
@@ -31,5 +32,23 @@ class Component(Resource): # pylint: disable=too-few-public-methods
         self.browser = controller.browser
         self.env = controller.env
         self.validate()
+
+    @property
+    def __describe__(self):
+        """
+        Fetch component description with attribute names for Element, Elements, and Component Group instances.
+
+        :return: dict
+        """
+        expected_attributes = ['controller', 'browser', 'env', 'validate']
+        base_attributes = [child for child in dir(self) if not child.startswith('_') and child not in expected_attributes]
+        element_instances = [el for el in base_attributes if isinstance(getattr(self, el), Element)]
+        elements_instances = [el for el in base_attributes if isinstance(getattr(self, el), Elements)]
+        group_instances = [el for el in base_attributes if el not in element_instances + elements_instances]
+        return {
+            'element': element_instances,
+            'elements': elements_instances,
+            'groups': group_instances
+        }
 
     meta = {'required_fields': [('controller', Controller)]}
