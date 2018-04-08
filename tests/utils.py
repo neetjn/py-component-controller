@@ -118,11 +118,17 @@ class TaskService(Service):
 class AppController(ControllerSpec):
 
     def __init__(self, browser, base_url, **env):
-        super(AppController, self).__init__(browser, base_url, {
-            'header': Header,
-            'footer': Footer,
-            'home': HomePage
-        }, **env)
+        super(AppController, self).__init__(
+            browser=browser,
+            base_url=base_url,
+            components={
+                'header': Header,
+                'footer': Footer,
+                'home': HomePage
+            },
+            services={
+                'tasks': TaskService
+            }, **env)
 
     def go_home(self):
         self.components.home.logo.click()
