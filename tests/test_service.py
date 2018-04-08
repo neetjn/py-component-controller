@@ -18,8 +18,8 @@ class TestService(BaseTest):
 
     def test_service_components(self):
         """test service has reference to components"""
-        self.assertTrue(hasattr(self.tasks_service, 'browser'))
-        self.assertEqual(self.task_service.components, self.app.components)
+        self.assertTrue(hasattr(self.tasks_service, 'components'))
+        self.assertEqual(self.tasks_service.components, self.app.components)
 
     def test_service_env(self):
         """test service has reference to env"""
