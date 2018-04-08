@@ -27,8 +27,8 @@ When a component is instantiated, the constructor automatically binds the follow
 * **browser**: Reference to parent controller's webdriver.
 * **env**: Reference to parent controller's env resource.
 
-Description
-===========
+Descriptions
+============
 
 Components are constructed with a property `__describe__` which will return a dictionary of
 Element, Element, and Component Group instances. This can be helpful for dynamically

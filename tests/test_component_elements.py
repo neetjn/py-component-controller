@@ -155,7 +155,7 @@ class TestElement(BaseTest):
         self.assertTrue(self.app.wait(timeout=5, condition=self.logo.check.invisible))
         self.assertTrue(self.delete_tasks.check.enabled())
         self.assertFalse(self.delete_tasks.check.disabled())
-        self.app.delete_tasks(tasks=2)
+        self.app.services.tasks.delete_tasks(tasks=2)
         self.assertTrue(self.app.wait(timeout=5, condition=self.task.fmt(id=2).check.not_available))
         self.assertFalse(self.delete_tasks.check.enabled())
         self.assertTrue(self.delete_tasks.check.disabled())

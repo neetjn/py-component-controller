@@ -15,7 +15,18 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from pyscc.element import component_element, component_elements, component_group
-from pyscc.component import Component
-from pyscc.controller import Controller
-from pyscc.service import Service
+from pyscc.resource import Resource
+
+
+class Service(Resource): # pylint: disable=too-few-public-methods
+    """
+    Base resource for controller services.
+
+    :param controller: Parent controller reference.
+    :type controller: Controller
+    """
+    def __init__(self, controller):
+        self.browser = controller.browser
+        self.components = controller.components
+        self.env = controller.env
+        self.validate()
