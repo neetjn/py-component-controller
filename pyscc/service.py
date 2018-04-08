@@ -31,5 +31,3 @@ class Service(Resource):
         self.components = controller.components
         self.env = controller.env
         self.validate()
-
-    meta = {'required_fields': [('components', Resource), ('env', Resource)]}
