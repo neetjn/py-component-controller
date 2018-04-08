@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
