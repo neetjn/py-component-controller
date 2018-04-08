@@ -1,7 +1,7 @@
 from time import time
 from unittest import TestCase
 
-from pyscc import Component, Controller, ControllerSpec, Service, \
+from pyscc import Component, Controller, Service, \
     component_element, component_elements, component_group
 from selenium import webdriver
 
@@ -115,20 +115,17 @@ class TaskService(Service):
         home.create_task_content.send_input(content)
 
 
-class AppController(ControllerSpec):
+class AppController(Controller):
 
     def __init__(self, browser, base_url, **env):
         super(AppController, self).__init__(
-            browser=browser,
-            base_url=base_url,
-            components={
+            browser, base_url, {
                 'header': Header,
                 'footer': Footer,
                 'home': HomePage
-            },
-            services={
-                'tasks': TaskService
             }, **env)
+
+        self.add_service('tasks', TaskService)
 
     def go_home(self):
         self.components.home.logo.click()

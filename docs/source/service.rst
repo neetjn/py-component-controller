@@ -16,12 +16,6 @@ If a controller is exceeding some 800 lines of code, it may be beneficial for bo
 organization and productivity to compartementalize strings of functionality operating
 off of the same base component.
 
-Implementation
-==============
-
-Services are part of the 0.2.1 Controller specification. To use this functionality in the meantime,
-import and reference `ControllerSpec` instead of the `Controller` object from the `controller` module.
-
 Example
 =======
 
@@ -80,15 +74,11 @@ The following example is an abstraction of the `Google` controller featured on `
     class Google(Controller):
 
         def __init__(self, browser, base_url):
-            super(Product, self).__init__(
-                browser=browser,
-                base_url=base_url,
-                components={
-                    'home': Home,
-                    'results': Results
-                },
-                services={'search': SearchService}
-            )
+            super(Product, self).__init__(browser, base_url, {
+                'home': Home,
+                'results': Results
+            })
+            self.add_service('search', SearchService)
 
         def number_of_results():
             return self.components.results.results.count()

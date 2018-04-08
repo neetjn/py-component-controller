@@ -55,6 +55,8 @@ class Controller(object):
         self.components = Resource(**{
             name: component(controller=self) for name, component in iteritems(components)})
 
+        self.services = Resource()
+
         self.browser.get(self.base_url)
 
     def __enter__(self):
@@ -88,6 +90,17 @@ class Controller(object):
             by_xpath, selector), webdriver)
 
         return webdriver
+
+    def add_service(self, name, prototype):
+        """
+        Adds new service to controller.
+
+        :param name: Service alias.
+        :type name: string
+        :param prototype: Service definition to instantiate.
+        :type prototype: Service
+        """
+        setattr(self.services, name, prototype(self))
 
     @property
     def location(self):
@@ -313,26 +326,3 @@ class Controller(object):
             self.logger.warning('Could not close remote driver')
         finally:
             self.browser.quit()
-
-
-class ControllerSpec(Controller):
-
-    def __init__(self, browser, base_url, components, services=None, **env):
-        """
-        Controller for managing components.
-
-        :param browser: Webdriver for controller and components to reference.
-        :type browser: webdriver
-        :param base_url: Base url for navigations, will navigate to this url in init.
-        :type base_url: string
-        :param components: Component objects to instantiate.
-        :type components: dict
-        :param services: Service objects to instantiate.
-        :type services: dict
-        :param env: Key value pairs to pass to instantiated components.
-        :type env: **kwargs => dict
-        """
-        super(ControllerSpec, self).__init__(browser, base_url, components, **env)
-        services = services or {}
-        self.services = Resource(**{
-            name: service(controller=self) for name, service in iteritems(services)})
