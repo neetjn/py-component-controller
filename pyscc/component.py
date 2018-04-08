@@ -44,8 +44,8 @@ class Component(Resource): # pylint: disable=too-few-public-methods
         base_attributes = [child for child in dir(self) if not child.startswith('_') and child not in expected_attributes]
         element_instances = [el for el in base_attributes if isinstance(getattr(self, el), Element)]
         elements_instances = [el for el in base_attributes if isinstance(getattr(self, el), Elements)]
-        group_instances = [el for el in base_attributes if el
-            not in element_instances + elements_instances and isinstance(getattr(self, el), Resource)]
+        # pylint: disable=line-too-long
+        group_instances = [el for el in base_attributes if el not in element_instances + elements_instances and isinstance(getattr(self, el), Resource)]
         return {
             'element': element_instances,
             'elements': elements_instances,
