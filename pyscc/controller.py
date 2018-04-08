@@ -317,7 +317,7 @@ class Controller(object):
 
 class ControllerSpec(Controller):
 
-    def __init__(self, browser, base_url, components, services, **env):
+    def __init__(self, browser, base_url, components, services=None, **env):
         """
         Controller for managing components.
 
@@ -333,5 +333,6 @@ class ControllerSpec(Controller):
         :type env: **kwargs => dict
         """
         super(ControllerSpec, self).__init__(browser, base_url, components, **env)
+        services = services or {}
         self.services = Resource(**{
             name: service(controller=self) for name, service in iteritems(services)})

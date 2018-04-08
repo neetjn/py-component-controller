@@ -81,8 +81,8 @@ The following example is an abstraction of the `Google` controller featured on `
 
         def __init__(self, browser, base_url):
             super(Product, self).__init__(
-                browser,
-                base_url,
+                browser=browser,
+                base_url=base_url,
                 components={
                     'home': Home,
                     'results': Results
