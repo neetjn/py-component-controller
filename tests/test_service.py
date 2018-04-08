@@ -7,7 +7,7 @@ from selenium import webdriver
 class TestService(BaseTest):
 
     def setUp(self):
-        super(TestService, self).__init__()
+        super(TestService, self).setUp()
         self.tasks_service = self.app.services.tasks
 
     def test_service_webdriver(self):
