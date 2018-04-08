@@ -36,15 +36,17 @@ class Component(Resource): # pylint: disable=too-few-public-methods
     @property
     def __describe__(self):
         """
-        Fetch component description with attribute names for Element, Elements, and Component Group instances.
+        Fetch component description with attribute names for Element, Elements,
+        and Component Group instances.
 
+        :example: { 'element': [...], 'elements': [...], 'group': [...] }
         :return: dict
         """
+        # pylint: disable=line-too-long
         expected_attributes = ['controller', 'browser', 'env', 'validate']
         base_attributes = [child for child in dir(self) if not child.startswith('_') and child not in expected_attributes]
         element_instances = [el for el in base_attributes if isinstance(getattr(self, el), Element)]
         elements_instances = [el for el in base_attributes if isinstance(getattr(self, el), Elements)]
-        # pylint: disable=line-too-long
         group_instances = [el for el in base_attributes if el not in element_instances + elements_instances and isinstance(getattr(self, el), Resource)]
         return {
             'element': element_instances,
