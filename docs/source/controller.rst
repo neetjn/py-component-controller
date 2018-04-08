@@ -35,7 +35,7 @@ The most prevelant polyfill featured is uniformity for `find_elements_by_x`. Eve
 
 Any irregularities between webdrivers should be reported via the py-component-controller github with steps to reproduce and a related issue or task if available for the corresponding webdriver.
 
-Contructor
+Attributes
 ==========
 
 When a controller is instantiated, the constructor automatically binds the following attributes:
