@@ -24,6 +24,13 @@ class TestComponent(BaseTest):
         self.assertEqual(self.app.components.home.env, self.app.env)
         self.assertEqual(self.app.components.home.env.created, self.created)
 
+    def test_component_root_selector(self):
+        """test component root selector applies to element, elements, and group"""
+        home = self.app.components.home
+        self.assertTrue(home.logo.selector.startswith('body '))
+        self.assertTrue(home.task_group.desc.selector.startswith('body '))
+        self.assertTrue(home.task_assignees.selector.startswith('body '))
+
     def test_component_description(self):
         """test component description works as intended"""
         description = self.app.components.home.__describe__

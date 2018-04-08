@@ -23,6 +23,8 @@ class Header(Component):
 
 class HomePage(Component):
 
+    _ = 'body'
+
     @component_element
     def logo(self):
         return 'header-partial h1.logo'

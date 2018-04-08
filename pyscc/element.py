@@ -40,7 +40,7 @@ class Element(Resource):
     def __init__(self, controller, component, selector):
         self.controller = controller
         self.component = component
-        if self.component._:
+        if hasattr(self.component, '_'):
             selector = self.component._ + ' ' + selector
         self.selector = self._selector = selector
         self.check = Check(self)
@@ -424,7 +424,7 @@ class Elements(Resource):
     def __init__(self, controller, component, selector):
         self.controller = controller
         self.component = component
-        if self.component._:
+        if hasattr(self.component, '_'):
             selector = self.component._ + ' ' + selector
         self.selector = self._selector = selector
         self.checks = Checks(self)
