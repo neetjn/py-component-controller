@@ -32,11 +32,16 @@ class Element(Resource):
 
     :param controller: Parent controller reference.
     :type controller: Controller
+    :param component: Element's component instance.
+    :type component: Component
     :param selector: Selector of given element.
     :type selector: string
     """
-    def __init__(self, controller, selector):
+    def __init__(self, controller, component, selector):
         self.controller = controller
+        self.component = component
+        if hasattr(self.component, '_'):
+            selector = self.component._ + ' ' + selector
         self.selector = self._selector = selector
         self.check = Check(self)
         self.wait_handle = None  # used for js waits
@@ -411,11 +416,16 @@ class Elements(Resource):
 
     :param controller: Parent controller reference.
     :type controller: Controller
+    :param component: Elements' component instance.
+    :type component: Component
     :param selector: Selector of given elements.
     :type selector: string
     """
-    def __init__(self, controller, selector):
+    def __init__(self, controller, component, selector):
         self.controller = controller
+        self.component = component
+        if hasattr(self.component, '_'):
+            selector = self.component._ + ' ' + selector
         self.selector = self._selector = selector
         self.checks = Checks(self)
         self.validate()
@@ -907,7 +917,7 @@ def component_element(ref):
     """
     @property
     def wrapper(self):  # pylint: disable=missing-docstring
-        return Element(self.controller, ref(self))
+        return Element(self.controller, self, ref(self))
     return wrapper
 
 
@@ -919,7 +929,7 @@ def component_elements(ref):
     """
     @property
     def wrapper(self):  # pylint: disable=missing-docstring
-        return Elements(self.controller, ref(self))
+        return Elements(self.controller, self, ref(self))
     return wrapper
 
 
@@ -941,7 +951,7 @@ def component_group(ref):
     def wrapper(self): # pylint: disable=missing-docstring
         group_def = ref(self)
         # pylint: disable=line-too-long
-        group = Resource(**{element: Element(self.controller, (group_def.get('_') + ' ' + selector) if \
+        group = Resource(**{element: Element(self.controller, self, (group_def.get('_') + ' ' + selector) if \
             group_def.get('_') else selector) for element, selector in iteritems(group_def) \
             if selector != '_'})
         group.__group__ = [element for element, _ in iteritems(group_def) if element != '_']

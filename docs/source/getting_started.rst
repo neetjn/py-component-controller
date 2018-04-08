@@ -15,6 +15,8 @@ The following code is an example of a controller for Google's search engine:
 
     class Home(Component):
 
+        _ = 'body > app'  # optional root selector to be applied to all component items
+
         @component_element
         def search_bar(self):
             # we only need to return the selector
