@@ -313,3 +313,25 @@ class Controller(object):
             self.logger.warning('Could not close remote driver')
         finally:
             self.browser.quit()
+
+
+class ControllerSpec(Controller):
+
+    def __init__(self, browser, base_url, components, services, **env):
+        """
+        Controller for managing components.
+
+        :param browser: Webdriver for controller and components to reference.
+        :type browser: webdriver
+        :param base_url: Base url for navigations, will navigate to this url in init.
+        :type base_url: string
+        :param components: Component objects to instantiate.
+        :type components: dict
+        :param services: Service objects to instantiate.
+        :type services: dict
+        :param env: Key value pairs to pass to instantiated components.
+        :type env: **kwargs => dict
+        """
+        super(ControllerSpec, self).__init__(browser, base_url, components, **env)
+        self.services = Resource(**{
+            name: service(controller=self) for name, service in iteritems(services)})
