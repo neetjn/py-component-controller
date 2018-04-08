@@ -19,7 +19,7 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-class Service(Resource):
+class Service(Resource): # pylint: disable=too-few-public-methods
     """
     Base resource for controller services.
 
