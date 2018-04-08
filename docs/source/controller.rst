@@ -44,8 +44,29 @@ When a controller is instantiated, the constructor automatically binds the follo
 * **js**: Reference to instantiated pyselenium-js driver.
 * **logger**: Python logger reference.
 * **components** Resource for instantiated components constructed using the dictionarty provided in the constructor.
-* **services** Resource for instantiated controller services using the dictionary provided in the constructor.
 * **env**: Resource for environmental variables consumed in the form of kwargs from the constructor.
+
+Adding Services
+===============
+
+Services are defined in more detail `here <https://google.com>`_.
+
+To add a new service to your controller, refer to the api method **add_service**:
+
+.. code-block:: python
+
+    from pyscc import Service
+
+    class UserService(Service):
+
+        def login(self, username, password):
+            # can create methods using the same context as a controller
+            login_page = self.components.login
+            login_page.username.send_input(username)
+            ...
+
+    controller.add_service('users', UserService)
+    controller.services.users.login(...)
 
 Getting Current Location
 ==========================
