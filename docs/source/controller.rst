@@ -44,6 +44,7 @@ When a controller is instantiated, the constructor automatically binds the follo
 * **js**: Reference to instantiated pyselenium-js driver.
 * **logger**: Python logger reference.
 * **components** Resource for instantiated components constructed using the dictionarty provided in the constructor.
+* **services** Resource for instantiated controller services using the dictionary provided in the constructor.
 * **env**: Resource for environmental variables consumed in the form of kwargs from the constructor.
 
 Getting Current Location

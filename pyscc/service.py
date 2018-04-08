@@ -15,7 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from pyscc.controller import Controller
 from pyscc.resource import Resource
+
 
 class Service(Resource):
     """
@@ -25,7 +27,8 @@ class Service(Resource):
     :type controller: Controller
     """
     def __init__(self, controller):
-        self.controller = controller
         self.browser = controller.browser
         self.env = controller.env
         self.validate()
+
+    meta = {'required_fields': [('controller', Controller)]}

@@ -11,3 +11,4 @@ Table of Contents
     getting_started
     component
     controller
+    service
