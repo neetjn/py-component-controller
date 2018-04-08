@@ -28,7 +28,8 @@ class Service(Resource):
     """
     def __init__(self, controller):
         self.browser = controller.browser
+        self.components = controller.components
         self.env = controller.env
         self.validate()
 
-    meta = {'required_fields': [('controller', Controller)]}
+    meta = {'required_fields': [('components', Resource), ('env', Resource)]}

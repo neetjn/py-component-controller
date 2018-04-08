@@ -54,4 +54,5 @@ class Component(Resource): # pylint: disable=too-few-public-methods
             'group': group_instances
         }
 
-    meta = {'required_fields': [('controller', Controller)]}
+    meta = {'required_fields': [
+        ('controller', Controller), ('components', Resource), ('env', Resource)]}

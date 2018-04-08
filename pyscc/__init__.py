@@ -17,5 +17,5 @@
 
 from pyscc.element import component_element, component_elements, component_group
 from pyscc.component import Component
-from pyscc.controller import Controller
+from pyscc.controller import Controller, ControllerSpec
 from pyscc.service import Service

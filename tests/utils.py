@@ -1,8 +1,8 @@
 from time import time
 from unittest import TestCase
 
-from pyscc import Component, Controller, component_element, component_elements, \
-    component_group
+from pyscc import Component, Controller, ControllerSpec, Service, \
+    component_element, component_elements, component_group
 from selenium import webdriver
 
 
@@ -86,17 +86,7 @@ class Footer(Component):
         return 'a#author'
 
 
-class AppController(Controller):
-
-    def __init__(self, browser, base_url, **env):
-        super(AppController, self).__init__(browser, base_url, {
-            'header': Header,
-            'footer': Footer,
-            'home': HomePage
-        }, **env)
-
-    def go_home(self):
-        self.components.home.logo.click()
+class TaskService(Service):
 
     def delete_tasks(self, tasks):
         home = self.components.home
@@ -123,6 +113,19 @@ class AppController(Controller):
         home.create_task_assignee.send_input(assignee)
         home.create_task_title.send_input(title)
         home.create_task_content.send_input(content)
+
+
+class AppController(ControllerSpec):
+
+    def __init__(self, browser, base_url, **env):
+        super(AppController, self).__init__(browser, base_url, {
+            'header': Header,
+            'footer': Footer,
+            'home': HomePage
+        }, **env)
+
+    def go_home(self):
+        self.components.home.logo.click()
 
 
 class BaseTest(TestCase):
