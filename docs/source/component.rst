@@ -18,7 +18,7 @@ Any accessory functionality should be provided by your controller.
 
 If you haven't already check out `Getting Started <http://py-component-controller.readthedocs.io/en/latest/getting_started.html>`_ for examples.
 
-Contructor
+Attributes
 ==========
 
 When a component is instantiated, the constructor automatically binds the following attributes:
@@ -26,6 +26,22 @@ When a component is instantiated, the constructor automatically binds the follow
 * **controller**: Reference to parent controller instance.
 * **browser**: Reference to parent controller's webdriver.
 * **env**: Reference to parent controller's env resource.
+
+Descriptions
+============
+
+Components are constructed with a property `__describe__` which will return a dictionary of
+Element, Element, and Component Group instances. This can be helpful for dynamically
+mapping and operating against arbitrary components.
+
+.. code-block:: python
+
+    print(controller.components.page.__describe__)
+    >> {
+    >>   'element': [],
+    >>   'elements': [],
+    >>   'group': [],
+    >> {
 
 Element (wrapper)
 =================
@@ -162,7 +178,18 @@ Additionally, for elements that do not listen on the click event but rather mous
         .mouseup()\
         .mousedown()
 
-You may also leverage the `select` api method for option child elements of select elements for proper selection.
+You may also leverage the *select* api method for option child elements of select elements for proper selection.
+
+*HTML*
+
+.. code-block:: html
+
+    <select>
+        <option value="py">Python</option>
+        <option value="js">Javascript</option>
+    </select>
+
+*Example*
 
 .. code-block:: python
 

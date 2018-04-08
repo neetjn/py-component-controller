@@ -44,15 +44,15 @@ class TestElement(BaseTest):
     def test_element_group_fmt(self):
         """test element groups format selectors as intended"""
         self.assertEqual(self.task_form.fmt(form='create-todo'), self.task_form)
-        self.assertEqual(self.task_form.assignee.selector, 'create-todo #taskAssignee')
+        self.assertEqual(self.task_form.assignee.selector, 'body create-todo #taskAssignee')
         self.task_form.title.fmt(class_name='u-full-width')
-        self.assertEqual(self.task_form.title.selector, 'create-todo #taskTitle.u-full-width')
+        self.assertEqual(self.task_form.title.selector, 'body create-todo #taskTitle.u-full-width')
 
     def test_element_group_root(self):
         """test element group root element"""
         self.assertTrue('_' not in self.task_group.__group__)  # gh issue 54
         task = self.task_group.fmt(id='1')
-        self.assertEqual(task.desc.selector, 'todo-task#task-1 h4')
+        self.assertEqual(task.desc.selector, 'body todo-task#task-1 h4')
 
     def test_element_wrapper(self):
         """test element wrapper instantiated as intended"""
@@ -155,7 +155,7 @@ class TestElement(BaseTest):
         self.assertTrue(self.app.wait(timeout=5, condition=self.logo.check.invisible))
         self.assertTrue(self.delete_tasks.check.enabled())
         self.assertFalse(self.delete_tasks.check.disabled())
-        self.app.delete_tasks(tasks=2)
+        self.app.services.tasks.delete_tasks(tasks=2)
         self.assertTrue(self.app.wait(timeout=5, condition=self.task.fmt(id=2).check.not_available))
         self.assertFalse(self.delete_tasks.check.enabled())
         self.assertTrue(self.delete_tasks.check.disabled())

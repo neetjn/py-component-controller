@@ -55,6 +55,8 @@ class Controller(object):
         self.components = Resource(**{
             name: component(controller=self) for name, component in iteritems(components)})
 
+        self.services = Resource()
+
         self.browser.get(self.base_url)
 
     def __enter__(self):
@@ -88,6 +90,17 @@ class Controller(object):
             by_xpath, selector), webdriver)
 
         return webdriver
+
+    def add_service(self, name, prototype):
+        """
+        Adds new service to controller.
+
+        :param name: Service alias.
+        :type name: string
+        :param prototype: Service definition to instantiate.
+        :type prototype: Service
+        """
+        setattr(self.services, name, prototype(self))
 
     @property
     def location(self):
