@@ -25,6 +25,9 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
+ELEMENTS_STALE_WAIT_TIME = 3
+
+
 # pylint: disable=too-many-public-methods
 class Element(Resource):
     """
@@ -440,6 +443,10 @@ class Elements(Resource):
         return self.controller.browser.find_elements_by_css_selector(self.selector) \
             or self.controller.browser.find_elements_by_xpath(self.selector)
 
+    def __wait_elements_not_stale(self, timeout):
+        # pylint: disable=line-too-long
+        self.controller.wait(timeout, condition=lambda: [element.text for element in self.get()])
+
     def fmt(self, **kwargs):
         """
         Used to format selectors.
@@ -465,14 +472,19 @@ class Elements(Resource):
         """
         return len(self.get())
 
-    def text(self, raw=False):
+    def text(self, raw=False, check_stale_element=False):
         """
         Get list of element text values.
 
         :param raw: Extract inner html from element.
         :type raw: bool
+        :param check_stale_element: Ensure retrieved WebElement instances are finished mounting.
+        :type check_stale_element: bool
         :return: [string, ...], None
         """
+        if check_stale_element:
+            # wait in the event element list is actively loading
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         found = self.get()
         if found:
             collection = []
@@ -485,22 +497,32 @@ class Elements(Resource):
             return collection
         return []
 
-    def value(self):
+    def value(self, check_stale_element=False):
         """
         Get list of input element values.
 
+        :param check_stale_element: Ensure retrieved WebElement instances are finished mounting.
+        :type check_stale_element: bool
         :return: [string, ...], None
         """
+        if check_stale_element:
+            # wait in the event element list is actively loading
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_value(element) for element in self.get()]
 
-    def get_attribute(self, attribute):
+    def get_attribute(self, attribute, check_stale_element=False):
         """
         Used to fetch list of elements attributes.
 
         :param attribute: Attribute of elements to target.
         :type attribute: string
+        :param check_stale_element: Ensure retrieved WebElement instances are finished mounting.
+        :type check_stale_element: bool
         :return: [(None, bool, int, float, string), ...]
         """
+        if check_stale_element:
+            # wait in the event element list is actively loading
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_attribute(element, attribute) for element in self.get()]
 
     def set_attribute(self, attribute, value):
@@ -517,14 +539,19 @@ class Elements(Resource):
             self.controller.js.set_attribute(element, attribute, value)
         return self
 
-    def get_property(self, prop):
+    def get_property(self, prop, check_stale_element=False):
         """
         Used to fetch list of elements properties.
 
         :param prop: Property of elements to target.
         :type prop: string
+        :param check_stale_element: Ensure retrieved WebElement instances are finished mounting.
+        :type check_stale_element: bool
         :return: None, bool, int, float, string
         """
+        if check_stale_element:
+            # wait in the event element list is actively loading
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_property(element, prop) for element in self.get()]
 
     def set_property(self, prop, value):
