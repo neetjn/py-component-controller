@@ -25,7 +25,7 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-ELEMENTS_GETTER_WAIT_TIME = 3
+ELEMENTS_STALE_WAIT_TIME = 3
 
 
 # pylint: disable=too-many-public-methods
@@ -443,6 +443,11 @@ class Elements(Resource):
         return self.controller.browser.find_elements_by_css_selector(self.selector) \
             or self.controller.browser.find_elements_by_xpath(self.selector)
 
+    def __wait_elements_not_stale(self, timeout):
+        self.controller.wait(
+            timeout=ELEMENTS_GETTER_WAIT_TIME,
+            condition=lambda: [element.text for element in self.get()])
+
     def fmt(self, **kwargs):
         """
         Used to format selectors.
@@ -480,9 +485,7 @@ class Elements(Resource):
         """
         if check_stale_element:
             # wait in the event element list is actively loading
-            self.controller.wait(
-                timeout=ELEMENTS_GETTER_WAIT_TIME,
-                condition=lambda: [element.text for element in self.get()])
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         found = self.get()
         if found:
             collection = []
@@ -505,9 +508,7 @@ class Elements(Resource):
         """
         if check_stale_element:
             # wait in the event element list is actively loading
-            self.controller.wait(
-                timeout=ELEMENTS_GETTER_WAIT_TIME,
-                condition=lambda: [element.text for element in self.get()])
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_value(element) for element in self.get()]
 
     def get_attribute(self, attribute, check_stale_element=False):
@@ -522,9 +523,7 @@ class Elements(Resource):
         """
         if check_stale_element:
             # wait in the event element list is actively loading
-            self.controller.wait(
-                timeout=ELEMENTS_GETTER_WAIT_TIME,
-                condition=lambda: [element.text for element in self.get()])
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_attribute(element, attribute) for element in self.get()]
 
     def set_attribute(self, attribute, value):
@@ -553,9 +552,7 @@ class Elements(Resource):
         """
         if check_stale_element:
             # wait in the event element list is actively loading
-            self.controller.wait(
-                timeout=ELEMENTS_GETTER_WAIT_TIME,
-                condition=lambda: [element.text for element in self.get()])
+            self.__wait_elements_not_stale(ELEMENTS_STALE_WAIT_TIME)
         return [self.controller.js.get_property(element, prop) for element in self.get()]
 
     def set_property(self, prop, value):
