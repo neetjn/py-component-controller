@@ -25,7 +25,6 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-ELEMENT_GETTER_WAIT_TIME = 3
 ELEMENTS_GETTER_WAIT_TIME = 3
 
 
