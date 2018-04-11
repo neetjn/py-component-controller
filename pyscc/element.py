@@ -444,9 +444,8 @@ class Elements(Resource):
             or self.controller.browser.find_elements_by_xpath(self.selector)
 
     def __wait_elements_not_stale(self, timeout):
-        self.controller.wait(
-            timeout=ELEMENTS_GETTER_WAIT_TIME,
-            condition=lambda: [element.text for element in self.get()])
+        # pylint: disable=line-too-long
+        self.controller.wait(timeout, condition=lambda: [element.text for element in self.get()])
 
     def fmt(self, **kwargs):
         """
