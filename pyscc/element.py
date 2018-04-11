@@ -473,6 +473,8 @@ class Elements(Resource):
         :type raw: bool
         :return: [string, ...], None
         """
+        if not self.controller.wait(timeout=3, condition=lambda: [element.text for element in self.get()]):
+            return []
         found = self.get()
         if found:
             collection = []
