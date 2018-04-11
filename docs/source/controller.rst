@@ -49,7 +49,7 @@ When a controller is instantiated, the constructor automatically binds the follo
 Adding Services
 ===============
 
-Services are defined in more detail `here <https://google.com>`_.
+Services are defined in more detail `here <http://py-component-controller.readthedocs.io/en/latest/service.html>`_.
 
 To add a new service to your controller, refer to the api method **add_service**:
 
