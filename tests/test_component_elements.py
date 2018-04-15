@@ -1,7 +1,6 @@
 import datetime
 from uuid import uuid4
 
-from pyscc.
 from pyscc.element import Element, Elements
 from pyscc.resource import Resource
 from tests.utils import BaseTest
