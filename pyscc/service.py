@@ -26,6 +26,7 @@ class Service(Resource): # pylint: disable=too-few-public-methods
     :type controller: Controller
     """
     def __init__(self, controller):
+        self.controller = controller
         self.browser = controller.browser
         self.components = controller.components
         self.env = controller.env
