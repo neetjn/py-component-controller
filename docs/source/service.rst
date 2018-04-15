@@ -16,6 +16,16 @@ If a controller is exceeding some 800 lines of code, it may be beneficial for bo
 organization and productivity to compartementalize strings of functionality operating
 off of the same base component.
 
+Attributes
+==========
+
+When a service is instantiated, the constructor automatically binds the following attributes:
+
+* **controller**: Reference to parent controller instance.
+* **browser**: Reference to parent controller's webdriver
+* **components**: Reference to parent controller's components.
+* **env**: Reference to parent controller's env resource.
+
 Example
 =======
 
@@ -55,7 +65,7 @@ The following example is an abstraction of the `Google` controller featured on `
 
         def search(self, query, redirect=False):
             # navigate to base url
-            self.navigate('/')
+            self.controller.navigate('/')
             # create reference to our home component
             home = self.components.home
             # wait 5 seconds for search bar to be visible
