@@ -445,7 +445,7 @@ class Elements(Resource):
 
     def __wait_elements_not_stale(self, timeout):
         # pylint: disable=line-too-long
-        self.controller.wait(timeout, condition=lambda: [self.controller.js.get_property('outerHTML') for element in self.get()])
+        self.controller.wait(timeout, condition=lambda: [self.controller.js.get_property(element, 'outerHTML') for element in self.get()])
 
     def fmt(self, **kwargs):
         """
