@@ -25,7 +25,7 @@ from pyscc.controller import Controller
 from pyscc.resource import Resource
 
 
-ELEMENTS_STALE_WAIT_TIME = 3
+ELEMENTS_STALE_WAIT_TIME = 5
 
 
 # pylint: disable=too-many-public-methods
@@ -445,7 +445,7 @@ class Elements(Resource):
 
     def __wait_elements_not_stale(self, timeout):
         # pylint: disable=line-too-long
-        self.controller.wait(timeout, condition=lambda: [element.text for element in self.get()])
+        self.controller.wait(timeout, condition=lambda: [self.controller.js.get_property('outerHTML') for element in self.get()])
 
     def fmt(self, **kwargs):
         """
