@@ -23,7 +23,6 @@ Attributes
 
 When a component is instantiated, the constructor automatically binds the following attributes:
 
-* **controller**: Reference to parent controller instance.
 * **browser**: Reference to parent controller's webdriver.
 * **env**: Reference to parent controller's env resource.
 
