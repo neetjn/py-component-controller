@@ -199,7 +199,11 @@ class TestElement(BaseTest):
         """test elements wrapper text aggregation"""
         self.app.wait(timeout=1)  # wait for transitions
         self.assertEqual(len(self.tasks.text()), 3)
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.text(check_stale_element=True)), 3)
+        # make sure the stale element check isn't taking maximum time
+        # assume each check should take no longer than 1 second
+        self.assertTrue(datetime.datetime.now() - start < datetime.timedelta(seconds=3))
         for task in self.tasks.text():
             self.assertIn('2017', task)
         for task in self.tasks.text(raw=True):
@@ -214,7 +218,11 @@ class TestElement(BaseTest):
         self.assertEqual(len(attributes), 3)
         for attr in attributes:
             self.assertEqual(attr, 'barfoo')
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.get_attribute('foobar', check_stale_element=True)), 3)
+        # make sure the stale element check isn't taking maximum time
+        # assume each check should take no longer than 1 second
+        self.assertTrue(datetime.datetime.now() - start < datetime.timedelta(seconds=3))
 
     def test_elements_wrapper_properties(self):
         """test elements wrapper property aggregation and specification"""
@@ -225,4 +233,8 @@ class TestElement(BaseTest):
         self.assertEqual(len(properties), 3)
         for prop in properties:
             self.assertEqual(prop, 'barfoo')
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.get_property('foobar', check_stale_element=True)), 3)
+        # make sure the stale element check isn't taking maximum time
+        # assume each check should take no longer than 1 second
+        self.assertTrue(datetime.datetime.now() - start < datetime.timedelta(seconds=3))
