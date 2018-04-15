@@ -199,7 +199,7 @@ class TestElement(BaseTest):
         """test elements wrapper text aggregation"""
         self.app.wait(timeout=1)  # wait for transitions
         self.assertEqual(len(self.tasks.text()), 3)
-        now = datetime.datetime.now()
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.text(check_stale_element=True)), 3)
         # make sure the stale element check isn't taking maximum time
         # assume each check should take no longer than 1 second
@@ -218,7 +218,7 @@ class TestElement(BaseTest):
         self.assertEqual(len(attributes), 3)
         for attr in attributes:
             self.assertEqual(attr, 'barfoo')
-        now = datetime.datetime.now()
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.get_attribute('foobar', check_stale_element=True)), 3)
         # make sure the stale element check isn't taking maximum time
         # assume each check should take no longer than 1 second
@@ -233,7 +233,7 @@ class TestElement(BaseTest):
         self.assertEqual(len(properties), 3)
         for prop in properties:
             self.assertEqual(prop, 'barfoo')
-        now = datetime.datetime.now()
+        start = datetime.datetime.now()
         self.assertEqual(len(self.tasks.get_property('foobar', check_stale_element=True)), 3)
         # make sure the stale element check isn't taking maximum time
         # assume each check should take no longer than 1 second
