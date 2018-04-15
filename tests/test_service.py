@@ -12,7 +12,7 @@ class TestService(BaseTest):
 
     def test_service_controller(self):
         """test service has reference to controller"""
-        self.assertEqual(hasattr(self.tasks_service), 'controller')
+        self.assertTrue(hasattr(self.tasks_service, 'controller'))
         self.assertIsInstance(self.tasks_service.controller, Controller)
         self.assertEqual(self.tasks_service.controller, self.app)
 
