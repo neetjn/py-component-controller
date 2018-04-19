@@ -291,7 +291,7 @@ class Controller(object):
             log_path = '%sconsole.%s.json' % (path, ('%s.%s' % (name, timestamp)) if \
                 name else timestamp)
             with open(log_path, 'a') as logfile:
-                logfile.write(self.js.console_dump())
+                logfile.write(self.js.console_dump().encode('utf8'))
             return log_path
         except WebDriverException:
             self.logger.critical('Browser logger object not found, could not return any logs.')
