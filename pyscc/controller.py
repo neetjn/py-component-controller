@@ -18,7 +18,7 @@
 import os
 import logging as logger
 import time
-import sys
+import io
 from string import Template
 from types import MethodType
 
@@ -291,11 +291,7 @@ class Controller(object):
             timestamp = str(int(time.time()))
             log_path = '%sconsole.%s.json' % (path, ('%s.%s' % (name, timestamp)) if \
                 name else timestamp)
-            if sys.version_info[0] < 3:
-                with open(log_path, 'a') as logfile:
-                    logfile.write(self.js.console_dump().encode('utf-8'))
-                return log_path
-            with open(log_path, 'a', encoding='utf-8') as logfile:
+            with io.open(log_path, 'a', encoding='utf-8') as logfile:
                 logfile.write(self.js.console_dump())
             return log_path
         except WebDriverException:
