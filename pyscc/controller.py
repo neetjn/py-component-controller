@@ -18,6 +18,7 @@
 import os
 import logging as logger
 import time
+import io
 from string import Template
 from types import MethodType
 
@@ -280,7 +281,7 @@ class Controller(object):
         :Warning: `self.js.console_logger` must be executed to store logs.
         :param name: Name log file dropped to disk, will default to timestamp if not specified.
         :type name: string
-        :param path: Path to drop conole log in.
+        :param path: Path to drop console log in.
         :type path: string
         :return: string
         """
@@ -290,7 +291,7 @@ class Controller(object):
             timestamp = str(int(time.time()))
             log_path = '%sconsole.%s.json' % (path, ('%s.%s' % (name, timestamp)) if \
                 name else timestamp)
-            with open(log_path, 'a') as logfile:
+            with io.open(log_path, 'a', encoding='utf-8') as logfile:
                 logfile.write(self.js.console_dump())
             return log_path
         except WebDriverException:
