@@ -15,39 +15,95 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import os
-import logging as logger
-import time
 import io
+import logging
+import os
+import sys
+import time
 from string import Template
 from types import MethodType
 
 from pyseleniumjs import E2EJS
 from selenium.common.exceptions import InvalidSelectorException, \
     NoSuchElementException, WebDriverException
+from selenium.webdriver.remote.remote_connection import LOGGER as SeleniumLogger
 from six import iteritems, string_types
 
 from pyscc.resource import Resource
 
 
-class Controller(object):
-    """
-    Controller for managing components.
+class ControllerLogger(logging.Logger):
 
-    :param browser: Webdriver for controller and components to reference.
-    :type browser: webdriver
-    :param base_url: Base url for navigations, will navigate to this url in init.
-    :type base_url: string
-    :param components: Component objects to instantiate.
-    :type components: dict
-    :param env: Key value pairs to pass to instantiated components.
-    :type env: **kwargs => dict
-    """
+    def __init__(self, name, level=0):
+        self._filters = []
+        super(ControllerLogger, self).__init__(name, level)
+
+    def add_filter(self, filter):
+        self._filters.append(filter)
+
+    def _log(self, level, msg, args, exc_info=None, extra=None):
+        if len(self._filters):
+            for filter in self._filters:
+                if not callable(filter) and not filter():
+                    return
+
+        super(ControllerLogger, self)._log(level, msg, args, exc_info, extra)
+
+
+class Controller(object):
+
+    _FILTER_SELENIUM_LOGS_ = False
+    _FILTER_SELENIUM_LOG_STREAM_ = False
+    _LOG_TO_FILE_ = False
+
     def __init__(self, browser, base_url, components, **env):
+        """
+        Controller for managing components.
+
+        :param browser: Webdriver for controller and components to reference.
+        :type browser: webdriver
+        :param base_url: Base url for navigations, will navigate to this url in init.
+        :type base_url: string
+        :param components: Component objects to instantiate.
+        :type components: dict
+        :param env: Key value pairs to pass to instantiated components.
+        :type env: **kwargs => dict
+        """
         self.browser = self.__patch_webdriver(browser)
         self.js = E2EJS(browser) # pylint: disable=invalid-name
         self.base_url = base_url
-        self.logger = logger
+
+        log_format = '%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s'
+
+        if self._FILTER_SELENIUM_LOGS_:
+            SeleniumLogger.propagate = False
+
+        if self._FILTER_SELENIUM_LOG_STREAM_:
+            for handler in SeleniumLogger.handlers:
+                if isinstance(handler, logging.StreamHandler):
+                    SeleniumLogger.removeHandler(handler)
+
+        logging.setLoggerClass(ControllerLogger)
+        self.logger = logging.getLogger('pyscc')
+        self.logger.setLevel(logging.DEBUG)
+
+        if self._LOG_TO_FILE_:
+            if not os.path.exists('logs/'):
+                os.makedirs('logs/')
+            log_time = str(time.time())
+            # -- file logging for all logs
+            bfh = logging.FileHandler('logs/{}.log'.format(log_time))
+            bfh.setFormatter(logging.Formatter(log_format))
+            logging.getLogger().addHandler(bfh)
+            # -- file logging for pyscc logs
+            pfh = logging.FileHandler('logs/{}_controller.log'.format(log_time))
+            pfh.setFormatter(logging.Formatter(log_format))
+            self.logger.addHandler(pfh)
+            # -- file logging for pyscc logs
+            sfh = logging.FileHandler('logs/{}_selenium.log'.format(log_time))
+            sfh.setFormatter(logging.Formatter(log_format))
+            SeleniumLogger.addHandler(sfh)
+
         if not isinstance(components, (tuple, list, dict)):
             raise TypeError('Components must be either a tuple, list, or dictionary')
 
