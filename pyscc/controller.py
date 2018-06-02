@@ -40,7 +40,7 @@ class ControllerLogger(logging.Logger):
     def add_filter(self, source):
         self._filters.append(source)
 
-    # pylint: disable=too-many-arguments,len-as-condition
+    # pylint: disable=too-many-arguments,len-as-condition, arguments-differ
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if len(self._filters):
             for source in self._filters:
