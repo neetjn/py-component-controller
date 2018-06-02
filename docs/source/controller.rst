@@ -35,6 +35,11 @@ The most prevelant polyfill featured is uniformity for `find_elements_by_x`. Eve
 
 Any irregularities between webdrivers should be reported via the py-component-controller github with steps to reproduce and a related issue or task if available for the corresponding webdriver.
 
+Logging
+=======
+
+The controller supports logging,
+
 Attributes
 ==========
 
