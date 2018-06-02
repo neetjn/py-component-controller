@@ -6,7 +6,7 @@ python:
 env:
   - NODE_VERSION="8"
 before_install:
-  - npm install -g chromedriver@2.35 --unsafe-perm=true
+  - npm install -g chromedriver@2.38.3 --unsafe-perm=true
   - pip install pipenv
   - pip install codecov
 addons:
