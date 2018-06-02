@@ -38,7 +38,31 @@ Any irregularities between webdrivers should be reported via the py-component-co
 Logging
 =======
 
-The controller supports logging,
+The controller supports logging out of the box. Three settings may be toggled to better exercise the logger,
+
+* _FILTER_SELENIUM_LOGS_:
+* _FILTER_SELENIUM_LOG_STREAM_:
+* _LOG_TO_FILE_: Drop logs to hard disk.
+
+These settings are all disabled by default, but can be toggled like so:
+
+... code-block:: python
+
+from pyscc import Controller
+
+
+class App(Controller):
+
+    _LOG_TO_FILE_ = True
+    ...
+
+To filter logs, refer to the api method `add_filter` which can be accessed via the controller's logger instance.
+
+... code-block:: python
+
+    # filter messages
+    ref.controller.logger.add_filter(lambda msg: 'selenium' in msg)
+
 
 Attributes
 ==========
