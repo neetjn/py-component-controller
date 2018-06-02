@@ -18,7 +18,6 @@
 import io
 import logging
 import os
-import sys
 import time
 from string import Template
 from types import MethodType
@@ -38,9 +37,10 @@ class ControllerLogger(logging.Logger):
         self._filters = []
         super(ControllerLogger, self).__init__(name, level)
 
-    def add_filter(self, filter):
-        self._filters.append(filter)
+    def add_filter(self, source):
+        self._filters.append(source)
 
+    # pylint: disable=too-many-arguments,len-as-condition
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if len(self._filters):
             for filter in self._filters:
