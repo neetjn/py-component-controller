@@ -43,8 +43,8 @@ class ControllerLogger(logging.Logger):
     # pylint: disable=too-many-arguments,len-as-condition
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if len(self._filters):
-            for filter in self._filters:
-                if not callable(filter) and not filter():
+            for source in self._filters:
+                if not callable(source) and not source():
                     return
 
         super(ControllerLogger, self)._log(level, msg, args, exc_info, extra)
