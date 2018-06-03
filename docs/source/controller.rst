@@ -35,6 +35,35 @@ The most prevelant polyfill featured is uniformity for `find_elements_by_x`. Eve
 
 Any irregularities between webdrivers should be reported via the py-component-controller github with steps to reproduce and a related issue or task if available for the corresponding webdriver.
 
+Logging
+=======
+
+The controller supports logging out of the box. Three settings may be toggled to better exercise the logger:
+
+* _FILTER_SELENIUM_LOGS_: Filters selenium logs all together.
+* _FILTER_SELENIUM_LOG_STREAM_: Filters selenium logs from stdout stream.
+* _LOG_TO_FILE_: Drop logs to hard disk. Will drop individual logs for the controller and selenium.
+
+These settings are all disabled by default, but can be toggled like so:
+
+... code-block:: python
+
+from pyscc import Controller
+
+
+class App(Controller):
+
+    _LOG_TO_FILE_ = True
+    ...
+
+To filter logs, refer to the api method `add_filter` which can be accessed via the controller's logger instance.
+
+... code-block:: python
+
+    # filter messages containing the text 'selenium'
+    ref.controller.logger.add_filter(lambda msg: 'selenium' in msg)
+
+
 Attributes
 ==========
 
