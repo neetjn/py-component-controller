@@ -47,7 +47,7 @@ Controllers were created to utilize our defined component objects and to farm ou
 
 ## Usage
 
-This project was created using selenium `3.6.0`, and pyseleniumjs `1.3.6`.
+This project was created using selenium `3.12.0`, and pyseleniumjs `1.3.8`.
 
 Support is available for both Python 2.7 and 3.6.
 
@@ -67,8 +67,8 @@ The mock site can be accessed [here](http://riot-todo-84334.firebaseapp.com/); i
 
 Requirements:
 * Python 2.7, 3.6 (with pip/pipenv)
-* Chrome or Chromium (Chrome 60-64)
-* ChromeDriver (version 2.3.3)
+* Chrome or Chromium (Chrome 64-67)
+* ChromeDriver (version 2.38.3)
 
 ### Contributors
 
