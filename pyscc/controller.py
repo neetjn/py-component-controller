@@ -83,9 +83,10 @@ class Controller(object):
                 if isinstance(handler, logging.StreamHandler):
                     SeleniumLogger.removeHandler(handler)
 
+        logging.getLogger().setLevel(logging.DEBUG)
+
         logging.setLoggerClass(ControllerLogger)
         self.logger = logging.getLogger('pyscc')
-        self.logger.setLevel(logging.DEBUG)
 
         if self._LOG_TO_FILE_:
             if not os.path.exists('logs/'):
