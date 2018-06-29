@@ -26,7 +26,7 @@ The official selenium bindings for Python feel rather dated, and a single intera
 
 ```python
 app = App(webdriver, base_url, {
-  'header', Header,
+  'header': Header,
   'footer': Footer,
   'home': Home
 })
