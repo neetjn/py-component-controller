@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# pylint: disable=too-many-lines
+
 from string import Template
 from types import MethodType
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
@@ -266,7 +268,7 @@ class Element(Resource):
         found = self.get()
         if found:
             self.controller.js.scroll_into_view(found)
-            self.controler.js.trigger_event(found, 'mouseleave', 'MouseEvent')
+            self.controller.js.trigger_event(found, 'mouseleave', 'MouseEvent')
             return found
         return None
 
