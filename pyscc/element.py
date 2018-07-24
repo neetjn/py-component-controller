@@ -244,6 +244,32 @@ class Element(Resource):
             return self
         return None
 
+    def mouseover(self):
+        """
+        Dispatches a mouseover event on the given element.
+
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controller.js.trigger_event(found, 'mouseover', 'MouseEvent')
+            return found
+        return None
+
+    def mouseleave(self):
+        """
+        Dispatches a mouseleave event on the given element.
+
+        :return: Element, None
+        """
+        found = self.get()
+        if found:
+            self.controller.js.scroll_into_view(found)
+            self.controler.js.trigger_event(found, 'mouseleave', 'MouseEvent')
+            return found
+        return None
+
     def select(self):
         """
         Selects an option child element of a select element naturally.

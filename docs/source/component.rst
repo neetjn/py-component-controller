@@ -169,7 +169,7 @@ If you require the traditional clicking behavior, simplify fetch a selenium WebE
 
     component.button.get().click()
 
-Additionally, for elements that do not listen on the click event but rather mouseup or mousedown, you may refer to the api methods `mouseup` and `mousedown` (chainable):
+Additionally, for elements that do not listen on the click event but rather mouseup or mousedown, you may refer to the api methods *mouseup* and *mousedown* (chainable):
 
 .. code-block:: python
 
@@ -193,6 +193,18 @@ You may also leverage the *select* api method for option child elements of selec
 .. code-block:: python
 
     component.language_options.python.select()
+
+Hovering Over an Element
+------------------------
+
+The element wrapper allows you to hover over an element using the *mouseover* api method (chainable). You may also leave an element by leveraging *mouseup*.
+
+.. code-block:: python
+
+    component.button\
+        .mouseover()\
+        .mouseleave()
+
 
 Scrolling To an Element
 -----------------------
