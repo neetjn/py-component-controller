@@ -42,6 +42,24 @@ mapping and operating against arbitrary components.
     >>   'group': [],
     >> {
 
+Root Selectors
+==============
+
+When creating components where each attributed Element or Elements instance will be pulling from the same base selector, you can leverage a component level root selector to help simplify development.
+Component root selectors are denoted by a static attribute, `_`.
+
+.. code-block:: python
+
+    class MyModal(Component):
+
+        # root selector specification
+        _ = 'div.modal'
+
+        @component_element
+        def title(self):
+            # this selector will be processed as 'div.modal h1.modal-title'
+            return 'h1.modal-title'
+
 Element (wrapper)
 =================
 
