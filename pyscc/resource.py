@@ -18,7 +18,8 @@
 from six import iteritems
 
 
-class Resource(object): # pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,useless-object-inheritance
+class Resource(object):
     """
     Base object for shenanigans.
     """

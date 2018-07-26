@@ -50,6 +50,7 @@ class ControllerLogger(logging.Logger):
         super(ControllerLogger, self)._log(level, msg, args, exc_info, extra)
 
 
+# pylint: disable=useless-object-inheritance
 class Controller(object):
 
     _FILTER_SELENIUM_LOGS_ = False
@@ -247,7 +248,7 @@ class Controller(object):
                 self.browser.switch_to_window(handle)
                 if strict and title == self.title:
                     return True
-                elif not strict and title in self.title:
+                if not strict and title in self.title:
                     return True
             return False
 
@@ -280,7 +281,7 @@ class Controller(object):
                 self.browser.switch_to_window(handle)
                 if strict and location == self.location:
                     return True
-                elif not strict and location in self.location:
+                if not strict and location in self.location:
                     return True
             return False
 
@@ -296,7 +297,7 @@ class Controller(object):
         return result
 
     @classmethod
-    def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):
+    def wait(cls, timeout=1, condition=None, reverse=False, throw_error=False):  # pylint: disable=no-else-return
         """
         Assisted delays between browser and main thread.
 
@@ -308,6 +309,7 @@ class Controller(object):
         :type throw_error: bool
         :return: bool
         """
+        # pylint: disable=no-else-return
         if callable(condition):
             if not isinstance(timeout, int) or timeout < 1:
                 raise ValueError('Timeout must be an integer or float greater than or equal to 1')
